@@ -1,28 +1,43 @@
 {
-  "name": "my-app",
-  "title": "My App",
+  "name": "@deskpro/shopify",
+  "title": "Shopify",
   "description": "My Deskpro app",
   "version": "1.0.0",
   "scope": "agent",
   "isSingleInstall": false,
+  "hasDevMode": true,
   "targets": [{
     "target": "ticket_sidebar",
     "entrypoint": "index.html"
   }],
+  "entityAssociations": {
+    "linkedShopifyCustomers": {
+      "title": "Linked Shopify Customers",
+      "entity": "person",
+      "type": "external_id"
+    }
+  },
   "settings": {
-    "example": {
-      "title": "Example Setting",
-      "description": "Example backend only setting",
+    "shop_name": {
+      "title": "Shop name",
+      "description": "Your Shop name",
       "type": "string",
-      "isRequired": false,
+      "isRequired": true,
+      "isBackendOnly": false
+    },
+    "access_token": {
+      "title": "Access Token",
+      "description": "Your shopify access token",
+      "type": "string",
+      "isRequired": true,
       "isBackendOnly": true
     }
   },
   "proxy": {
     "whitelist": [{
-      "url": "https://example.com/.*",
-      "methods": ["GET", "POST", "PUT"],
-      "timeout": 10
+      "url": "https://(.*).myshopify.com/admin/api/2022-04/.*",
+      "methods": ["GET", "POST", "PUT", "DELETE"],
+      "timeout": 30
     }]
   }
 }
