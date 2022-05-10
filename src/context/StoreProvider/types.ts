@@ -11,7 +11,7 @@ export type Page =
 
 export interface State {
     page?: Page;
-    pageParams?: any;
+    pageParams?: object;
 }
 
 export type Action =
