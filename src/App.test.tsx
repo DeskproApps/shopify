@@ -5,7 +5,7 @@ test("renders App component", async () => {
     const { getByText } = render(<App />);
 
     await waitFor(() => {
-        const buttonElement = getByText(/My App/i);
+        const buttonElement = getByText(/Add/i);
         expect(buttonElement).toBeInTheDocument();
     });
 });
