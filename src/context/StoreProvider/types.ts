@@ -1,3 +1,6 @@
+export type ApiRequestMethod = "GET" | "POST" | "PUT" | "DELETE";
+
+
 import { Reducer } from "react";
 
 export type Page =
