@@ -10,5 +10,9 @@ export const reducer: StoreReducer = (state: State, action: Action): State => {
             page: action.page,
             pageParams: action.params,
         }))
+        .with([__, { type: "loadContext" }],  ([prevState, action]) => ({
+            ...prevState,
+            context: action.context,
+        }))
         .otherwise(() => state);
 };
