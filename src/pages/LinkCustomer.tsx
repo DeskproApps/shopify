@@ -53,8 +53,9 @@ export const LinkCustomer: FC = () => {
 
         setEntityCustomer(client, primaryUser.id, selectedCustomerId)
             .then(() => dispatch({ type: "changePage", page: "home" }))
-            // ToDo: handle error
-            .catch(() => {});
+            .catch((error: Error) => {
+                dispatch({ type: "error", error });
+            });
     };
 
     return (

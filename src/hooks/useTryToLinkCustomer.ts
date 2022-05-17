@@ -47,7 +47,7 @@ const useTryToLinkCustomer = (
     const primaryUser = state.context?.data.ticket?.primaryUser;
 
     useEffect(() => {
-        if (!client || !primaryUser.id) {
+        if (!client || !primaryUser?.id) {
             return
         }
 

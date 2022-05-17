@@ -4,6 +4,7 @@ import {Context, useDeskproAppClient, useDeskproAppEvents } from "@deskpro/app-s
 import { Page } from "../context/StoreProvider/types";
 import { useStore } from "../context/StoreProvider/hooks";
 import { useTryToLinkCustomer } from "../hooks";
+import { ErrorBlock } from "../components/Error";
 import { Home } from "./Home";
 import { ViewOrder } from "./ViewOrder";
 import { EditOrder } from "./EditOrder";
@@ -15,6 +16,10 @@ import { LinkCustomer } from "./LinkCustomer";
 export const Main: FC = () => {
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
+
+    if (state._error) {
+        console.error(state._error);
+    }
 
     useTryToLinkCustomer(
         () => dispatch({ type: "changePage", page: "home" }),
@@ -40,5 +45,10 @@ export const Main: FC = () => {
         .with("edit_order", () => <EditOrder {...state.pageParams} />)
         .otherwise(() => <LinkCustomer {...state.pageParams} />)
 
-    return page;
+    return (
+        <>
+            {state._error && (<ErrorBlock text="An error occurred" />)}
+            {page}
+        </>
+    );
 };
