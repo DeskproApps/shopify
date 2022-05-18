@@ -10,7 +10,7 @@ export type CustomerSearchParams = {
  */
 export type DateTime = string;
 
-export type Customer = {
+export type CustomerType = {
     accepts_marketing: boolean,
     accepts_marketing_updated_at: DateTime,
     addresses: object, // ToDo: need typings
@@ -19,7 +19,7 @@ export type Customer = {
     default_address: object, // ToDo: need typings
     email: string,
     first_name: string,
-    id: string,
+    id: number,
     last_name: string,
     last_order_id: number | null,
     last_order_name: string | null,
