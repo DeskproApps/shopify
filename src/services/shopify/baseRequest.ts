@@ -1,17 +1,11 @@
-import { proxyFetch, IDeskproClient } from "@deskpro/app-sdk";
-import { ApiRequestMethod } from './types';
-
-/**
- * Get shop info service
- */
-export const getShopInfo = (client: IDeskproClient) => {
-    return request(client, "https://__shop_name__.myshopify.com/admin/api/2022-04/shop.json")
-};
+import { IDeskproClient, proxyFetch } from "@deskpro/app-sdk";
+import { BASE_URL, placeholders } from "./constants";
+import { ApiRequestMethod } from "./types";
 
 /**
  * Base request service
  */
-const request = async (
+const baseRequest = async (
     client: IDeskproClient,
     url: string,
     method: ApiRequestMethod = 'GET'
@@ -21,17 +15,17 @@ const request = async (
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "X-Shopify-Access-Token": "__access_token__",
+        "X-Shopify-Access-Token": placeholders.ACCESS_TOKEN,
     };
 
-    const res = await dpFetch(url, { method, headers });
+    const res = await dpFetch(`${BASE_URL}${url}`, { method, headers });
 
     if (res.status === 400) {
         return res.json();
     }
 
     if (res.status < 200 || res.status >= 400) {
-        throw new Error(`${method} ${url}: Response Status [${res.status}]`);
+        throw new Error(`${method} ${BASE_URL}${url}: Response Status [${res.status}]`);
     }
 
     try {
@@ -40,3 +34,5 @@ const request = async (
         return {};
     }
 };
+
+export { baseRequest };

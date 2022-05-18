@@ -9,8 +9,8 @@ export const EditOrder: FC = () => {
         <>
             <h1>EditOrder</h1>
             <Button
-                text="toLinkCustomers"
-                onClick={() => dispatch({ type: "changePage", page: "link_customers" })}
+                text="toLinkCustomer"
+                onClick={() => dispatch({ type: "changePage", page: "link_customer" })}
             />
         </>
     );
