@@ -91,6 +91,10 @@ export const LinkCustomer: FC = () => {
             {!customers.length && <NoFound />}
             <footer style={{ margin: "14px 0 8px" }}>
                 <Button text="Add" onClick={onAdd} />
+                <Button
+                    text="Add"
+                    onClick={() => dispatch({ type: "changePage", page: "home" })}
+                />
             </footer>
         </>
     )
