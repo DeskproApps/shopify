@@ -43,7 +43,8 @@ export const Main: FC = () => {
         .with("list_orders", () => <ListOrders {...state.pageParams} />)
         .with("view_order", () => <ViewOrder {...state.pageParams} />)
         .with("edit_order", () => <EditOrder {...state.pageParams} />)
-        .otherwise(() => <LinkCustomer {...state.pageParams} />)
+        // .otherwise(() => <LinkCustomer {...state.pageParams} />)
+        .otherwise(() => <Home {...state.pageParams} />)
 
     return (
         <>
