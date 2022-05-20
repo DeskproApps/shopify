@@ -64,8 +64,8 @@ const useTryToLinkCustomer = (
     }, [
         client,
         user,
-        // onLinkedItems, // this is causing useEffect to re-evaluate
-        // onNoLinkedItems, // this is causing useEffect to re-evaluate
+        onLinkedItems,
+        onNoLinkedItems,
     ]);
 };
 
