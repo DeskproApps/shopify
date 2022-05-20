@@ -3,11 +3,8 @@ import {
     HorizontalDivider,
     useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
-import {
-    SubHeader,
-    OrderInfo,
-    TextBlockWithLabel, Comments,
-} from "../components/Home";
+import { OrderInfo, Comments } from "../components/Home";
+import { SubHeader, TextBlockWithLabel } from "../components/common";
 // import { getEntityCustomerList } from "../services/entityAssociation";
 // import { getCustomer } from "../services/shopify";
 // import { CustomerType } from "../services/shopify/types";
