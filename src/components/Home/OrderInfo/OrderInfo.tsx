@@ -6,8 +6,7 @@ import {
     VerticalDivider,
     HorizontalDivider,
 } from "@deskpro/app-sdk";
-import { SubHeader } from "../../common/SubHeader";
-import { TextBlockWithLabel } from "../../common/TextBlockWithLabel";
+import { SubHeader, TextBlockWithLabel } from "../../common";
 import { Props } from "./types";
 
 const statusNames = {

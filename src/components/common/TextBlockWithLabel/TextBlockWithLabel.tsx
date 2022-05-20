@@ -1,6 +1,6 @@
-import { FC } from "react";
+import { FC, ReactElement, isValidElement } from "react";
 import styled from "styled-components";
-import { P8, P5 } from "@deskpro/app-sdk";
+import { P8, P5, Stack } from "@deskpro/app-sdk";
 import { Props } from "./types";
 
 const Container = styled.div<Props>`
@@ -11,11 +11,21 @@ const Label = styled(P8)`
     color: ${({ theme }) => (theme.colors.grey80)};
 `;
 
-const TextBlockWithLabel: FC<Props> = ({ text, label, marginBottom = 10 }) => (
-    <Container marginBottom={marginBottom}>
-        {label && <Label>{label}</Label>}
-        {text && <P5>{text}</P5>}
-    </Container>
-);
+const TextBlockWithLabel: FC<Props> = ({ text, label, marginBottom = 10 }) => {
+    let textBlock: ReactElement | null = null;
+
+    if (typeof text === 'string') {
+        textBlock = (<P5>{text}</P5>);
+    } else if (isValidElement(text)) {
+        textBlock = (<Stack>{text}</Stack>)
+    }
+
+    return (
+        <Container marginBottom={marginBottom}>
+            {label && <Label>{label}</Label>}
+            {textBlock && textBlock}
+        </Container>
+    );
+}
 
 export { TextBlockWithLabel };
