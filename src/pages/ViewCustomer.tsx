@@ -1,10 +1,9 @@
-import { FC, useState, useEffect } from "react";
-import styled from "styled-components";
+import { FC, useEffect } from "react";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Stack, lightTheme, useDeskproAppClient } from "@deskpro/app-sdk";
 import { Tag, Toggle } from "@deskpro/deskpro-ui";
+import { useStore } from "../context/StoreProvider/hooks";
 import { TextBlockWithLabel } from "../components/common";
-import {useStore} from "../context/StoreProvider/hooks";
 
 const tagNames = {
     vip: "VIP",
@@ -26,12 +25,7 @@ type TagNames = typeof tagNames;
 
 const customerTags: Array<keyof TagNames> = ["vip", "development"];
 
-const TagStyled = styled(Tag)`
-    margin-right: 6px;
-`;
-
 export const ViewCustomer: FC = () => {
-    const [isSendEmail, setIsSendEmail] = useState<boolean>(true);
     const [state] = useStore();
     const { client } = useDeskproAppClient();
 
@@ -52,9 +46,9 @@ export const ViewCustomer: FC = () => {
             <TextBlockWithLabel
                 label="Tags"
                 text={(
-                    <Stack>
+                    <Stack gap={6}>
                         {customerTags.map((tag) => (
-                            <TagStyled
+                            <Tag
                                 key={tag}
                                 color={{
                                     ...tagColorSchema[tag],
@@ -71,9 +65,9 @@ export const ViewCustomer: FC = () => {
                 label="Receive Marketing Email"
                 text={(
                     <Toggle
+                        disabled
                         label="Yes"
-                        checked={isSendEmail}
-                        onChange={() => setIsSendEmail(!isSendEmail)}
+                        checked={true}
                     />
                 )}
             />
