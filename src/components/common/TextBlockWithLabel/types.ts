@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { ReactElement } from "react";
 
 export type Props = {
     label?: string,
-    text?: string | ReactNode,
+    text?: string | ReactElement,
     marginBottom?: number,
 };

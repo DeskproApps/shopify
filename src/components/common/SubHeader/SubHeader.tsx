@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
 import { H1 } from "@deskpro/app-sdk";
-import { ShopifyLink } from "../../ShopifyLink";
+import { ShopifyLink } from "../../common";
 import { Stack } from "@deskpro/deskpro-ui";
 
 type Props = {
