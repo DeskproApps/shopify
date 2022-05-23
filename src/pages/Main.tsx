@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import { match } from "ts-pattern";
 import {Context, useDeskproAppClient, useDeskproAppEvents } from "@deskpro/app-sdk";
 import { Page } from "../context/StoreProvider/types";
@@ -22,8 +22,8 @@ export const Main: FC = () => {
     }
 
     useTryToLinkCustomer(
-        () => dispatch({ type: "changePage", page: "home" }),
-        () => dispatch({ type: "changePage", page: "link_customer" }),
+        useCallback(() => dispatch({ type: "changePage", page: "home" }), [dispatch]),
+        useCallback(() => dispatch({ type: "changePage", page: "link_customer" }), [dispatch]),
     );
 
     useDeskproAppEvents({

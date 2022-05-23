@@ -44,22 +44,29 @@ const useTryToLinkCustomer = (
 ) => {
     const { client } = useDeskproAppClient();
     const [state] = useStore();
-    const primaryUser = state.context?.data.ticket?.primaryUser;
+    // const primaryUser = state.context?.data.ticket?.primaryUser;
+
+    const user = state.context?.data.ticket?.primaryUser || state.context?.data.user;
 
     useEffect(() => {
-        if (!client || !primaryUser?.id) {
+        if (!client || !user?.id) {
             return
         }
 
-        checkIsLinkedCustomer(client, primaryUser.id)
+        checkIsLinkedCustomer(client, user.id)
             .then((isLinkedCustomer) => {
                 if (!isLinkedCustomer) {
-                    tryLinkCustomer(client, primaryUser, onLinkedItems, onNoLinkedItems)
+                    tryLinkCustomer(client, user, onLinkedItems, onNoLinkedItems)
                 } else {
                     onLinkedItems();
                 }
             })
-    }, [client, primaryUser, onLinkedItems, onNoLinkedItems]);
+    }, [
+        client,
+        user,
+        onLinkedItems,
+        onNoLinkedItems,
+    ]);
 };
 
 export { useTryToLinkCustomer };

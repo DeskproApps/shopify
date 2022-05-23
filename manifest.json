@@ -1,8 +1,8 @@
 {
   "name": "@deskpro/shopify",
   "title": "Shopify",
-  "description": "My Deskpro app",
-  "version": "1.0.0",
+  "description": "TODO: Shopify app description",
+  "version": "0.0.1",
   "scope": "agent",
   "isSingleInstall": false,
   "hasDevMode": true,

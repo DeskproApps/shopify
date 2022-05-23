@@ -1,36 +1,95 @@
-import { FC, useState, useEffect } from "react";
-import { Button, useDeskproAppClient } from "@deskpro/app-sdk";
+import { FC, /*useState,*/ useEffect } from "react";
+import {
+    HorizontalDivider,
+    useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
-import { getEntityCustomerList } from "../services/entityAssociation";
-import { Customer } from "../services/shopify/types";
+import {
+    SubHeader,
+    OrderInfo,
+    TextBlockWithLabel, Comments,
+} from "../components/Home";
+// import { getEntityCustomerList } from "../services/entityAssociation";
+// import { getCustomer } from "../services/shopify";
+// import { CustomerType } from "../services/shopify/types";
+// import { getFullName } from "../utils";
 
 export const Home: FC = () => {
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
-    const [customerId, setCustomerId] = useState<string | null>(null);
-    const primaryUserId = state.context?.data.ticket?.primaryUser.id;
+    // const [customer, setCustomer] = useState<CustomerType | null>(null);
+    const userId = state.context?.data.ticket?.primaryUser.id || state.context?.data.user.id;
+
+    useEffect(() => {
+        client?.setTitle("Shopify Customer");
+    }, [client, state])
+
+    const onChangePageOrder = (orderId: string) => {
+        dispatch({ type: "changePage", page: "view_order", params: { orderId } })
+    };
 
     useEffect(() => {
         if (!client) {
             return;
         }
 
-        getEntityCustomerList(client, primaryUserId)
-            .then((customers: Array<Customer['id']>) => {
-                setCustomerId(customers[0]);
+        /*getEntityCustomerList(client, userId)
+            .then((customers: string[]) => {
+                return getCustomer(client, customers[0]);
             })
-    }, [client, primaryUserId]);
+            .then(({ customer }) => {
+                setCustomer(customer);
+            })
+            .catch((err) => console.log('>>> home:catch:', err));*/
+    }, [client, userId]);
 
     return (
         <>
-            <h1>Home: {customerId}</h1>
-            <Button
-                text="toListOrder"
-                onClick={() => dispatch({ type: "changePage", page: "list_orders" })}
+            {/* Customer Info */}
+            <SubHeader
+                text="Armen Tamzarian"
+                link="https://__shop_name__.myshopify.com/admin/customers/<customerId>"
+                onChangePage={() => dispatch({ type: "changePage", page: "view_customer" })}
             />
-            <Button
-                text="toViewCustomer"
-                onClick={() => dispatch({ type: "changePage", page: "view_customer" })}
+            <TextBlockWithLabel
+                label="Email"
+                text="john.jones@company.com"
+            />
+            <TextBlockWithLabel
+                label="Total spent"
+                text="1485.00 USD"
+            />
+            <TextBlockWithLabel
+                label="Customer Note"
+                text="The user said that he was really satisfied with our support agent. John offered a discount if the user is going to upgrade to let agents to use Deskpro."
+            />
+            <HorizontalDivider style={{ marginBottom: 10 }}/>
+
+            {/* Orders */}
+            <SubHeader
+                marginBottom={14}
+                text="Orders (9)"
+                link="https://__shop_name__.myshopify.com/admin/orders?"
+                onChangePage={() => dispatch({ type: "changePage", page: "list_orders" })}
+            />
+            {[
+                { id: "1", orderName: "Mens T-Shirt XL", date: "17 May, 2020", status: "onHold" },
+                { id: "2", orderName: "Television", date: "17 May, 2020", status: "fulfilled" },
+                { id: "3", orderName: "John Lewis & Partners Puppytooty & many many more", date: "17 May, 2020", status: "onHold" },
+                { id: "4", orderName: "Mens T-Shirt XL", date: "17 May, 2020", status: "onHold" },
+                { id: "5", orderName: "Oven", date: "17 May, 2020", status: "unfulfilled" },
+            ].map((order) => (
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                /* @ts-ignore */
+                <OrderInfo key={order.id} onChangePage={onChangePageOrder} {...order} />
+            ))}
+
+            {/* Comments */}
+            <Comments
+                comments={[
+                    { id: "1", date: "10 mos", comment: "The user was particularly interested in purchasing." },
+                    { id: "2", date: "1yr", comment: "The user said that he was really satisfied with our support agent. John offered a discount if the user is going to upgrade to let agents to use Deskpro. " },
+                    { id: "3", date: "1yr", comment: "Test note." },
+                ]}
             />
         </>
     );
