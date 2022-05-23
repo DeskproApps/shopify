@@ -9,9 +9,8 @@ import { useStore } from "../context/StoreProvider/hooks";
 import { setEntityCustomer } from "../services/entityAssociation";
 import { getCustomers } from "../services/shopify";
 import { CustomerType } from "../services/shopify/types";
-import { Customer } from "../components/Customer";
-import { NoFound } from "../components/NoFound";
-import { InputSearch } from "../components/InputSearch";
+import { Customer, InputSearch } from "../components/LinkCustomer";
+import { NoFound } from "../components/common";
 
 export const LinkCustomer: FC = () => {
     const [state, dispatch] = useStore();

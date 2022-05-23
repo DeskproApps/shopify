@@ -4,7 +4,7 @@ import {Context, useDeskproAppClient, useDeskproAppEvents } from "@deskpro/app-s
 import { Page } from "../context/StoreProvider/types";
 import { useStore } from "../context/StoreProvider/hooks";
 import { useTryToLinkCustomer } from "../hooks";
-import { ErrorBlock } from "../components/Error";
+import { ErrorBlock } from "../components/common";
 import { Home } from "./Home";
 import { ViewOrder } from "./ViewOrder";
 import { EditOrder } from "./EditOrder";

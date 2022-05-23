@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Radio, Stack, Label, P1 } from "@deskpro/app-sdk";
 import { lightTheme } from "@deskpro/deskpro-ui";
-import { getFullName } from "../../utils";
+import { getFullName } from "../../../utils";
 import { Props } from "./types";
 
 const Customer: FC<Props> = ({
