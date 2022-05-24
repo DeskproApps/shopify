@@ -5,7 +5,7 @@ import { H1, Stack } from "@deskpro/app-sdk";
 type Props = {
     title: string,
     price: string,
-} & Record<string, any>;
+} & Record<string, unknown>;
 
 const Container = styled(Stack)`
   margin: 0 8px 10px 0;

@@ -31,6 +31,11 @@ export const ViewCustomer: FC = () => {
 
     useEffect(() => {
         client?.setTitle("Armen Tamzarian");
+        client?.deregisterElement("shopifyMenu");
+        client?.registerElement("shopifyEditButton", {
+            type: "edit_button",
+            payload: { type: "changePage", page: "edit_customer" },
+        });
     }, [client, state]);
 
     return (

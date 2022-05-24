@@ -42,11 +42,27 @@ const order = {
 };
 
 export const ViewOrder: FC = () => {
-    const [state, dispatch] = useStore();
+    const [state] = useStore();
     const { client } = useDeskproAppClient();
 
     useEffect(() => {
         client?.setTitle("#4357");
+        client?.deregisterElement("shopifyMenu");
+        client?.deregisterElement("shopifyEditButton");
+        client?.registerElement("shopifyEditButton", {
+            type: "edit_button",
+            payload: { type: "changePage", page: "edit_order" },
+        });
+        client?.registerElement("shopifyMenu", {
+            type: "menu",
+            items: [{
+                title: "Cancel order",
+                payload: { type: "changePage", page: "list_orders" },
+            }, {
+                title: "Settings",
+                payload: "settings",
+            }],
+        });
     }, [client, state]);
 
     return (

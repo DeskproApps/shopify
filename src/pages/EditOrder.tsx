@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, ChangeEvent } from "react";
 import styled from "styled-components";
 import {P5, H3, lightTheme, InputWithDisplay} from "@deskpro/deskpro-ui";
 import {
@@ -37,18 +37,21 @@ export const EditOrder: FC = () => {
         zip: "94105",
     });
 
-    const onChangeShipping = (name) => (e) => setShipping((state) => ({
+    const onChangeShipping = (name: string) => (e: ChangeEvent<HTMLInputElement>) => setShipping((state) => ({
         ...state,
         [name]: e.target.value,
     }));
 
-    const onChangeBilling = (name) => (e) => setBilling((state) => ({
+    const onChangeBilling = (name: string) => (e: ChangeEvent<HTMLInputElement>) => setBilling((state) => ({
         ...state,
         [name]: e.target.value,
     }));
 
     useEffect(() => {
         client?.setTitle("Edit Order #4357");
+        client?.deregisterElement("shopifyMenu");
+        client?.deregisterElement("shopifyEditButton");
+        client?.deregisterElement("shopifyButton");
     }, [client, state]);
 
     return (
