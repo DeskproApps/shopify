@@ -1,11 +1,12 @@
 import { FC, useState, useEffect, ChangeEvent } from "react";
 import styled from "styled-components";
-import {P5, H3, lightTheme, InputWithDisplay} from "@deskpro/deskpro-ui";
+import { P5, H3, InputWithDisplay } from "@deskpro/deskpro-ui";
 import {
     Pill,
     Stack,
     Button,
     HorizontalDivider,
+    useDeskproAppTheme,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
@@ -18,6 +19,7 @@ const Note = styled(P5)`
 export const EditOrder: FC = () => {
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
+    const { theme } = useDeskproAppTheme();
 
     const [shipping, setShipping] = useState({
         firstName: "Armen",
@@ -61,8 +63,8 @@ export const EditOrder: FC = () => {
                 text={(
                     <Pill
                         label="Paid"
-                        textColor={lightTheme.colors.white}
-                        backgroundColor={lightTheme.colors.turquoise100}
+                        textColor={theme.colors.white}
+                        backgroundColor={theme.colors.turquoise100}
                     />
                 )}
             />
@@ -71,8 +73,8 @@ export const EditOrder: FC = () => {
                 text={(
                     <Pill
                         label="Unfulfilled"
-                        textColor={lightTheme.colors.white}
-                        backgroundColor={lightTheme.colors.systemShade80}
+                        textColor={theme.colors.white}
+                        backgroundColor={theme.colors.systemShade80}
                     />
                 )}
             />

@@ -1,9 +1,9 @@
 import { FC, useEffect } from "react";
-import { lightTheme } from "@deskpro/deskpro-ui";
 import {
     H1,
     Pill,
     HorizontalDivider,
+    useDeskproAppTheme,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
@@ -44,6 +44,7 @@ const order = {
 export const ViewOrder: FC = () => {
     const [state] = useStore();
     const { client } = useDeskproAppClient();
+    const { theme } = useDeskproAppTheme();
 
     useEffect(() => {
         client?.setTitle("#4357");
@@ -73,7 +74,7 @@ export const ViewOrder: FC = () => {
             <PriceItem title="Subtotal" price={order.subtotal} />
             <PriceItem title="Shipping" price={order.shipping} />
             <PriceItem title="Taxes:" price={order.taxes} />
-            <PriceItem title="Total Value (2)" price={order.total} style={{ backgroundClip: lightTheme.colors.grey5 }} />
+            <PriceItem title="Total Value (2)" price={order.total} style={{ backgroundClip: theme.colors.grey5 }} />
             <HorizontalDivider style={{ marginBottom: "10px" }}/>
             <H1>Information</H1>
             <TextBlockWithLabel
@@ -81,8 +82,8 @@ export const ViewOrder: FC = () => {
                 text={(
                     <Pill
                         label={order.paymentStatus}
-                        textColor={lightTheme.colors.white}
-                        backgroundColor={lightTheme.colors.turquoise100}
+                        textColor={theme.colors.white}
+                        backgroundColor={theme.colors.turquoise100}
                     />
                 )}
             />
@@ -91,8 +92,8 @@ export const ViewOrder: FC = () => {
                 text={(
                     <Pill
                         label={order.orderStatus}
-                        textColor={lightTheme.colors.white}
-                        backgroundColor={lightTheme.colors.scarlett100}
+                        textColor={theme.colors.white}
+                        backgroundColor={theme.colors.scarlett100}
                     />
                 )}
             />

@@ -1,6 +1,6 @@
 import { FC, useCallback } from "react";
 import { match } from "ts-pattern";
-import {Context, useDeskproAppClient, useDeskproAppEvents } from "@deskpro/app-sdk";
+import { Context, useDeskproAppClient, useDeskproAppEvents } from "@deskpro/app-sdk";
 import { Page, AppElementPayload } from "../context/StoreProvider/types";
 import { useStore } from "../context/StoreProvider/hooks";
 import { useTryToLinkCustomer } from "../hooks";

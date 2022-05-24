@@ -1,6 +1,11 @@
 import { FC, useEffect } from "react";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { Stack, lightTheme, useDeskproAppClient } from "@deskpro/app-sdk";
+import {
+    Stack,
+    DeskproAppTheme,
+    useDeskproAppTheme,
+    useDeskproAppClient,
+} from "@deskpro/app-sdk";
 import { Tag, Toggle } from "@deskpro/deskpro-ui";
 import { useStore } from "../context/StoreProvider/hooks";
 import { TextBlockWithLabel } from "../components/common";
@@ -10,16 +15,16 @@ const tagNames = {
     development: "Development",
 };
 
-const tagColorSchema = {
+const getTagColorSchema = (theme: DeskproAppTheme['theme']) => ({
     vip: {
-        borderColor: lightTheme.colors.orange100,
-        backgroundColor: lightTheme.colors.orange10,
+        borderColor: theme.colors.orange100,
+        backgroundColor: theme.colors.orange10,
     },
     development: {
-        borderColor: lightTheme.colors.turquoise100,
-        backgroundColor: lightTheme.colors.turquoise10,
+        borderColor: theme.colors.turquoise100,
+        backgroundColor: theme.colors.turquoise10,
     },
-};
+});
 
 type TagNames = typeof tagNames;
 
@@ -28,6 +33,8 @@ const customerTags: Array<keyof TagNames> = ["vip", "development"];
 export const ViewCustomer: FC = () => {
     const [state] = useStore();
     const { client } = useDeskproAppClient();
+    const { theme } = useDeskproAppTheme();
+    const tagColorSchema = getTagColorSchema(theme);
 
     useEffect(() => {
         client?.setTitle("Armen Tamzarian");
@@ -57,7 +64,7 @@ export const ViewCustomer: FC = () => {
                                 key={tag}
                                 color={{
                                     ...tagColorSchema[tag],
-                                    textColor: "#4C4F50",
+                                    textColor: theme.colors.grey100,
                                 }}
                                 label={tagNames[tag]}
                                 closeIcon={faTimes}

@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { lightTheme } from "@deskpro/deskpro-ui";
 import {
     H0,
     P5,
@@ -7,6 +6,7 @@ import {
     Stack,
     VerticalDivider,
     HorizontalDivider,
+    useDeskproAppTheme,
 } from "@deskpro/app-sdk";
 import { TextBlockWithLabel } from "../../common";
 import img from "./item.png";
@@ -18,18 +18,21 @@ const Image: FC<Partial<OrderItemType> & { basis?: number }> = ({ basis, name })
     </Stack>
 );
 
-const NamePrice: FC<Partial<OrderItemType>> = ({ name, price, mos }) => (
-    <Stack justify="space-between" style={{ marginBottom: "8px" }}>
-        <Stack vertical>
-            <P5>{name}</P5>
-            <P11 style={{ color: lightTheme.colors.grey80 }}>{mos} mos</P11>
+const NamePrice: FC<Partial<OrderItemType>> = ({ name, price, mos }) => {
+    const { theme } = useDeskproAppTheme();
+    return (
+        <Stack justify="space-between" style={{ marginBottom: "8px" }}>
+            <Stack vertical>
+                <P5>{name}</P5>
+                <P11 style={{ color: theme.colors.grey80 }}>{mos} mos</P11>
+            </Stack>
+            <Stack vertical align="end">
+                <H0>{price}</H0>
+                <P11>USD</P11>
+            </Stack>
         </Stack>
-        <Stack vertical align="end">
-            <H0>{price}</H0>
-            <P11>USD</P11>
-        </Stack>
-    </Stack>
-);
+    );
+}
 
 const DescriptionQty: FC<Partial<OrderItemType>> = ({ description, qty }) => (
     <Stack wrap="nowrap" align="stretch">
