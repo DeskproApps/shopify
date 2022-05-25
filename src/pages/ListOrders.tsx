@@ -21,8 +21,17 @@ export const ListOrders: FC = () => {
 
     useEffect(() => {
         client?.setTitle(`Orders (${orders.length})`);
+
         client?.deregisterElement("shopifyMenu");
         client?.deregisterElement("shopifyEditButton");
+        client?.deregisterElement("shopifyHomeButton");
+        client?.deregisterElement("shopifyRefreshButton");
+
+        client?.registerElement("shopifyHomeButton", {
+            type: "home_button",
+            payload: { type: "changePage", page: "home" }
+        });
+        client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
     }, [client, state]);
 
     return (

@@ -38,11 +38,26 @@ export const ViewCustomer: FC = () => {
 
     useEffect(() => {
         client?.setTitle("Armen Tamzarian");
+
         client?.deregisterElement("shopifyMenu");
+        client?.deregisterElement("shopifyEditButton");
+        client?.deregisterElement("shopifyHomeButton");
+        client?.deregisterElement("shopifyRefreshButton");
+
+        client?.registerElement("shopifyExternalCtaLink", {
+            type: "cta_external_link",
+            url: "https://__shop_name__.myshopify.com/admin/customers/<customer_id>",
+            hasIcon: true,
+        });
+        client?.registerElement("shopifyHomeButton", {
+            type: "home_button",
+            payload: { type: "changePage", page: "home" }
+        });
         client?.registerElement("shopifyEditButton", {
             type: "edit_button",
             payload: { type: "changePage", page: "edit_customer" },
         });
+        client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
     }, [client, state]);
 
     return (
