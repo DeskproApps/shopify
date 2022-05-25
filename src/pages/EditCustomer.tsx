@@ -3,7 +3,8 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import {
     Stack,
     Button,
-    lightTheme,
+    DeskproAppTheme,
+    useDeskproAppTheme,
     useDeskproAppClient,
     TextAreaWithDisplay,
 } from "@deskpro/app-sdk";
@@ -16,16 +17,16 @@ const tagNames = {
     development: "Development",
 };
 
-const tagColorSchema = {
+const getTagColorSchema = (theme: DeskproAppTheme['theme']) => ({
     vip: {
-        borderColor: lightTheme.colors.orange100,
-        backgroundColor: lightTheme.colors.orange10,
+        borderColor: theme.colors.orange100,
+        backgroundColor: theme.colors.orange10,
     },
     development: {
-        borderColor: lightTheme.colors.turquoise100,
-        backgroundColor: lightTheme.colors.turquoise10,
+        borderColor: theme.colors.turquoise100,
+        backgroundColor: theme.colors.turquoise10,
     },
-};
+});
 
 type TagNames = typeof tagNames;
 
@@ -33,6 +34,8 @@ const customerTags: Array<keyof TagNames> = ["vip", "development"];
 
 export const EditCustomer: FC = () => {
     const { client } = useDeskproAppClient();
+    const { theme } = useDeskproAppTheme();
+
     const [state, dispatch] = useStore();
     const [firstName, setFirstName] = useState<string>("Armen");
     const [lastName, setLastName] = useState<string>("Tamzarian");
@@ -41,8 +44,13 @@ export const EditCustomer: FC = () => {
     const [isSendEmail, setIsSendEmail] = useState<boolean>(true);
     const [note, setNote] = useState<string>("The user said that he was really satisfied with our support agent. John offered a discount if the user is going to upgrade to let agents to use Deskpro.");
 
+    const tagColorSchema = getTagColorSchema(theme);
+
     useEffect(() => {
         client?.setTitle("Edit Customer Details");
+        client?.deregisterElement("shopifyMenu");
+        client?.deregisterElement("shopifyEditButton");
+        client?.registerElement("shopifyButton", { type: "refresh_button" });
     }, [client, state]);
 
     return (

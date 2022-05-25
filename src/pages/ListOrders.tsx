@@ -16,11 +16,13 @@ const orders = [
 ];
 
 export const ListOrders: FC = () => {
-    const [state] = useStore();
+    const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
 
     useEffect(() => {
         client?.setTitle(`Orders (${orders.length})`);
+        client?.deregisterElement("shopifyMenu");
+        client?.deregisterElement("shopifyEditButton");
     }, [client, state]);
 
     return (
@@ -28,7 +30,11 @@ export const ListOrders: FC = () => {
             {orders.map((order) => (
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 /* @ts-ignore */
-                <OrderInfo key={order.id} onChangePage={() => {}} {...order} />
+                <OrderInfo
+                    {...order}
+                    key={order.id}
+                    onChangePage={() => dispatch({ type: "changePage", page: "view_order" })}
+                />
             ))}
         </>
     );

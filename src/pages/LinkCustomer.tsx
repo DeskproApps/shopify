@@ -21,7 +21,9 @@ export const LinkCustomer: FC = () => {
 
     useEffect(() => {
         client?.setTitle("Link Customer");
-        client?.registerElement("myRefreshButton", { type: "refresh_button" });
+        client?.deregisterElement("shopifyMenu");
+        client?.deregisterElement("shopifyEditButton");
+        client?.registerElement("shopifyButton", { type: "refresh_button" });
     }, [client, state]);
 
     const searchInShopify = useDebouncedCallback<(q: string) => void>((q) => {

@@ -18,6 +18,16 @@ export const Home: FC = () => {
 
     useEffect(() => {
         client?.setTitle("Shopify Customer");
+        client?.registerElement("shopifyMenu", {
+            type: "menu",
+            items: [{
+                title: "Change Linked Customer",
+                payload: { type: "changePage", page: "link_customer" },
+            }, {
+                title: "Settings",
+                payload: "settings",
+            }],
+        });
     }, [client, state])
 
     const onChangePageOrder = (orderId: string) => {
