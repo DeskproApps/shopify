@@ -9,6 +9,7 @@ import {
 import { Tag, Toggle } from "@deskpro/deskpro-ui";
 import { useStore } from "../context/StoreProvider/hooks";
 import { TextBlockWithLabel } from "../components/common";
+import { getShopName } from "../utils";
 
 const tagNames = {
     vip: "VIP",
@@ -35,6 +36,7 @@ export const ViewCustomer: FC = () => {
     const { client } = useDeskproAppClient();
     const { theme } = useDeskproAppTheme();
     const tagColorSchema = getTagColorSchema(theme);
+    const shopName = getShopName(state);
 
     useEffect(() => {
         client?.setTitle("Armen Tamzarian");
@@ -44,11 +46,13 @@ export const ViewCustomer: FC = () => {
         client?.deregisterElement("shopifyHomeButton");
         client?.deregisterElement("shopifyRefreshButton");
 
-        client?.registerElement("shopifyExternalCtaLink", {
-            type: "cta_external_link",
-            url: "https://__shop_name__.myshopify.com/admin/customers/<customer_id>",
-            hasIcon: true,
-        });
+        if (shopName) {
+            client?.registerElement("shopifyExternalCtaLink", {
+                type: "cta_external_link",
+                url: `https://${shopName}.myshopify.com/admin/customers/<customer_id>`,
+                hasIcon: true,
+            });
+        }
         client?.registerElement("shopifyHomeButton", {
             type: "home_button",
             payload: { type: "changePage", page: "home" }
@@ -58,6 +62,7 @@ export const ViewCustomer: FC = () => {
             payload: { type: "changePage", page: "edit_customer" },
         });
         client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, state]);
 
     return (
