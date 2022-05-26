@@ -10,6 +10,8 @@ export type CustomerSearchParams = {
  */
 export type DateTime = string;
 
+export type MarketingOptInLevel = 'single_opt_in' | 'confirmed_opt_in' | 'unknown' | null
+
 export type CustomerType = {
     accepts_marketing: boolean,
     accepts_marketing_updated_at: DateTime,
@@ -24,7 +26,7 @@ export type CustomerType = {
     last_order_id: number | null,
     last_order_name: string | null,
     metafield: object, // ToDo: need typings
-    marketing_opt_in_level: 'single_opt_in' | 'confirmed_opt_in' | 'unknown' | null,
+    marketing_opt_in_level: MarketingOptInLevel,
     multipass_identifier: number | unknown,
     orders_count: number,
     phone: string,
@@ -36,3 +38,9 @@ export type CustomerType = {
     updated_at: DateTime,
     verified_email: boolean,
 };
+
+export type Order = {
+    id: number,
+};
+
+export type Orders = Array<Order>;

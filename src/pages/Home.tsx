@@ -1,19 +1,15 @@
-import { FC, /*useState,*/ useEffect } from "react";
+import { FC, useEffect } from "react";
 import {
-    HorizontalDivider,
     useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
-import { Comments } from "../components/Home";
-import { SubHeader, OrderInfo, TextBlockWithLabel } from "../components/common";
-// import { getEntityCustomerList } from "../services/entityAssociation";
-// import { getCustomer } from "../services/shopify";
-// import { CustomerType } from "../services/shopify/types";
-// import { getFullName } from "../utils";
+import { CustomerInfo, Orders, Comments } from "../components/Home";
+import { getEntityCustomerList } from "../services/entityAssociation";
+import { getCustomer, getOrders } from "../services/shopify";
+import { getShopName } from "../utils";
 
 export const Home: FC = () => {
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
-    // const [customer, setCustomer] = useState<CustomerType | null>(null);
     const userId = state.context?.data.ticket?.primaryUser.id || state.context?.data.user.id;
 
     useEffect(() => {
@@ -39,65 +35,49 @@ export const Home: FC = () => {
             return;
         }
 
-        /*getEntityCustomerList(client, userId)
+        getEntityCustomerList(client, userId)
             .then((customers: string[]) => {
                 return getCustomer(client, customers[0]);
             })
             .then(({ customer }) => {
-                setCustomer(customer);
+                if (customer && customer.id) {
+                    getOrders(client, customer.id)
+                        .then(({ orders }) => {
+                            console.log('>>> orders:', orders);
+                        })
+                }
+                dispatch({ type: "linkedCustomer", customer });
             })
-            .catch((err) => console.log('>>> home:catch:', err));*/
+            .catch((err) => console.log('>>> home:catch:', err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, userId]);
 
-    return (
-        <>
-            {/* Customer Info */}
-            <SubHeader
-                text="Armen Tamzarian"
-                link="https://__shop_name__.myshopify.com/admin/customers/<customerId>"
-                onChangePage={() => dispatch({ type: "changePage", page: "view_customer" })}
-            />
-            <TextBlockWithLabel
-                label="Email"
-                text="john.jones@company.com"
-            />
-            <TextBlockWithLabel
-                label="Total spent"
-                text="1485.00 USD"
-            />
-            <TextBlockWithLabel
-                label="Customer Note"
-                text="The user said that he was really satisfied with our support agent. John offered a discount if the user is going to upgrade to let agents to use Deskpro."
-            />
-            <HorizontalDivider style={{ marginBottom: 10 }}/>
+    console.log('>>> state.customer:', state.customer);
 
-            {/* Orders */}
-            <SubHeader
-                marginBottom={14}
-                text="Orders (9)"
-                link="https://__shop_name__.myshopify.com/admin/orders?"
-                onChangePage={() => dispatch({ type: "changePage", page: "list_orders" })}
-            />
-            {[
-                { id: "1", orderName: "Mens T-Shirt XL", date: "17 May, 2020", status: "onHold" },
-                { id: "2", orderName: "Television", date: "17 May, 2020", status: "fulfilled" },
-                { id: "3", orderName: "John Lewis & Partners Puppytooty & many many more", date: "17 May, 2020", status: "onHold" },
-                { id: "4", orderName: "Mens T-Shirt XL", date: "17 May, 2020", status: "onHold" },
-                { id: "5", orderName: "Oven", date: "17 May, 2020", status: "unfulfilled" },
-            ].map((order) => (
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                /* @ts-ignore */
-                <OrderInfo key={order.id} onChangePage={onChangePageOrder} {...order} />
-            ))}
+    return !state?.customer
+        ? (<>Loading...</>)
+        : (
+            <>
+                <CustomerInfo
+                    {...state.customer}
+                    link={`https://${getShopName(state)}.myshopify.com/admin/customers/${state.customer.id}`}
+                    onChangePage={() => dispatch({ type: "changePage", page: "view_customer" })}
+                />
+                {/* Orders */}
+                <Orders
+                    link={`https://${getShopName(state)}.myshopify.com/admin/orders`}
+                    onChangePage={() => dispatch({ type: "changePage", page: "list_orders" })}
+                    onChangePageOrder={onChangePageOrder}
+                />
 
-            {/* Comments */}
-            <Comments
-                comments={[
-                    { id: "1", date: "10 mos", comment: "The user was particularly interested in purchasing." },
-                    { id: "2", date: "1yr", comment: "The user said that he was really satisfied with our support agent. John offered a discount if the user is going to upgrade to let agents to use Deskpro. " },
-                    { id: "3", date: "1yr", comment: "Test note." },
-                ]}
-            />
-        </>
-    );
+                {/* Comments */}
+                <Comments
+                    comments={[
+                        { id: "1", date: "10 mos", comment: "The user was particularly interested in purchasing." },
+                        { id: "2", date: "1yr", comment: "The user said that he was really satisfied with our support agent. John offered a discount if the user is going to upgrade to let agents to use Deskpro. " },
+                        { id: "3", date: "1yr", comment: "Test note." },
+                    ]}
+                />
+            </>
+        );
 };

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { IDeskproClient, useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
+import { UserType } from "../context/StoreProvider/types";
 import { getCustomers } from "../services/shopify";
 import { getEntityCustomerList, setEntityCustomer } from "../services/entityAssociation";
 
@@ -14,15 +15,9 @@ const checkIsLinkedCustomer = (client: IDeskproClient, userId: string): Promise<
         });
 };
 
-// ToDo: import types from @deskpro/app-sdk
-type User = {
-    id: string,
-    email: string,
-};
-
 const tryLinkCustomer = (
     client: IDeskproClient,
-    user: User,
+    user: UserType,
     onLinkedItems: () => void,
     onNoLinkedItems: () => void,
 ): void => {
@@ -44,7 +39,6 @@ const useTryToLinkCustomer = (
 ) => {
     const { client } = useDeskproAppClient();
     const [state] = useStore();
-    // const primaryUser = state.context?.data.ticket?.primaryUser;
 
     const user = state.context?.data.ticket?.primaryUser || state.context?.data.user;
 

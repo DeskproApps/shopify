@@ -1,9 +1,9 @@
 import { IDeskproClient } from "@deskpro/app-sdk";
 import { baseRequest } from "./baseRequest";
+import { CustomerType } from "./types";
 
-// ToDo: need return type
-const getCustomer = (client: IDeskproClient, customerId: string) => {
-    return baseRequest(client, `/customers/${customerId}.json`)
+const getCustomer = (client: IDeskproClient, customerId: string): Promise<{ customer: CustomerType }> => {
+    return baseRequest(client, `/customers/${customerId}.json`);
 };
 
 export { getCustomer };
