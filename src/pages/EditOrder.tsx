@@ -21,6 +21,20 @@ export const EditOrder: FC = () => {
     const { client } = useDeskproAppClient();
     const { theme } = useDeskproAppTheme();
 
+    useEffect(() => {
+        client?.setTitle("Edit Order #4357");
+
+        client?.deregisterElement("shopifyMenu");
+        client?.deregisterElement("shopifyEditButton");
+        client?.deregisterElement("shopifyHomeButton");
+        client?.deregisterElement("shopifyRefreshButton");
+
+        client?.registerElement("shopifyHomeButton", {
+            type: "home_button",
+            payload: { type: "changePage", page: "home" }
+        });
+    }, [client, state]);
+
     const [shipping, setShipping] = useState({
         firstName: "Armen",
         lastName: "Tamzarian",
@@ -48,13 +62,6 @@ export const EditOrder: FC = () => {
         ...state,
         [name]: e.target.value,
     }));
-
-    useEffect(() => {
-        client?.setTitle("Edit Order #4357");
-        client?.deregisterElement("shopifyMenu");
-        client?.deregisterElement("shopifyEditButton");
-        client?.deregisterElement("shopifyButton");
-    }, [client, state]);
 
     return (
         <>

@@ -18,6 +18,13 @@ export const Home: FC = () => {
 
     useEffect(() => {
         client?.setTitle("Shopify Customer");
+
+        client?.deregisterElement("shopifyMenu");
+        client?.deregisterElement("shopifyEditButton");
+        client?.deregisterElement("shopifyHomeButton");
+        client?.deregisterElement("shopifyRefreshButton");
+
+        client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
         client?.registerElement("shopifyMenu", {
             type: "menu",
             items: [{

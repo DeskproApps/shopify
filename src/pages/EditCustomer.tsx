@@ -48,9 +48,16 @@ export const EditCustomer: FC = () => {
 
     useEffect(() => {
         client?.setTitle("Edit Customer Details");
-        client?.deregisterElement("shopifyMenu");
+
         client?.deregisterElement("shopifyEditButton");
-        client?.registerElement("shopifyButton", { type: "refresh_button" });
+        client?.deregisterElement("shopifyRefreshButton");
+        client?.deregisterElement("shopifyHomeButton");
+        client?.deregisterElement("shopifyMenu");
+
+        client?.registerElement("shopifyHomeButton", {
+            type: "home_button",
+            payload: { type: "changePage", page: "home" }
+        });
     }, [client, state]);
 
     return (
