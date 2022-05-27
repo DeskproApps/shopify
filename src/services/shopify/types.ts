@@ -28,6 +28,7 @@ export type CustomerType = {
     metafield: object, // ToDo: need typings
     marketing_opt_in_level: MarketingOptInLevel,
     multipass_identifier: number | unknown,
+    note: string | null,
     orders_count: number,
     phone: string,
     state: string,
@@ -39,8 +40,20 @@ export type CustomerType = {
     verified_email: boolean,
 };
 
+export type OrderItem = {
+    id: number,
+    title: string,
+};
+
+export type FinancialStatus = string | null;
+export type FulfillmentStatus = "fulfilled" | null;
+
 export type Order = {
     id: number,
+    created_at: DateTime,
+    line_items: Array<OrderItem>,
+    financial_status: FinancialStatus,
+    fulfillment_status: FulfillmentStatus,
 };
 
 export type Orders = Array<Order>;

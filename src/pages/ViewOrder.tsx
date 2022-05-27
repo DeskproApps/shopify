@@ -48,12 +48,21 @@ export const ViewOrder: FC = () => {
 
     useEffect(() => {
         client?.setTitle("#4357");
+
         client?.deregisterElement("shopifyMenu");
         client?.deregisterElement("shopifyEditButton");
+        client?.deregisterElement("shopifyHomeButton");
+        client?.deregisterElement("shopifyRefreshButton");
+
+        client?.registerElement("shopifyHomeButton", {
+            type: "home_button",
+            payload: { type: "changePage", page: "home" }
+        });
         client?.registerElement("shopifyEditButton", {
             type: "edit_button",
             payload: { type: "changePage", page: "edit_order" },
         });
+        client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
         client?.registerElement("shopifyMenu", {
             type: "menu",
             items: [{

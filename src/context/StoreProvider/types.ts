@@ -1,6 +1,6 @@
 import { Reducer } from "react";
 import { Context, User } from "@deskpro/app-sdk";
-import { CustomerType } from "../../services/shopify/types";
+import {CustomerType, Orders} from "../../services/shopify/types";
 
 export type Page =
     "home"
@@ -16,6 +16,7 @@ export interface State {
     pageParams?: object;
     context?: Context,
     customer?: CustomerType,
+    orders?: Orders,
     _error?: Error | unknown;
 }
 
@@ -23,7 +24,8 @@ export type Action =
     | { type: "changePage", page: Page, params?: object }
     | { type: "loadContext", context: Context }
     | { type: "error", error: Error }
-    | { type: "linkedCustomer", customer: CustomerType };
+    | { type: "linkedCustomer", customer: CustomerType }
+    | { type: "linkedOrders", orders: Orders };
 
 export type Dispatch = (action: Action) => void;
 
@@ -34,7 +36,6 @@ export type AppElementPayload = undefined | {
     page: Page
 };
 
-// ToDo: create typing from different Context type @deskpro/app-sdk/esm/client/types.d.ts
 export type UserType = User & {
     id: string,
 };

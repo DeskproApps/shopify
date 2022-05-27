@@ -14,6 +14,13 @@ export const Home: FC = () => {
 
     useEffect(() => {
         client?.setTitle("Shopify Customer");
+
+        client?.deregisterElement("shopifyMenu");
+        client?.deregisterElement("shopifyEditButton");
+        client?.deregisterElement("shopifyHomeButton");
+        client?.deregisterElement("shopifyRefreshButton");
+
+        client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
         client?.registerElement("shopifyMenu", {
             type: "menu",
             items: [{
@@ -26,7 +33,7 @@ export const Home: FC = () => {
         });
     }, [client, state])
 
-    const onChangePageOrder = (orderId: string) => {
+    const onChangePageOrder = (orderId: number) => {
         dispatch({ type: "changePage", page: "view_order", params: { orderId } })
     };
 
@@ -36,26 +43,27 @@ export const Home: FC = () => {
         }
 
         getEntityCustomerList(client, userId)
-            .then((customers: string[]) => {
-                return getCustomer(client, customers[0]);
-            })
-            .then(({ customer }) => {
-                if (customer && customer.id) {
-                    getOrders(client, customer.id)
-                        .then(({ orders }) => {
-                            console.log('>>> orders:', orders);
-                        })
+            .then(async (customers: string[]) => {
+                const customerId = customers[0];
+
+                try {
+                    const { customer } = await getCustomer(client, customerId);
+                    const { orders } = await getOrders(client, customerId);
+
+                    dispatch({ type: "linkedCustomer", customer });
+                    dispatch({ type: "linkedOrders", orders });
+                } catch (e) {
+                    const error = e as Error;
+
+                    throw new Error(error.message || "Failed to fetch");
                 }
-                dispatch({ type: "linkedCustomer", customer });
             })
-            .catch((err) => console.log('>>> home:catch:', err));
+            .catch((error: Error) => dispatch({ type: "error", error }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, userId]);
 
-    console.log('>>> state.customer:', state.customer);
-
-    return !state?.customer
-        ? (<>Loading...</>)
+    return (!state?.customer || !state.orders)
+        ? state._error ? null : <>Loading...</>
         : (
             <>
                 <CustomerInfo
@@ -63,14 +71,13 @@ export const Home: FC = () => {
                     link={`https://${getShopName(state)}.myshopify.com/admin/customers/${state.customer.id}`}
                     onChangePage={() => dispatch({ type: "changePage", page: "view_customer" })}
                 />
-                {/* Orders */}
                 <Orders
+                    ordersCount={state.customer?.orders_count || 0}
+                    orders={state.orders}
                     link={`https://${getShopName(state)}.myshopify.com/admin/orders`}
                     onChangePage={() => dispatch({ type: "changePage", page: "list_orders" })}
                     onChangePageOrder={onChangePageOrder}
                 />
-
-                {/* Comments */}
                 <Comments
                     comments={[
                         { id: "1", date: "10 mos", comment: "The user was particularly interested in purchasing." },

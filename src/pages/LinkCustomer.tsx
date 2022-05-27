@@ -21,9 +21,23 @@ export const LinkCustomer: FC = () => {
 
     useEffect(() => {
         client?.setTitle("Link Customer");
+
         client?.deregisterElement("shopifyMenu");
         client?.deregisterElement("shopifyEditButton");
-        client?.registerElement("shopifyButton", { type: "refresh_button" });
+        client?.deregisterElement("shopifyHomeButton");
+        client?.deregisterElement("shopifyRefreshButton");
+
+        // no linked customers
+        client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
+        // client?.registerElement("shopifySettingsButton");
+
+        // already a linked customer
+        // client?.registerElement("shopifyHomeButton", {
+        //     type: "home_button",
+        //     payload: { type: "changePage", page: "home" }
+        // });
+        // client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
+        // client?.registerElement("shopifySettingsButton");
     }, [client, state]);
 
     const searchInShopify = useDebouncedCallback<(q: string) => void>((q) => {

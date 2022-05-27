@@ -6,7 +6,10 @@ import { Props } from "./types";
 
 const CustomerInfo: FC<Props> = ({
     link,
+    note,
     email,
+    currency,
+    total_spent,
     onChangePage,
     first_name: firstName,
     last_name: lastName,
@@ -24,11 +27,11 @@ const CustomerInfo: FC<Props> = ({
             />
             <TextBlockWithLabel
                 label="Total spent"
-                text="1485.00 USD"
+                text={`${total_spent} ${currency}`}
             />
             <TextBlockWithLabel
                 label="Customer Note"
-                text="The user said that he was really satisfied with our support agent. John offered a discount if the user is going to upgrade to let agents to use Deskpro."
+                text={note ? note : '-'}
             />
             <HorizontalDivider style={{ marginBottom: 10 }}/>
         </>
