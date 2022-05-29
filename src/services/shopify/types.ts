@@ -12,6 +12,10 @@ export type DateTime = string;
 
 export type MarketingOptInLevel = 'single_opt_in' | 'confirmed_opt_in' | 'unknown' | null
 
+export type EmailMarketingConsent = Record<string, unknown> & {
+    state: "subscribed" | "not_subscribed"
+}
+
 export type CustomerType = {
     accepts_marketing: boolean,
     accepts_marketing_updated_at: DateTime,
@@ -20,6 +24,7 @@ export type CustomerType = {
     created_at: DateTime,
     default_address: object, // ToDo: need typings
     email: string,
+    email_marketing_consent: EmailMarketingConsent,
     first_name: string,
     id: number,
     last_name: string,
