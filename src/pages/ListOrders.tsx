@@ -1,26 +1,20 @@
 import { FC, useEffect } from "react";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
+import { getEntityCustomerList } from "../services/entityAssociation";
+import { getOrders } from "../services/shopify";
+import { getShopName } from "../utils";
 import { OrderInfo } from "../components/common";
-
-const orders = [
-    { id: "1", orderName: "Mens T-Shirt XL", date: "17 May, 2020", status: "onHold" },
-    { id: "2", orderName: "Television", date: "17 May, 2020", status: "fulfilled" },
-    { id: "3", orderName: "John Lewis & Partners Puppytooty & many many more", date: "17 May, 2020", status: "onHold" },
-    { id: "4", orderName: "Mens T-Shirt XL", date: "17 May, 2020", status: "onHold" },
-    { id: "5", orderName: "Oven", date: "17 May, 2020", status: "unfulfilled" },
-    { id: "6", orderName: "Mens T-Shirt XL", date: "17 May, 2020", status: "onHold" },
-    { id: "7", orderName: "Television", date: "17 May, 2020", status: "fulfilled" },
-    { id: "8", orderName: "John Lewis & Partners Puppytooty & many many more", date: "17 May, 2020", status: "onHold" },
-    { id: "9", orderName: "Mens T-Shirt XL", date: "17 May, 2020", status: "onHold" },
-];
 
 export const ListOrders: FC = () => {
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
+    const userId = state.context?.data.ticket?.primaryUser.id || state.context?.data.user.id;
 
     useEffect(() => {
-        client?.setTitle(`Orders (${orders.length})`);
+        client?.setTitle(
+            `Orders ${state.customer?.orders_count ? `(${state.customer?.orders_count})` : ''}`
+        );
 
         client?.deregisterElement("shopifyMenu");
         client?.deregisterElement("shopifyEditButton");
@@ -34,15 +28,36 @@ export const ListOrders: FC = () => {
         client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
     }, [client, state]);
 
+    useEffect(() => {
+        if (!client) {
+            return;
+        }
+
+        if (!state.orders) {
+            getEntityCustomerList(client, userId)
+                .then((customers: string[]) => {
+                    return getOrders(client, customers[0]);
+                })
+                .then(({ orders }) => dispatch({ type: "linkedOrders", orders }))
+                .catch((error: Error) => dispatch({ type: "error", error }));
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [client, userId]);
+
+    const onChangePageOrder = (orderId: number) => {
+        dispatch({ type: "changePage", page: "view_order", params: { orderId } })
+    };
+
     return (
         <>
-            {orders.map((order) => (
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                /* @ts-ignore */
+            {(state?.orders || []).map((order) => (
                 <OrderInfo
                     {...order}
                     key={order.id}
-                    onChangePage={() => dispatch({ type: "changePage", page: "view_order" })}
+                    linkOrder={
+                        `https://${getShopName(state)}.myshopify.com/admin/orders/${order.id}`
+                    }
+                    onChangePage={onChangePageOrder}
                 />
             ))}
         </>
