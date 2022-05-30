@@ -1,9 +1,20 @@
 import { IDeskproClient } from "@deskpro/app-sdk";
-import { baseRequest } from "./baseRequest";
+import { baseGraphQLRequest } from "./baseGraphQLRequest";
+import { CustomerType } from "./types";
 
-// ToDo: need return type
-const getCustomer = (client: IDeskproClient, customerId: string) => {
-    return baseRequest(client, `/customers/${customerId}.json`)
+const getCustomer = (
+    client: IDeskproClient,
+    customerId: string
+): Promise<{ customer: CustomerType }> => {
+    const query = `query getCustomer($id: ID!) {
+        customer(id: $id) {
+            displayName
+        }
+    }`;
+
+    const variables = { id: customerId }
+
+    return baseGraphQLRequest(client, { query, variables })
 };
 
 export { getCustomer };

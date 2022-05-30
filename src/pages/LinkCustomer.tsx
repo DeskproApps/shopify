@@ -51,7 +51,9 @@ export const LinkCustomer: FC = () => {
         }
 
         getCustomers(client, { querySearch: q })
-            .then(({ customers }: { customers: [] }) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            .then(({ customers }) => {
                 if (Array.isArray(customers)) {
                     setCustomers(customers);
                 }
