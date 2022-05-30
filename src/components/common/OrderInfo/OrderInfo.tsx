@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { match } from "ts-pattern";
 import {
     Pill,
     Stack,
@@ -10,22 +11,33 @@ import {
 import { SubHeader, TextBlockWithLabel } from "../../common";
 import { Props } from "./types";
 
-/*const statusNames = {
-    onHold: "On hold",
-    fulfilled: "Fulfilled",
-    unfulfilled: "Unfulfilled",
-    partially: "Partially fulfilled",
-    scheduled: "Scheduled",
-};
- */
+const getStatusName = (status: string | null = '') => {
+    if (!status) {
+        return 'Unfulfilled';
+    }
 
-const getStatusColorSchema = (theme: DeskproAppTheme['theme']) => ({
-    onHold: theme.colors.jasper80,
-    partially: theme.colors.turquoise100,
-    fulfilled: theme.colors.turquoise100,
-    unfulfilled: theme.colors.red100,
-    scheduled: theme.colors.cyan100
-});
+    return match(status.trim().toLowerCase().replaceAll(' ', ''))
+        .with("onhold", () => "On hold")
+        .with("partially", () => "Partially fulfilled")
+        .with("fulfilled", () => "Fulfilled")
+        .with("scheduled", () => "Scheduled")
+        .with("unfulfilled", () => "Unfulfilled")
+        .otherwise(() => "Unfulfilled");
+};
+
+const getStatusColorSchema = (theme: DeskproAppTheme['theme'], status: string | null = '') => {
+    if (!status) {
+        return theme.colors.red100
+    }
+
+    return match(status.trim().toLowerCase().replaceAll(' ', ''))
+        .with("onhold", () => theme.colors.jasper80)
+        .with("partially", () => theme.colors.turquoise100)
+        .with("fulfilled", () => theme.colors.turquoise100)
+        .with("scheduled", () => theme.colors.cyan10)
+        .with("unfulfilled", () => theme.colors.red100)
+        .otherwise(() => theme.colors.red100);
+};
 
 const OrderInfo: FC<Props> = ({
     id,
@@ -34,7 +46,6 @@ const OrderInfo: FC<Props> = ({
     line_items,
     created_at,
     fulfillment_status,
-    // financial_status,
 }) => {
     const { theme } = useDeskproAppTheme();
     const title = line_items.map(({ title }) => title).join(' & ');
@@ -63,8 +74,8 @@ const OrderInfo: FC<Props> = ({
                             <>
                                 <Pill
                                     textColor={theme.colors.white}
-                                    backgroundColor={getStatusColorSchema(theme)['partially']}
-                                    label={fulfillment_status}
+                                    backgroundColor={getStatusColorSchema(theme, fulfillment_status)}
+                                    label={getStatusName(fulfillment_status)}
                                 />
                             </>
                         )}
