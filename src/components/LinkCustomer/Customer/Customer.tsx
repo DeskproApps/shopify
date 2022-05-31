@@ -6,7 +6,6 @@ import {
     Radio,
     useDeskproAppTheme,
 } from "@deskpro/app-sdk";
-import { getFullName } from "../../../utils";
 import { Props } from "./types";
 
 const Customer: FC<Props> = ({
@@ -14,8 +13,7 @@ const Customer: FC<Props> = ({
     email,
     checked,
     onChange,
-    last_name: lastName,
-    first_name: firstName,
+    displayName,
 }) => {
     const { theme } = useDeskproAppTheme();
 
@@ -29,7 +27,7 @@ const Customer: FC<Props> = ({
                 style={{ margin: "0 8px" }}
             />
             <Label htmlFor={`customer-${id}`}>
-                <P1>{getFullName({ firstName, lastName })}</P1>
+                <P1>{displayName}</P1>
                 {email && (
                     <P1 style={{ color: theme.colors.grey80 }}>
                         &lt;{email}&gt;

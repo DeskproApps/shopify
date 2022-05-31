@@ -5,8 +5,8 @@ import {
 import { useStore } from "../context/StoreProvider/hooks";
 import { Comments } from "../components/Home";
 import { SubHeader, OrderInfo, TextBlockWithLabel } from "../components/common";
-// import { getEntityCustomerList } from "../services/entityAssociation";
-// import { getCustomer } from "../services/shopify";
+import { getEntityCustomerList } from "../services/entityAssociation";
+import { getCustomer } from "../services/shopify";
 // import { CustomerType } from "../services/shopify/types";
 // import { getFullName } from "../utils";
 
@@ -46,14 +46,15 @@ export const Home: FC = () => {
             return;
         }
 
-        /*getEntityCustomerList(client, userId)
+        getEntityCustomerList(client, userId)
             .then((customers: string[]) => {
                 return getCustomer(client, customers[0]);
             })
             .then(({ customer }) => {
-                setCustomer(customer);
+                console.log('>>> home:then:', customer)
+                // setCustomer(customer);
             })
-            .catch((err) => console.log('>>> home:catch:', err));*/
+            .catch((err) => console.log('>>> home:catch:', err));
     }, [client, userId]);
 
     return (
