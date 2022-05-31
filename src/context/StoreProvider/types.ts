@@ -1,6 +1,6 @@
 import { Reducer } from "react";
 import { Context, User } from "@deskpro/app-sdk";
-import {CustomerType, Orders} from "../../services/shopify/types";
+import { CustomerType, Orders } from "../../services/shopify/types";
 
 export type Page =
     "home"

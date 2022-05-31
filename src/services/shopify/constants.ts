@@ -4,3 +4,4 @@ export const placeholders = {
 };
 
 export const BASE_URL = `https://${placeholders.SHOP_NAME}.myshopify.com/admin/api/2022-04`;
+export const GRAPHQL_URL = `https://${placeholders.SHOP_NAME}.myshopify.com/admin/api/2022-04/graphql.json`;

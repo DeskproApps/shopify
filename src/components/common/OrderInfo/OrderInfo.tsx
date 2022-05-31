@@ -1,54 +1,25 @@
 import { FC } from "react";
-import { match } from "ts-pattern";
 import {
     Pill,
     Stack,
     VerticalDivider,
-    DeskproAppTheme,
     HorizontalDivider,
     useDeskproAppTheme,
 } from "@deskpro/app-sdk";
 import { SubHeader, TextBlockWithLabel } from "../../common";
+import { getStatusName, getStatusColorSchema, getDate } from "../../../utils";
 import { Props } from "./types";
-
-const getStatusName = (status: string | null = '') => {
-    if (!status) {
-        return 'Unfulfilled';
-    }
-
-    return match(status.trim().toLowerCase().replaceAll(' ', ''))
-        .with("onhold", () => "On hold")
-        .with("partially", () => "Partially fulfilled")
-        .with("fulfilled", () => "Fulfilled")
-        .with("scheduled", () => "Scheduled")
-        .with("unfulfilled", () => "Unfulfilled")
-        .otherwise(() => "Unfulfilled");
-};
-
-const getStatusColorSchema = (theme: DeskproAppTheme['theme'], status: string | null = '') => {
-    if (!status) {
-        return theme.colors.red100
-    }
-
-    return match(status.trim().toLowerCase().replaceAll(' ', ''))
-        .with("onhold", () => theme.colors.jasper80)
-        .with("partially", () => theme.colors.turquoise100)
-        .with("fulfilled", () => theme.colors.turquoise100)
-        .with("scheduled", () => theme.colors.cyan10)
-        .with("unfulfilled", () => theme.colors.red100)
-        .otherwise(() => theme.colors.red100);
-};
 
 const OrderInfo: FC<Props> = ({
     id,
+    createdAt,
+    lineItems,
     linkOrder,
     onChangePage,
-    line_items,
-    created_at,
-    fulfillment_status,
+    displayFulfillmentStatus,
 }) => {
     const { theme } = useDeskproAppTheme();
-    const title = line_items.map(({ title }) => title).join(' & ');
+    const title = lineItems.map(({ title }) => title).join(' & ');
 
     return (
         <>
@@ -62,7 +33,7 @@ const OrderInfo: FC<Props> = ({
                     <TextBlockWithLabel
                         marginBottom={0}
                         label="Date"
-                        text={(new Date(created_at)).toLocaleDateString()}
+                        text={getDate(createdAt)}
                     />
                 </Stack>
                 <VerticalDivider width={1} />
@@ -74,8 +45,8 @@ const OrderInfo: FC<Props> = ({
                             <>
                                 <Pill
                                     textColor={theme.colors.white}
-                                    backgroundColor={getStatusColorSchema(theme, fulfillment_status)}
-                                    label={getStatusName(fulfillment_status)}
+                                    backgroundColor={getStatusColorSchema(theme, displayFulfillmentStatus)}
+                                    label={getStatusName(displayFulfillmentStatus)}
                                 />
                             </>
                         )}
