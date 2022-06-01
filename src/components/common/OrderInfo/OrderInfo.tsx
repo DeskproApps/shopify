@@ -11,11 +11,11 @@ import { getStatusName, getStatusColorSchema, getDate } from "../../../utils";
 import { Props } from "./types";
 
 const OrderInfo: FC<Props> = ({
-    id,
+    // id,
     createdAt,
     lineItems,
     linkOrder,
-    onChangePage,
+    // onChangePage,
     displayFulfillmentStatus,
 }) => {
     const { theme } = useDeskproAppTheme();
@@ -26,7 +26,10 @@ const OrderInfo: FC<Props> = ({
             <SubHeader
                 text={title}
                 link={linkOrder}
-                onChangePage={() => onChangePage(id)}
+                onChangePage={() => {
+                    // ToDo: uncomment after create view order page
+                    // onChangePage(id)
+                }}
             />
             <Stack align="stretch" style={{ marginBottom: 10 }}>
                 <Stack grow={1}>
