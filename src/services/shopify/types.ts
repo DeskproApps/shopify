@@ -36,6 +36,18 @@ export type FulfillmentStatus =
     | "ON_HOLD"
     | "SCHEDULED";
 
+export type EmailMarketingConsent = {
+    consentUpdatedAt: DateTime,
+    marketingOptInLevel: "SINGLE_OPT_IN" | "CONFIRMED_OPT_IN" | "UNKNOWN",
+    marketingState:
+        | "NOT_SUBSCRIBED"
+        | "PENDING"
+        | "SUBSCRIBED"
+        | "UNSUBSCRIBED"
+        | "REDACTED"
+        | "INVALID",
+}
+
 export type CustomerType = {
     id: string,
     legacyResourceId: string,
@@ -50,8 +62,10 @@ export type CustomerType = {
     lastName: string,
     amountSpent: Money,
     numberOfOrders: string,
+    tags: string[],
     orders: Orders
     comments: Comments,
+    emailMarketingConsent: EmailMarketingConsent,
 };
 
 export type OrderItem = {
