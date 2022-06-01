@@ -1,6 +1,12 @@
 import { IDeskproClient } from "@deskpro/app-sdk";
-import { baseRequest } from "./baseRequest";
+import { baseGraphQLRequest } from "./baseGraphQLRequest";
 
 export const getShopInfo = (client: IDeskproClient) => {
-    return baseRequest(client, "/shop.json");
+    const query = `query {
+        shop {
+            description, email, id, name, url
+        }
+    }`;
+
+    return baseGraphQLRequest(client, { query });
 };

@@ -7,21 +7,22 @@ const Orders: FC<Props> = ({
     orders,
     onChangePage,
     onChangePageOrder,
-    ordersCount,
+    numberOfOrders,
 }) => (
     <>
         <SubHeader
             marginBottom={14}
-            text={`Orders ${ordersCount ? `(${ordersCount})` : ''}`}
+            text={`Orders ${numberOfOrders ? `(${numberOfOrders})` : ''}`}
             link={link}
             onChangePage={onChangePage}
         />
-        {orders.map(({ id, ...order }) => (
+        {orders.map(({ id, legacyResourceId,...order }) => (
             <OrderInfo
                 {...order}
                 key={id}
-                id={id}
-                linkOrder={`${link}/${id}`}
+                id={legacyResourceId}
+                legacyResourceId={legacyResourceId}
+                linkOrder={`${link}/${legacyResourceId}`}
                 onChangePage={onChangePageOrder}
             />
         ))}

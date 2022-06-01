@@ -1,23 +1,20 @@
 import { FC } from "react";
 import { HorizontalDivider } from "@deskpro/app-sdk";
 import { SubHeader, TextBlockWithLabel } from "../../common";
-import { getFullName } from "../../../utils";
 import { Props } from "./types";
 
 const CustomerInfo: FC<Props> = ({
     link,
     note,
     email,
-    currency,
-    total_spent,
+    amountSpent,
+    displayName,
     onChangePage,
-    first_name: firstName,
-    last_name: lastName,
 }) => {
     return (
         <>
             <SubHeader
-                text={getFullName({ firstName, lastName })}
+                text={displayName}
                 link={link}
                 onChangePage={onChangePage}
             />
@@ -27,7 +24,7 @@ const CustomerInfo: FC<Props> = ({
             />
             <TextBlockWithLabel
                 label="Total spent"
-                text={`${total_spent} ${currency}`}
+                text={`${amountSpent.amount} ${amountSpent.currencyCode}`}
             />
             <TextBlockWithLabel
                 label="Customer Note"

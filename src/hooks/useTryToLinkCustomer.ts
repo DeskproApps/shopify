@@ -22,9 +22,13 @@ const tryLinkCustomer = (
     onNoLinkedItems: () => void,
 ): void => {
     getCustomers(client, { email: user.email })
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         .then(({ customers }) => {
             if (customers.length === 1) {
-                setEntityCustomer(client, user.id, customers[0].id)
+                const customerId: string = customers[0].id as unknown as string;
+
+                setEntityCustomer(client, user.id, customerId)
                     .then(() => onLinkedItems())
                     .catch(() => onNoLinkedItems());
             } else {
