@@ -57,10 +57,11 @@ export const ViewCustomer: FC = () => {
             type: "home_button",
             payload: { type: "changePage", page: "home" }
         });
+        /* ToDo: uncomment when will be create edit_customer page
         client?.registerElement("shopifyEditButton", {
             type: "edit_button",
             payload: { type: "changePage", page: "edit_customer" },
-        });
+        });*/
         client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, state]);
