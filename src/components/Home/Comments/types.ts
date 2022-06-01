@@ -1,7 +1,5 @@
+import { Comments } from "../../../services/shopify/types";
+
 export type Props = {
-    comments: Array<{
-        id: string,
-        date: string,
-        comment: string,
-    }>
+    comments: Comments
 };

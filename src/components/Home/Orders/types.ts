@@ -5,5 +5,5 @@ export type Props = {
     orders: Orders,
     onChangePage: () => void,
     onChangePageOrder: (orderId: Order['id']) => void,
-    ordersCount?: CustomerType['orders_count'],
+    numberOfOrders: CustomerType['numberOfOrders'],
 };

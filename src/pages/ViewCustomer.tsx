@@ -1,4 +1,5 @@
 import { FC, useEffect } from "react";
+import { match } from "ts-pattern";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import {
     Stack,
@@ -10,37 +11,36 @@ import { Tag, Toggle } from "@deskpro/deskpro-ui";
 import { useStore } from "../context/StoreProvider/hooks";
 import { TextBlockWithLabel } from "../components/common";
 import { getShopName } from "../utils";
+import { useSetFullNameInTitle } from "../hooks";
+import { getEntityCustomerList } from "../services/entityAssociation";
+import { getCustomer } from "../services/shopify";
 
-const tagNames = {
-    vip: "VIP",
-    development: "Development",
+const getTagColorSchemaMatch = (theme: DeskproAppTheme['theme'], tag: string) => {
+    return match(tag.trim().toLowerCase())
+        .with('vip', () => ({
+            borderColor: theme.colors.orange100,
+            backgroundColor: theme.colors.orange10,
+        }))
+        .with('development', () => ({
+            borderColor: theme.colors.turquoise100,
+            backgroundColor: theme.colors.turquoise10,
+        }))
+        .otherwise(() => ({
+            borderColor: theme.colors.grey80,
+            backgroundColor: theme.colors.grey10,
+        }));
 };
 
-const getTagColorSchema = (theme: DeskproAppTheme['theme']) => ({
-    vip: {
-        borderColor: theme.colors.orange100,
-        backgroundColor: theme.colors.orange10,
-    },
-    development: {
-        borderColor: theme.colors.turquoise100,
-        backgroundColor: theme.colors.turquoise10,
-    },
-});
-
-type TagNames = typeof tagNames;
-
-const customerTags: Array<keyof TagNames> = ["vip", "development"];
-
 export const ViewCustomer: FC = () => {
-    const [state] = useStore();
+    const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
     const { theme } = useDeskproAppTheme();
-    const tagColorSchema = getTagColorSchema(theme);
     const shopName = getShopName(state);
+    const userId = state.context?.data.ticket?.primaryUser.id || state.context?.data.user.id;
+
+    useSetFullNameInTitle();
 
     useEffect(() => {
-        client?.setTitle("Armen Tamzarian");
-
         client?.deregisterElement("shopifyMenu");
         client?.deregisterElement("shopifyEditButton");
         client?.deregisterElement("shopifyHomeButton");
@@ -49,7 +49,7 @@ export const ViewCustomer: FC = () => {
         if (shopName) {
             client?.registerElement("shopifyExternalCtaLink", {
                 type: "cta_external_link",
-                url: `https://${shopName}.myshopify.com/admin/customers/<customer_id>`,
+                url: `https://${shopName}.myshopify.com/admin/customers/${state.customer?.legacyResourceId}`,
                 hasIcon: true,
             });
         }
@@ -65,28 +65,48 @@ export const ViewCustomer: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, state]);
 
+    useEffect(() => {
+        if (!client) {
+            return;
+        }
+
+        if (!state.customer) {
+            getEntityCustomerList(client, userId)
+                .then((customers: string[]) => {
+                    debugger
+                    return getCustomer(client, customers[0]);
+                })
+                .then(({ customer }) => {
+                    debugger;
+                    dispatch({ type: "linkedCustomer", customer })
+                })
+                .catch((error: Error) => dispatch({ type: "error", error }));
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [client, userId]);
+
     return (
         <>
             <TextBlockWithLabel
                 label="Email"
-                text="armen.tamzarian@company.com"
+                text={state.customer?.email}
             />
             <TextBlockWithLabel
                 label="Phone number"
-                text="-"
+                text={state.customer?.phone || '-'}
             />
             <TextBlockWithLabel
                 label="Tags"
                 text={(
-                    <Stack gap={6}>
-                        {customerTags.map((tag) => (
+                    <Stack gap={6} wrap="wrap">
+                        {state.customer?.tags.map((tag) => (
                             <Tag
                                 key={tag}
                                 color={{
-                                    ...tagColorSchema[tag],
+                                    ...getTagColorSchemaMatch(theme, tag),
                                     textColor: theme.colors.grey100,
                                 }}
-                                label={tagNames[tag]}
+                                label={tag}
                                 closeIcon={faTimes}
                             />
                         ))}
@@ -99,13 +119,13 @@ export const ViewCustomer: FC = () => {
                     <Toggle
                         disabled
                         label="Yes"
-                        checked={true}
+                        checked={state.customer?.emailMarketingConsent.marketingState === "SUBSCRIBED"}
                     />
                 )}
             />
             <TextBlockWithLabel
                 label="Customer Note"
-                text="The user said that he was really satisfied with our support agent. John offered a discount if the user is going to upgrade to let agents to use Deskpro."
+                text={state.customer?.note || '-'}
             />
         </>
     );
