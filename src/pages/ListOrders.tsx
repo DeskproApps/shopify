@@ -61,7 +61,7 @@ export const ListOrders: FC = () => {
                     {...order}
                     key={order.id}
                     linkOrder={
-                        `https://${getShopName(state)}.myshopify.com/admin/orders/${order.id}`
+                        `https://${getShopName(state)}.myshopify.com/admin/orders/${order.legacyResourceId}`
                     }
                     onChangePage={onChangePageOrder}
                 />

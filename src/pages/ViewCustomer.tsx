@@ -73,14 +73,8 @@ export const ViewCustomer: FC = () => {
 
         if (!state.customer) {
             getEntityCustomerList(client, userId)
-                .then((customers: string[]) => {
-                    debugger
-                    return getCustomer(client, customers[0]);
-                })
-                .then(({ customer }) => {
-                    debugger;
-                    dispatch({ type: "linkedCustomer", customer })
-                })
+                .then((customers: string[]) => getCustomer(client, customers[0]))
+                .then(({ customer }) => dispatch({ type: "linkedCustomer", customer }))
                 .catch((error: Error) => dispatch({ type: "error", error }));
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
