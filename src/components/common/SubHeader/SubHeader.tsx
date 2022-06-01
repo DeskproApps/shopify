@@ -5,7 +5,7 @@ import { ShopifyLink } from "../../common";
 import { Stack } from "@deskpro/deskpro-ui";
 
 type Props = {
-    text: string,
+    text?: string,
     link: string,
     marginBottom?: number,
     onChangePage: () => void,

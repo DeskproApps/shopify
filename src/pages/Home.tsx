@@ -1,19 +1,16 @@
-import { FC, /*useState,*/ useEffect } from "react";
+import { FC, useEffect } from "react";
 import {
-    HorizontalDivider,
     useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
-import { Comments } from "../components/Home";
-import { SubHeader, OrderInfo, TextBlockWithLabel } from "../components/common";
+import { CustomerInfo, Orders, Comments } from "../components/Home";
 import { getEntityCustomerList } from "../services/entityAssociation";
 import { getCustomer } from "../services/shopify";
-// import { CustomerType } from "../services/shopify/types";
-// import { getFullName } from "../utils";
+import { getShopName } from "../utils";
+import { Order } from "../services/shopify/types";
 
 export const Home: FC = () => {
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
-    // const [customer, setCustomer] = useState<CustomerType | null>(null);
     const userId = state.context?.data.ticket?.primaryUser.id || state.context?.data.user.id;
 
     useEffect(() => {
@@ -37,7 +34,7 @@ export const Home: FC = () => {
         });
     }, [client, state])
 
-    const onChangePageOrder = (orderId: string) => {
+    const onChangePageOrder = (orderId: Order['legacyResourceId']) => {
         dispatch({ type: "changePage", page: "view_order", params: { orderId } })
     };
 
@@ -47,65 +44,48 @@ export const Home: FC = () => {
         }
 
         getEntityCustomerList(client, userId)
-            .then((customers: string[]) => {
-                return getCustomer(client, customers[0]);
+            .then(async (customers: string[]) => {
+                const customerId = customers[0];
+
+                try {
+                    const { customer } = await getCustomer(client, customerId);
+                    const { orders } = customer;
+
+                    dispatch({ type: "linkedCustomer", customer });
+                    dispatch({ type: "linkedOrders", orders });
+                } catch (e) {
+                    const error = e as Error;
+
+                    throw new Error(error.message || "Failed to fetch");
+                }
             })
-            .then(({ customer }) => {
-                console.log('>>> home:then:', customer)
-                // setCustomer(customer);
-            })
-            .catch((err) => console.log('>>> home:catch:', err));
+            .catch((error: Error) => dispatch({ type: "error", error }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, userId]);
 
-    return (
-        <>
-            {/* Customer Info */}
-            <SubHeader
-                text="Armen Tamzarian"
-                link="https://__shop_name__.myshopify.com/admin/customers/<customerId>"
-                onChangePage={() => dispatch({ type: "changePage", page: "view_customer" })}
-            />
-            <TextBlockWithLabel
-                label="Email"
-                text="john.jones@company.com"
-            />
-            <TextBlockWithLabel
-                label="Total spent"
-                text="1485.00 USD"
-            />
-            <TextBlockWithLabel
-                label="Customer Note"
-                text="The user said that he was really satisfied with our support agent. John offered a discount if the user is going to upgrade to let agents to use Deskpro."
-            />
-            <HorizontalDivider style={{ marginBottom: 10 }}/>
-
-            {/* Orders */}
-            <SubHeader
-                marginBottom={14}
-                text="Orders (9)"
-                link="https://__shop_name__.myshopify.com/admin/orders?"
-                onChangePage={() => dispatch({ type: "changePage", page: "list_orders" })}
-            />
-            {[
-                { id: "1", orderName: "Mens T-Shirt XL", date: "17 May, 2020", status: "onHold" },
-                { id: "2", orderName: "Television", date: "17 May, 2020", status: "fulfilled" },
-                { id: "3", orderName: "John Lewis & Partners Puppytooty & many many more", date: "17 May, 2020", status: "onHold" },
-                { id: "4", orderName: "Mens T-Shirt XL", date: "17 May, 2020", status: "onHold" },
-                { id: "5", orderName: "Oven", date: "17 May, 2020", status: "unfulfilled" },
-            ].map((order) => (
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                /* @ts-ignore */
-                <OrderInfo key={order.id} onChangePage={onChangePageOrder} {...order} />
-            ))}
-
-            {/* Comments */}
-            <Comments
-                comments={[
-                    { id: "1", date: "10 mos", comment: "The user was particularly interested in purchasing." },
-                    { id: "2", date: "1yr", comment: "The user said that he was really satisfied with our support agent. John offered a discount if the user is going to upgrade to let agents to use Deskpro. " },
-                    { id: "3", date: "1yr", comment: "Test note." },
-                ]}
-            />
-        </>
-    );
+    return (!state?.customer /*|| !state.orders*/)
+        ? state._error ? null : <>Loading...</>
+        : (
+            <>
+                {state?.customer && (
+                    <CustomerInfo
+                        {...state.customer}
+                        link={`https://${getShopName(state)}.myshopify.com/admin/customers/${state.customer.legacyResourceId}`}
+                        onChangePage={() => dispatch({ type: "changePage", page: "view_customer" })}
+                    />
+                )}
+                {state?.orders && (
+                    <Orders
+                        numberOfOrders={state.customer?.numberOfOrders || '0'}
+                        orders={state.orders}
+                        link={`https://${getShopName(state)}.myshopify.com/admin/orders`}
+                        onChangePage={() => dispatch({ type: "changePage", page: "list_orders" })}
+                        onChangePageOrder={onChangePageOrder}
+                    />
+                )}
+                {state?.customer?.comments && (
+                    <Comments comments={state.customer.comments} />
+                )}
+            </>
+        );
 };

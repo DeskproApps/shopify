@@ -7,6 +7,7 @@ import {
     Stack,
     HorizontalDivider,
 } from "@deskpro/app-sdk";
+import { getDate } from "../../../utils";
 import { Props } from "./types";
 
 const Date = styled(P11)`
@@ -23,11 +24,11 @@ const Title = styled(H1)`
 const Comments: FC<Props> = ({ comments }) => (
     <>
         <Title>Comments ({comments.length})</Title>
-        {comments.map(({ id, date, comment }) => (
+        {comments.map(({ id, message, createdAt }) => (
             <div key={id}>
                 <Stack align="baseline">
-                    <Date>{date}</Date>
-                    <P1>{comment}</P1>
+                    <Date>{getDate(createdAt)}</Date>
+                    <P1>{message}</P1>
                 </Stack>
                 <HorizontalDivider style={{ margin: "10px 0" }}/>
             </div>

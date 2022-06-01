@@ -1,7 +1,6 @@
-export type Props = {
-    id: string,
-    date: string,
-    status: "onHold" | "fulfilled" | "unfulfilled" | "partially" | "scheduled",
-    orderName: string,
-    onChangePage: (orderId: string) => void
-}
+import { Order } from "../../../services/shopify/types";
+
+export type Props = Order & {
+    linkOrder: string,
+    onChangePage: (orderId: Order['id']) => void
+};
