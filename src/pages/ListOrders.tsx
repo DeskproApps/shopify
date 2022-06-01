@@ -2,7 +2,8 @@ import { FC, useEffect } from "react";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { getEntityCustomerList } from "../services/entityAssociation";
-import { getOrders } from "../services/shopify";
+import { getCustomer } from "../services/shopify";
+import { Order } from "../services/shopify/types";
 import { getShopName } from "../utils";
 import { OrderInfo } from "../components/common";
 
@@ -13,7 +14,7 @@ export const ListOrders: FC = () => {
 
     useEffect(() => {
         client?.setTitle(
-            `Orders ${state.customer?.orders_count ? `(${state.customer?.orders_count})` : ''}`
+            `Orders ${state.customer?.numberOfOrders ? `(${state.customer?.numberOfOrders})` : ''}`
         );
 
         client?.deregisterElement("shopifyMenu");
@@ -36,15 +37,20 @@ export const ListOrders: FC = () => {
         if (!state.orders) {
             getEntityCustomerList(client, userId)
                 .then((customers: string[]) => {
-                    return getOrders(client, customers[0]);
+                    return getCustomer(client, customers[0]);
                 })
-                .then(({ orders }) => dispatch({ type: "linkedOrders", orders }))
+                .then(({ customer }) => {
+                    const { orders } = customer;
+
+                    dispatch({ type: "linkedCustomer", customer })
+                    dispatch({ type: "linkedOrders", orders })
+                })
                 .catch((error: Error) => dispatch({ type: "error", error }));
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, userId]);
 
-    const onChangePageOrder = (orderId: number) => {
+    const onChangePageOrder = (orderId: Order['id']) => {
         dispatch({ type: "changePage", page: "view_order", params: { orderId } })
     };
 
