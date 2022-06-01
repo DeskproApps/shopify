@@ -31,13 +31,6 @@ const getTagColorSchemaMatch = (theme: DeskproAppTheme['theme'], tag: string) =>
         }));
 };
 
-const getCustomerTags = (stringTags?: string): string[] => {
-    if (!stringTags?.length) {
-        return [];
-    }
-    return stringTags.split(',').map((tag) => tag.trim());
-};
-
 export const ViewCustomer: FC = () => {
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
@@ -56,7 +49,7 @@ export const ViewCustomer: FC = () => {
         if (shopName) {
             client?.registerElement("shopifyExternalCtaLink", {
                 type: "cta_external_link",
-                url: `https://${shopName}.myshopify.com/admin/customers/<customer_id>`,
+                url: `https://${shopName}.myshopify.com/admin/customers/${state.customer?.legacyResourceId}`,
                 hasIcon: true,
             });
         }
@@ -80,9 +73,13 @@ export const ViewCustomer: FC = () => {
         if (!state.customer) {
             getEntityCustomerList(client, userId)
                 .then((customers: string[]) => {
+                    debugger
                     return getCustomer(client, customers[0]);
                 })
-                .then(({ customer }) => dispatch({ type: "linkedCustomer", customer }))
+                .then(({ customer }) => {
+                    debugger;
+                    dispatch({ type: "linkedCustomer", customer })
+                })
                 .catch((error: Error) => dispatch({ type: "error", error }));
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -102,7 +99,7 @@ export const ViewCustomer: FC = () => {
                 label="Tags"
                 text={(
                     <Stack gap={6} wrap="wrap">
-                        {getCustomerTags(state.customer?.tags).map((tag) => (
+                        {state.customer?.tags.map((tag) => (
                             <Tag
                                 key={tag}
                                 color={{
@@ -122,7 +119,7 @@ export const ViewCustomer: FC = () => {
                     <Toggle
                         disabled
                         label="Yes"
-                        checked={state.customer?.email_marketing_consent.state === "subscribed"}
+                        checked={state.customer?.emailMarketingConsent.marketingState === "SUBSCRIBED"}
                     />
                 )}
             />

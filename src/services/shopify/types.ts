@@ -36,8 +36,16 @@ export type FulfillmentStatus =
     | "ON_HOLD"
     | "SCHEDULED";
 
-export type EmailMarketingConsent = Record<string, unknown> & {
-    state: "subscribed" | "not_subscribed"
+export type EmailMarketingConsent = {
+    consentUpdatedAt: DateTime,
+    marketingOptInLevel: "SINGLE_OPT_IN" | "CONFIRMED_OPT_IN" | "UNKNOWN",
+    marketingState:
+        | "NOT_SUBSCRIBED"
+        | "PENDING"
+        | "SUBSCRIBED"
+        | "UNSUBSCRIBED"
+        | "REDACTED"
+        | "INVALID",
 }
 
 export type CustomerType = {
@@ -54,9 +62,10 @@ export type CustomerType = {
     lastName: string,
     amountSpent: Money,
     numberOfOrders: string,
+    tags: string[],
     orders: Orders
     comments: Comments,
-    email_marketing_consent: EmailMarketingConsent,
+    emailMarketingConsent: EmailMarketingConsent,
 };
 
 export type OrderItem = {

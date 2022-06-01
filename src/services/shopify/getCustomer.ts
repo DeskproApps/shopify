@@ -22,7 +22,9 @@ const getCustomer = (
             firstName,
             lastName,
             numberOfOrders,
+            tags,
             amountSpent { amount, currencyCode },
+            emailMarketingConsent { marketingState },
             orders(first: 50) {
                 edges {
                     node {
