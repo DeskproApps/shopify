@@ -1,7 +1,7 @@
 {
   "name": "@deskpro-apps/shopify",
   "title": "Shopify",
-  "description": "TODO: Shopify app description",
+  "description": "The Deskpro Shopify app lets you see Shopify customer and order information for a Deskpro user",
   "version": "1.0.0",
   "scope": "agent",
   "isSingleInstall": false,

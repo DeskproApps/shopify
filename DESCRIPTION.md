@@ -1,4 +1,4 @@
-My App
-======
+Shopify
+===
 
-todo: add a description that will appear alongside your app in Deskpro admin
+TODO: Write description for Shopify app, or link to website content using `appStoreUrl` in `manifest.json`
