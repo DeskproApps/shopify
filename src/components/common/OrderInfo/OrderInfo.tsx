@@ -7,15 +7,15 @@ import {
     useDeskproAppTheme,
 } from "@deskpro/app-sdk";
 import { SubHeader, TextBlockWithLabel } from "../../common";
-import { getStatusName, getStatusColorSchema, getDate } from "../../../utils";
+import { getShippingStatusName, getShippingStatusColorSchema, getDate } from "../../../utils";
 import { Props } from "./types";
 
 const OrderInfo: FC<Props> = ({
-    // id,
+    id,
     createdAt,
     lineItems,
     linkOrder,
-    // onChangePage,
+    onChangePage,
     displayFulfillmentStatus,
 }) => {
     const { theme } = useDeskproAppTheme();
@@ -26,10 +26,7 @@ const OrderInfo: FC<Props> = ({
             <SubHeader
                 text={title}
                 link={linkOrder}
-                onChangePage={() => {
-                    // ToDo: uncomment after create view order page
-                    // onChangePage(id)
-                }}
+                onChangePage={() => onChangePage(id)}
             />
             <Stack align="stretch" style={{ marginBottom: 10 }}>
                 <Stack grow={1}>
@@ -48,8 +45,8 @@ const OrderInfo: FC<Props> = ({
                             <>
                                 <Pill
                                     textColor={theme.colors.white}
-                                    backgroundColor={getStatusColorSchema(theme, displayFulfillmentStatus)}
-                                    label={getStatusName(displayFulfillmentStatus)}
+                                    backgroundColor={getShippingStatusColorSchema(theme, displayFulfillmentStatus)}
+                                    label={getShippingStatusName(displayFulfillmentStatus)}
                                 />
                             </>
                         )}

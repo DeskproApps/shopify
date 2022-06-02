@@ -10,7 +10,7 @@ export type CustomerSearchParams = {
  */
 export type DateTime = string;
 
-type Money = {
+export type Money = {
     amount: number,
     currencyCode: string,
 }
@@ -20,8 +20,8 @@ export type FinancialStatus =
     | "EXPIRED"
     | "PAID"
     | "PARTIALLY_PAID"
-    | "PARTIALLY_REFUNDED"
     | "PENDING"
+    | "PARTIALLY_REFUNDED"
     | "REFUNDED"
     | "VOIDED";
 
@@ -48,6 +48,13 @@ export type EmailMarketingConsent = {
         | "INVALID",
 }
 
+export type Address = {
+    address1: string,
+    city: string,
+    countryCodeV2: string,
+    zip: string,
+}
+
 export type CustomerType = {
     id: string,
     legacyResourceId: string,
@@ -68,18 +75,44 @@ export type CustomerType = {
     emailMarketingConsent: EmailMarketingConsent,
 };
 
-export type OrderItem = {
+export type OrderItemType = {
     id: string,
+    quantity: number,
     title: string,
+    sku: string,
+    image: { url: string }
+    product: {
+        id: string,
+        title: string,
+        description: string,
+    },
+    originalUnitPriceSet: {
+        presentmentMoney: Money,
+    }
 };
 
 export type Order = {
     id: string,
+    note: string,
     legacyResourceId: string,
     createdAt: DateTime,
     displayFinancialStatus: FinancialStatus,
     displayFulfillmentStatus: FulfillmentStatus,
-    lineItems: Array<OrderItem>,
+    lineItems: Array<OrderItemType>,
+    shippingAddress: Address,
+    billingAddress: Address,
+    subtotalPriceSet: {
+        presentmentMoney: Money,
+    }
+    totalShippingPriceSet: {
+        presentmentMoney: Money,
+    }
+    totalTaxSet: {
+        presentmentMoney: Money,
+    }
+    totalPriceSet: {
+        presentmentMoney: Money,
+    }
 };
 
 export type Orders = Array<Order>;

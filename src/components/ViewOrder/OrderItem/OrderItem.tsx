@@ -1,7 +1,9 @@
 import { FC } from "react";
+import styled from "styled-components";
 import {
     H0,
     P5,
+    P8,
     P11,
     Stack,
     VerticalDivider,
@@ -9,63 +11,98 @@ import {
     useDeskproAppTheme,
 } from "@deskpro/app-sdk";
 import { TextBlockWithLabel } from "../../common";
-import img from "./item.png";
-import { OrderItemType } from "./types";
+import { OrderItemType } from "../../../services/shopify/types";
 
-const Image: FC<Partial<OrderItemType> & { basis?: number }> = ({ basis, name }) => (
-    <Stack basis={`${basis}%`}>
-        <img src={img} alt={name} style={{ width: "100%", height: "auto" }}/>
+const Card = styled.div`
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+`;
+
+const CardMedia = styled.div`
+    > * {
+        width: 50px;
+        border-radius: 4px;
+    }
+`;
+
+const CardBody = styled.div`
+    width: calc(100% - 50px - 12px);
+`;
+
+const Title = styled(P5)`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const Header: FC<OrderItemType> = (({
+    title,
+    originalUnitPriceSet: { presentmentMoney: { amount } },
+}) => (
+    <Stack>
+        <Title>{title}</Title>
+        <H0>{amount}</H0>
     </Stack>
-);
+));
 
-const NamePrice: FC<Partial<OrderItemType>> = ({ name, price, mos }) => {
+const SubHeader: FC<OrderItemType> = (({
+    sku,
+    originalUnitPriceSet: { presentmentMoney: { currencyCode } }
+}) => {
     const { theme } = useDeskproAppTheme();
-    return (
-        <Stack justify="space-between" style={{ marginBottom: "8px" }}>
-            <Stack vertical>
-                <P5>{name}</P5>
-                <P11 style={{ color: theme.colors.grey80 }}>{mos} mos</P11>
-            </Stack>
-            <Stack vertical align="end">
-                <H0>{price}</H0>
-                <P11>USD</P11>
-            </Stack>
-        </Stack>
-    );
-}
 
-const DescriptionQty: FC<Partial<OrderItemType>> = ({ description, qty }) => (
-    <Stack wrap="nowrap" align="stretch">
-        <Stack grow={1} basis="49%">
-            <TextBlockWithLabel
-                label="Description"
-                text={description}
-            />
+    return (
+        <Stack justify="space-between" style={{ marginBottom: 10 }}>
+            <P11 style={{ color: theme.colors.grey80 }}>{sku}</P11>
+            <P11>{currencyCode}</P11>
         </Stack>
+    )
+});
+
+const Description = styled(P5)`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const Qty = styled(P8)`
+    color: ${({ theme }) => theme.colors.grey80};
+`;
+
+const DescriptionBlock: FC<OrderItemType> = ({ quantity, product: { description } }) => (
+    <Stack wrap="nowrap" align="stretch" gap={6}>
+        <div style={{ width: "50%" }}>
+            <Qty>Description</Qty>
+            <Description>{description}</Description>
+        </div>
         <VerticalDivider width={1} />
-        <Stack grow={1} basis="49%">
+        <div style={{ width: "50%" }}>
             <TextBlockWithLabel
                 label="Qty"
-                text={qty}
+                text={`${quantity}`}
             />
-        </Stack>
+        </div>
     </Stack>
 );
 
-const Info: FC<Partial<OrderItemType> & { basis?: number }> = ({ basis, name, mos, price, description, qty }) => (
-    <Stack basis={`${basis}%`} vertical align="stretch">
-        <NamePrice name={name} price={price} mos={mos}/>
-        <DescriptionQty description={description} qty={qty} />
-    </Stack>
-);
+const OrderItem: FC<OrderItemType> = (props) => {
+    const { image, title } = props;
 
-const OrderItem: FC<OrderItemType> = ({ mos, name, price, description, qty }) => {
     return (
         <>
-            <Stack wrap="nowrap" gap={12}>
-                <Image basis={20} name={name} />
-                <Info basis={80} name={name} mos={mos} price={price} description={description} qty={qty} />
-            </Stack>
+            <Card>
+                <CardMedia>
+                    <img src={image.url} alt={title} />
+                </CardMedia>
+                <CardBody>
+                    <Header {...props} />
+                    <SubHeader {...props} />
+                    <DescriptionBlock {...props} />
+                </CardBody>
+            </Card>
             <HorizontalDivider style={{ margin: "10px 0" }} />
         </>
     );

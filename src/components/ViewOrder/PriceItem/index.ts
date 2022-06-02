@@ -1,1 +1,0 @@
-export { PriceItem } from "./PriceItem";
