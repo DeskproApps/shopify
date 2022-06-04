@@ -63,7 +63,7 @@ export const Home: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, userId]);
 
-    return (!state?.customer /*|| !state.orders*/)
+    return !state?.customer
         ? state._error ? null : <>Loading...</>
         : (
             <>

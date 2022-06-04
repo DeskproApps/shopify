@@ -1,35 +1,17 @@
 import { FC, useEffect } from "react";
-import { match } from "ts-pattern";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import {
     Stack,
-    DeskproAppTheme,
     useDeskproAppTheme,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
 import { Tag, Toggle } from "@deskpro/deskpro-ui";
 import { useStore } from "../context/StoreProvider/hooks";
 import { TextBlockWithLabel } from "../components/common";
-import { getShopName } from "../utils";
+import { getShopName, getTagColorSchema } from "../utils";
 import { useSetFullNameInTitle } from "../hooks";
 import { getEntityCustomerList } from "../services/entityAssociation";
 import { getCustomer } from "../services/shopify";
-
-const getTagColorSchemaMatch = (theme: DeskproAppTheme['theme'], tag: string) => {
-    return match(tag.trim().toLowerCase())
-        .with('vip', () => ({
-            borderColor: theme.colors.orange100,
-            backgroundColor: theme.colors.orange10,
-        }))
-        .with('development', () => ({
-            borderColor: theme.colors.turquoise100,
-            backgroundColor: theme.colors.turquoise10,
-        }))
-        .otherwise(() => ({
-            borderColor: theme.colors.grey80,
-            backgroundColor: theme.colors.grey10,
-        }));
-};
 
 export const ViewCustomer: FC = () => {
     const [state, dispatch] = useStore();
@@ -57,26 +39,23 @@ export const ViewCustomer: FC = () => {
             type: "home_button",
             payload: { type: "changePage", page: "home" }
         });
-        /* ToDo: uncomment when will be create edit_customer page
         client?.registerElement("shopifyEditButton", {
             type: "edit_button",
-            payload: { type: "changePage", page: "edit_customer" },
-        });*/
+            payload: { type: "changePage", page: "edit_customer", params: { customerId: state.customer?.id } },
+        });
         client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [client, state]);
+    }, [client, state.customer]);
 
     useEffect(() => {
         if (!client) {
             return;
         }
 
-        if (!state.customer) {
-            getEntityCustomerList(client, userId)
-                .then((customers: string[]) => getCustomer(client, customers[0]))
-                .then(({ customer }) => dispatch({ type: "linkedCustomer", customer }))
-                .catch((error: Error) => dispatch({ type: "error", error }));
-        }
+        getEntityCustomerList(client, userId)
+            .then((customers: string[]) => getCustomer(client, customers[0]))
+            .then(({ customer }) => dispatch({ type: "linkedCustomer", customer }))
+            .catch((error: Error) => dispatch({ type: "error", error }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, userId]);
 
@@ -98,7 +77,7 @@ export const ViewCustomer: FC = () => {
                             <Tag
                                 key={tag}
                                 color={{
-                                    ...getTagColorSchemaMatch(theme, tag),
+                                    ...getTagColorSchema(theme, tag),
                                     textColor: theme.colors.grey100,
                                 }}
                                 label={tag}

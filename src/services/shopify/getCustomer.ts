@@ -24,7 +24,11 @@ const getCustomer = (
             numberOfOrders,
             tags,
             amountSpent { amount, currencyCode },
-            emailMarketingConsent { marketingState },
+            emailMarketingConsent {
+                marketingState,
+                consentUpdatedAt,
+                marketingOptInLevel,
+            },
             orders(first: 50) {
                 edges {
                     node {

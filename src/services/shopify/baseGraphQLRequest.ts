@@ -6,7 +6,8 @@ import { GRAPHQL_URL, placeholders } from "./constants";
  */
 const baseGraphQLRequest = async (
     client: IDeskproClient,
-    { query, variables = {} }: { query: string, variables?: Record<string, string> },
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    { query, variables = {} }: { query: string, variables?: Record<string, any> },
 ) => {
     const dpFetch = await proxyFetch(client);
 
@@ -36,6 +37,10 @@ const baseGraphQLRequest = async (
 
     try {
         const response = await res.json();
+
+        if (response?.errors?.length) {
+            return Promise.reject(response?.errors);
+        }
 
         return response.data;
     } catch (e) {

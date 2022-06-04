@@ -37,20 +37,20 @@ export const Main: FC = () => {
         // @ts-ignore
         onElementEvent(id: string, type: string, payload?: AppElementPayload) {
             if (payload?.type === "changePage") {
-                dispatch({ type: "changePage", page: payload.page })
+                dispatch({ type: "changePage", page: payload.page, params: payload.params })
             }
         },
     });
 
     const page = match<Page|undefined>(state.page)
-        .with("home", () => <Home {...state.pageParams} />)
-        .with("link_customer", () => <LinkCustomer {...state.pageParams} />)
-        .with("view_customer", () => <ViewCustomer {...state.pageParams} />)
-        .with("edit_customer", () => <EditCustomer {...state.pageParams} />)
-        .with("list_orders", () => <ListOrders {...state.pageParams} />)
-        .with("view_order", () => <ViewOrder {...state.pageParams} />)
-        .with("edit_order", () => <EditOrder {...state.pageParams} />)
-        .otherwise(() => <LinkCustomer {...state.pageParams} />)
+        .with("home", () => <Home />)
+        .with("link_customer", () => <LinkCustomer />)
+        .with("view_customer", () => <ViewCustomer />)
+        .with("edit_customer", () => <EditCustomer />)
+        .with("list_orders", () => <ListOrders />)
+        .with("view_order", () => <ViewOrder />)
+        .with("edit_order", () => <EditOrder />)
+        .otherwise(() => <LinkCustomer />)
 
     return (
         <>
