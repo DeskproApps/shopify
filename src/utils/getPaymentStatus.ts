@@ -2,6 +2,17 @@ import { match } from "ts-pattern";
 import { DeskproAppTheme } from "@deskpro/app-sdk";
 import { FinancialStatus } from "../services/shopify/types";
 
+const financialStatuses = [
+    "AUTHORIZED",
+    "EXPIRED",
+    "PAID",
+    "PARTIALLY_PAID",
+    "PENDING",
+    "PARTIALLY_REFUNDED",
+    "REFUNDED",
+    "VOIDED",
+];
+
 const getPaymentStatusColorSchema = (
     theme: DeskproAppTheme['theme'],
     status: FinancialStatus,
@@ -31,4 +42,4 @@ const getPaymentStatusName = (status: FinancialStatus) => {
         .otherwise(() => status);
 };
 
-export { getPaymentStatusColorSchema, getPaymentStatusName };
+export { financialStatuses, getPaymentStatusColorSchema, getPaymentStatusName };

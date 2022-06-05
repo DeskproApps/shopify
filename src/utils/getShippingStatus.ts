@@ -2,6 +2,14 @@ import { match } from "ts-pattern";
 import { DeskproAppTheme } from "@deskpro/app-sdk";
 import { FulfillmentStatus } from "../services/shopify/types";
 
+const fulfillmentStatuses = [
+    "ON_HOLD",
+    "PARTIALLY_FULFILLED",
+    "FULFILLED",
+    "SCHEDULED",
+    "UNFULFILLED",
+];
+
 const getShippingStatusColorSchema = (
     theme: DeskproAppTheme['theme'],
     status: FulfillmentStatus,
@@ -25,4 +33,4 @@ const getShippingStatusName = (status: FulfillmentStatus) => {
         .otherwise(() => status);
 };
 
-export { getShippingStatusName, getShippingStatusColorSchema };
+export { getShippingStatusName, getShippingStatusColorSchema, fulfillmentStatuses };

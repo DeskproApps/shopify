@@ -50,9 +50,12 @@ export type EmailMarketingConsent = {
 
 export type Address = {
     address1: string,
+    address2: string,
     city: string,
     countryCodeV2: string,
     zip: string,
+    firstName: string,
+    lastName: string,
 }
 
 export type CustomerType = {

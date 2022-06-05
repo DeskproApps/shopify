@@ -14,9 +14,9 @@ import { useStore } from "../../context/StoreProvider/hooks";
 import { Label, TextBlockWithLabel } from "../common";
 import { getTagColorSchema, parseDateTime } from "../../utils";
 import { setCustomer } from "../../services/shopify";
-import { CustomerType, CustomerSearchParams } from "../../services/shopify/types";
+import { CustomerType } from "../../services/shopify/types";
 import { FormState } from "./types";
-import {CustomerUpdateValues} from "../../services/shopify/setCustomer";
+import { CustomerUpdateValues } from "../../services/shopify/setCustomer";
 
 const validationSchema = yup.object().shape({
     lastName: yup.string().required(),
