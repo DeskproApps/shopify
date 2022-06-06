@@ -32,7 +32,6 @@ const EditOrderForm: FC<Order> = ({
     displayFinancialStatus,
     displayFulfillmentStatus,
 }) => {
-    console.log(">>> edit:", { shippingAddress });
     const { client } = useDeskproAppClient();
     const { theme } = useDeskproAppTheme();
     const [state, dispatch] = useStore();
