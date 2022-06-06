@@ -4,5 +4,4 @@ const getDate = (date: DateTime) => {
     return (new Date(date)).toLocaleDateString()
 };
 
-
 export { getDate };

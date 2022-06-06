@@ -20,7 +20,7 @@ const Orders: FC<Props> = ({
             <OrderInfo
                 {...order}
                 key={id}
-                id={legacyResourceId}
+                id={id}
                 legacyResourceId={legacyResourceId}
                 linkOrder={`${link}/${legacyResourceId}`}
                 onChangePage={onChangePageOrder}

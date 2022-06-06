@@ -1,6 +1,6 @@
 import { Reducer } from "react";
 import { Context, User } from "@deskpro/app-sdk";
-import { CustomerType, Orders } from "../../services/shopify/types";
+import {CustomerType, Order, Orders} from "../../services/shopify/types";
 
 export type Page =
     "home"
@@ -11,9 +11,14 @@ export type Page =
     | "view_order"
     | "edit_order";
 
+export type OrderPageParams = { orderId: Order['id'] };
+
+export type PageParams =
+    | OrderPageParams;
+
 export interface State {
     page?: Page;
-    pageParams?: object;
+    pageParams?: JSX.IntrinsicAttributes & PageParams,
     context?: Context,
     customer?: CustomerType,
     orders?: Orders,
@@ -21,7 +26,7 @@ export interface State {
 }
 
 export type Action =
-    | { type: "changePage", page: Page, params?: object }
+    | { type: "changePage", page: Page, params?: PageParams }
     | { type: "loadContext", context: Context }
     | { type: "error", error: Error }
     | { type: "linkedCustomer", customer: CustomerType }

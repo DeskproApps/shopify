@@ -1,2 +1,3 @@
 export { OrderItem } from "./OrderItem";
-export { PriceItem } from "./PriceItem";
+export { TotalPrice } from "./TotalPrice";
+export { Information } from "./Information";
