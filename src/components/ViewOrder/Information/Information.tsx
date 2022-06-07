@@ -1,11 +1,12 @@
 import { FC } from "react";
+import omit from "lodash/omit";
 import {
     H1,
     P5,
     Pill,
     useDeskproAppTheme,
 } from "@deskpro/app-sdk";
-import { Order } from "../../../services/shopify/types";
+import { Order, Address } from "../../../services/shopify/types";
 import {TextBlockWithLabel} from "../../common";
 import {
     getTime,
@@ -55,11 +56,11 @@ const Information: FC<Order> = ({
             />
             <TextBlockWithLabel
                 label="Shipping Address"
-                text={Object.values(shippingAddress).join(", ")}
+                text={Object.values(omit(shippingAddress, ["firstName", "lastName"])).join(", ")}
             />
             <TextBlockWithLabel
                 label="Billing Address"
-                text={Object.values(billingAddress).join(", ")}
+                text={Object.values(omit(billingAddress, ["firstName", "lastName"])).join(", ")}
             />
             <TextBlockWithLabel
                 label="Created"

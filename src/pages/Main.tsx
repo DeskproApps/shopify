@@ -18,7 +18,7 @@ export const Main: FC = () => {
     const [state, dispatch] = useStore();
 
     if (state._error) {
-        console.error(state._error);
+        console.error(`Shopify: ${state._error}`);
     }
 
     useTryToLinkCustomer(

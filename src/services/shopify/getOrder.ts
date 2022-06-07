@@ -27,8 +27,8 @@ const getOrder = (
             totalPriceSet {
                 presentmentMoney { amount, currencyCode }
             },
-            shippingAddress { address1, city, countryCodeV2, zip },
-            billingAddress { address1, city, countryCodeV2, zip }
+            shippingAddress { address1, address2, city, countryCodeV2, zip, firstName, lastName },
+            billingAddress { address1, address2, city, countryCodeV2, zip, firstName, lastName }
             lineItems(first: 10) {
                 edges {
                     node {
