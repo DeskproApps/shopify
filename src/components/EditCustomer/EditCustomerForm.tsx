@@ -14,9 +14,9 @@ import { useStore } from "../../context/StoreProvider/hooks";
 import { Label, TextBlockWithLabel } from "../common";
 import { getTagColorSchema, parseDateTime } from "../../utils";
 import { setCustomer } from "../../services/shopify";
-import { CustomerType, CustomerSearchParams } from "../../services/shopify/types";
+import { CustomerType } from "../../services/shopify/types";
 import { FormState } from "./types";
-import {CustomerUpdateValues} from "../../services/shopify/setCustomer";
+import { CustomerUpdateValues } from "../../services/shopify/setCustomer";
 
 const validationSchema = yup.object().shape({
     lastName: yup.string().required(),
@@ -68,7 +68,7 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
             const newValues: CustomerUpdateValues = {
                 ...values,
                 emailMarketingConsent: {
-                    marketingState: isReceiveMarketingEmail ? "SUBSCRIBED" : "NOT_SUBSCRIBED",
+                    marketingState: isReceiveMarketingEmail ? "SUBSCRIBED" : "UNSUBSCRIBED",
                     marketingOptInLevel,
                     consentUpdatedAt: parseDateTime(),
                 },
@@ -143,12 +143,10 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
                     </Stack>
                 )}
             />
-            {/* ToDo: get error when try to update https://community.shopify.com/c/shopify-apps/can-t-update-emailmarketingconsent/td-p/1612753 */}
             <TextBlockWithLabel
                 label="Receive Marketing Email"
                 text={(
                     <Toggle
-                        disabled
                         name="isReceiveMarketingEmail"
                         label={values.isReceiveMarketingEmail ? "Yes" : "No"}
                         checked={values.isReceiveMarketingEmail}
