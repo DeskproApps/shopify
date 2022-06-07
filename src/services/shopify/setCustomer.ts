@@ -13,7 +13,6 @@ const setCustomer = (
     const variables = {
         input: {
             ...values,
-            // emailMarketingConsent,
             id: customerId,
         },
     };
@@ -28,8 +27,25 @@ const setCustomer = (
             }
         }
     `;
+    const variablesEmail = {
+        input: {
+            customerId,
+            emailMarketingConsent,
+        },
+    };
+    const queryEmail = `
+        mutation customerEmailMarketingConsentUpdate($input: CustomerEmailMarketingConsentUpdateInput!) {
+            customerEmailMarketingConsentUpdate(input: $input) {
+                userErrors { field, message },
+                customer { id }
+            }
+        }
+    `;
 
-    return baseGraphQLRequest(client, { query, variables })
+    return Promise.all([
+        baseGraphQLRequest(client, { query, variables }),
+        baseGraphQLRequest(client, { query: queryEmail, variables: variablesEmail }),
+    ])
         .catch((errors) => {
             let error = "";
 

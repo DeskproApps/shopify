@@ -68,6 +68,7 @@ export const ViewOrder: FC = () => {
                 },
             });
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, state?.pageParams?.orderId]);
 
     return !order

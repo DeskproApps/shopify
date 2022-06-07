@@ -34,8 +34,8 @@ const EditOrderForm: FC<Order> = ({
 }) => {
     const { client } = useDeskproAppClient();
     const { theme } = useDeskproAppTheme();
-    const [state, dispatch] = useStore();
-    const { touched, errors, handleSubmit, isSubmitting, getFieldProps } = useFormik<FormState>({
+    const [, dispatch] = useStore();
+    const { handleSubmit, isSubmitting, getFieldProps } = useFormik<FormState>({
         validationSchema,
         initialValues: {
             note,

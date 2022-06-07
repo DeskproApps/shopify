@@ -39,6 +39,7 @@ export const EditOrder: FC = () => {
                 client?.setTitle(`Edit Order #${order.legacyResourceId}`);
                 setOrder(order);
             });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, state?.pageParams?.orderId]);
 
     return (loading || !order)

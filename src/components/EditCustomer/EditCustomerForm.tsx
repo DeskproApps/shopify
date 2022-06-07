@@ -9,7 +9,7 @@ import {
     useDeskproAppClient,
     TextAreaWithDisplay,
 } from "@deskpro/app-sdk";
-import { InputWithDisplay, Tag/*, Toggle*/ } from "@deskpro/deskpro-ui";
+import { InputWithDisplay, Tag, Toggle } from "@deskpro/deskpro-ui";
 import { useStore } from "../../context/StoreProvider/hooks";
 import { Label, TextBlockWithLabel } from "../common";
 import { getTagColorSchema, parseDateTime } from "../../utils";
@@ -24,28 +24,41 @@ const validationSchema = yup.object().shape({
     email: yup.string().required().email(),
 });
 
-const EditCustomerForm: FC<CustomerType> = ({
-    id,
+const getInitValues = ({
     note,
-    tags,
     email,
     phone,
     lastName,
     firstName,
-    emailMarketingConsent: { marketingState, marketingOptInLevel },
-}) => {
+    emailMarketingConsent: { marketingState },
+}: CustomerType): FormState => ({
+    firstName,
+    lastName,
+    email,
+    phone,
+    note,
+    isReceiveMarketingEmail: marketingState === "SUBSCRIBED",
+});
+
+const EditCustomerForm: FC<CustomerType> = (props) => {
+    const {
+        id,
+        tags,
+        emailMarketingConsent: {marketingOptInLevel },
+    } = props;
     const { client } = useDeskproAppClient();
     const { theme } = useDeskproAppTheme();
     const [, dispatch] = useStore();
-    const { touched, errors, handleSubmit, isSubmitting, getFieldProps } = useFormik<FormState>({
-        initialValues: {
-            firstName,
-            lastName,
-            email,
-            phone,
-            note,
-            isReceiveMarketingEmail: marketingState === "SUBSCRIBED",
-        },
+    const {
+        values,
+        errors,
+        touched,
+        handleSubmit,
+        isSubmitting,
+        handleChange,
+        getFieldProps,
+    } = useFormik<FormState>({
+        initialValues: getInitValues(props),
         validationSchema,
         onSubmit: async ({ isReceiveMarketingEmail, ...values }) => {
             if (!client) {
@@ -55,7 +68,7 @@ const EditCustomerForm: FC<CustomerType> = ({
             const newValues: CustomerUpdateValues = {
                 ...values,
                 emailMarketingConsent: {
-                    marketingState: isReceiveMarketingEmail ? "SUBSCRIBED" : "NOT_SUBSCRIBED",
+                    marketingState: isReceiveMarketingEmail ? "SUBSCRIBED" : "UNSUBSCRIBED",
                     marketingOptInLevel,
                     consentUpdatedAt: parseDateTime(),
                 },
@@ -130,18 +143,17 @@ const EditCustomerForm: FC<CustomerType> = ({
                     </Stack>
                 )}
             />
-            {/* ToDo: get error when try to update https://community.shopify.com/c/shopify-apps/can-t-update-emailmarketingconsent/td-p/1612753
             <TextBlockWithLabel
                 label="Receive Marketing Email"
                 text={(
                     <Toggle
                         name="isReceiveMarketingEmail"
-                        label={formik.values.isReceiveMarketingEmail ? "Yes" : "No"}
-                        checked={formik.values.isReceiveMarketingEmail}
-                        onChange={formik.handleChange}
+                        label={values.isReceiveMarketingEmail ? "Yes" : "No"}
+                        checked={values.isReceiveMarketingEmail}
+                        onChange={handleChange}
                     />
                 )}
-            />*/}
+            />
             <Label htmlFor="note" label="Customer Note">
                 <TextAreaWithDisplay
                     placeholder="Enter note"
