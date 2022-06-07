@@ -1,20 +1,22 @@
-import { FC, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { getEntityCustomerList } from "../services/entityAssociation";
 import { getCustomer } from "../services/shopify";
-import { Order } from "../services/shopify/types";
+import { CustomerType, Order } from "../services/shopify/types";
 import { getShopName } from "../utils";
 import { OrderInfo } from "../components/common";
 
 export const ListOrders: FC = () => {
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
+    const [customer, setCustomer] = useState<CustomerType | null>(null);
+    const [orders, setOrders] = useState<Order[] | null>(null);
     const userId = state.context?.data.ticket?.primaryUser.id || state.context?.data.user.id;
 
     useEffect(() => {
         client?.setTitle(
-            `Orders ${state.customer?.numberOfOrders ? `(${state.customer?.numberOfOrders})` : ''}`
+            `Orders ${customer?.numberOfOrders ? `(${customer?.numberOfOrders})` : ''}`
         );
 
         client?.deregisterElement("shopifyMenu");
@@ -27,26 +29,24 @@ export const ListOrders: FC = () => {
             payload: { type: "changePage", page: "home" }
         });
         client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
-    }, [client, state]);
+    }, [client, customer?.numberOfOrders]);
 
     useEffect(() => {
         if (!client) {
             return;
         }
 
-        if (!state.orders) {
-            getEntityCustomerList(client, userId)
-                .then((customers: string[]) => {
-                    return getCustomer(client, customers[0]);
-                })
-                .then(({ customer }) => {
-                    const { orders } = customer;
+        getEntityCustomerList(client, userId)
+            .then((customers: string[]) => {
+                return getCustomer(client, customers[0]);
+            })
+            .then(({ customer }) => {
+                const { orders } = customer;
 
-                    dispatch({ type: "linkedCustomer", customer })
-                    dispatch({ type: "linkedOrders", orders })
-                })
-                .catch((error: Error) => dispatch({ type: "error", error }));
-        }
+                setCustomer(customer);
+                setOrders(orders);
+            })
+            .catch((error: Error) => dispatch({ type: "error", error }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, userId]);
 
@@ -56,7 +56,7 @@ export const ListOrders: FC = () => {
 
     return (
         <>
-            {(state?.orders || []).map((order) => (
+            {(orders || []).map((order) => (
                 <OrderInfo
                     {...order}
                     key={order.id}
