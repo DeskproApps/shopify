@@ -1,6 +1,8 @@
 import { Reducer } from "react";
 import { Context, User } from "@deskpro/app-sdk";
-import {CustomerType, Order, Orders} from "../../services/shopify/types";
+import { CustomerType, Order, Orders } from "../../services/shopify/types";
+
+export type ErrorType = Error | string | unknown;
 
 export type Page =
     "home"
@@ -11,24 +13,24 @@ export type Page =
     | "view_order"
     | "edit_order";
 
-export type OrderPageParams = { orderId: Order['id'] };
-
-export type PageParams =
-    | OrderPageParams;
+export type PageParams = {
+    orderId?: Order['id'],
+    customerId?: CustomerType['id']
+};
 
 export interface State {
     page?: Page;
-    pageParams?: JSX.IntrinsicAttributes & PageParams,
+    pageParams?: PageParams,
     context?: Context,
     customer?: CustomerType,
     orders?: Orders,
-    _error?: Error | unknown;
+    _error?: ErrorType,
 }
 
 export type Action =
     | { type: "changePage", page: Page, params?: PageParams }
     | { type: "loadContext", context: Context }
-    | { type: "error", error: Error }
+    | { type: "error", error: ErrorType }
     | { type: "linkedCustomer", customer: CustomerType }
     | { type: "linkedOrders", orders: Orders };
 
@@ -38,7 +40,8 @@ export type StoreReducer = Reducer<State, Action>;
 
 export type AppElementPayload = undefined | {
     type: "changePage",
-    page: Page
+    page: Page,
+    params?: PageParams,
 };
 
 export type UserType = User & {
