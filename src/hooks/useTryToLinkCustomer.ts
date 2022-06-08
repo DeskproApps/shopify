@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import {useState, useEffect, useCallback} from "react";
 import { IDeskproClient, useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { UserType } from "../context/StoreProvider/types";
@@ -18,21 +18,19 @@ const checkIsLinkedCustomer = (client: IDeskproClient, userId: string): Promise<
 const tryLinkCustomer = (
     client: IDeskproClient,
     user: UserType,
-    onLinkedItems: () => void,
-    onNoLinkedItems: () => void,
+    onLinked: () => void,
+    onNoLinked: () => void,
 ): void => {
     getCustomers(client, { email: user.email })
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         .then(({ customers }) => {
             if (customers.length === 1) {
-                const customerId: string = customers[0].id as unknown as string;
+                const customerId = customers[0].id;
 
                 setEntityCustomer(client, user.id, customerId)
-                    .then(() => onLinkedItems())
-                    .catch(() => onNoLinkedItems());
+                    .then(onLinked)
+                    .catch(onNoLinked);
             } else {
-                onNoLinkedItems()
+                onNoLinked()
             }
         })
 };
@@ -43,8 +41,19 @@ const useTryToLinkCustomer = (
 ) => {
     const { client } = useDeskproAppClient();
     const [state] = useStore();
+    const [loading, setLoading] = useState<boolean>(true);
 
     const user = state.context?.data.ticket?.primaryUser || state.context?.data.user;
+
+    const onLinkedCallback = useCallback(() => {
+        setLoading(false);
+        onLinkedItems();
+    }, [onLinkedItems]);
+
+    const onNoLinkedCallback = useCallback(() => {
+        setLoading(false);
+        onNoLinkedItems();
+    }, [onNoLinkedItems]);
 
     useEffect(() => {
         if (!client || !user?.id) {
@@ -54,17 +63,14 @@ const useTryToLinkCustomer = (
         checkIsLinkedCustomer(client, user.id)
             .then((isLinkedCustomer) => {
                 if (!isLinkedCustomer) {
-                    tryLinkCustomer(client, user, onLinkedItems, onNoLinkedItems)
+                    tryLinkCustomer(client, user, onLinkedCallback, onNoLinkedCallback)
                 } else {
-                    onLinkedItems();
+                    onLinkedCallback();
                 }
             })
-    }, [
-        client,
-        user,
-        onLinkedItems,
-        onNoLinkedItems,
-    ]);
+    }, [client, user?.id]);
+
+    return { loading };
 };
 
 export { useTryToLinkCustomer };

@@ -1,12 +1,12 @@
 import { FC, useState, useEffect } from "react";
-import {
-    useDeskproAppClient } from "@deskpro/app-sdk";
+import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { CustomerInfo, Orders, Comments } from "../components/Home";
 import { getEntityCustomerList } from "../services/entityAssociation";
 import { getCustomer } from "../services/shopify";
 import { getShopName } from "../utils";
 import { Order, CustomerType } from "../services/shopify/types";
+import { Loading } from "../components/common";
 
 export const Home: FC = () => {
     const { client } = useDeskproAppClient();
@@ -59,7 +59,7 @@ export const Home: FC = () => {
     }, [client, userId]);
 
     return !customer
-        ? state._error ? null : <>Loading...</>
+        ? state._error ? null : (<Loading />)
         : (
             <>
                 {customer && (

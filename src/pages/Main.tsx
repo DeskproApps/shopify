@@ -1,10 +1,14 @@
-import { FC, useCallback } from "react";
+import { FC } from "react";
 import { match } from "ts-pattern";
-import { Context, useDeskproAppClient, useDeskproAppEvents } from "@deskpro/app-sdk";
+import {
+    Context,
+    useDeskproAppClient,
+    useDeskproAppEvents,
+} from "@deskpro/app-sdk";
 import { Page, AppElementPayload } from "../context/StoreProvider/types";
 import { useStore } from "../context/StoreProvider/hooks";
 import { useTryToLinkCustomer } from "../hooks";
-import { ErrorBlock } from "../components/common";
+import { ErrorBlock, Loading } from "../components/common";
 import { Home } from "./Home";
 import { ViewOrder } from "./ViewOrder";
 import { EditOrder } from "./EditOrder";
@@ -21,9 +25,9 @@ export const Main: FC = () => {
         console.error(`Shopify: ${state._error}`);
     }
 
-    useTryToLinkCustomer(
-        useCallback(() => dispatch({ type: "changePage", page: "home" }), [dispatch]),
-        useCallback(() => dispatch({ type: "changePage", page: "link_customer" }), [dispatch]),
+    const { loading } = useTryToLinkCustomer(
+        () => dispatch({ type: "changePage", page: "home" }),
+        () => dispatch({ type: "changePage", page: "link_customer" }),
     );
 
     useDeskproAppEvents({
@@ -55,7 +59,10 @@ export const Main: FC = () => {
     return (
         <>
             {state._error && (<ErrorBlock text="An error occurred" />)}
-            {page}
+            {loading
+                ? (<Loading />)
+                : page
+            }
         </>
     );
 };
