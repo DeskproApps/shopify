@@ -22,16 +22,19 @@ export const Home: FC = () => {
         client?.deregisterElement("shopifyRefreshButton");
 
         client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
-        client?.registerElement("shopifyMenu", {
-            type: "menu",
-            items: [{
-                title: "Change Linked Customer",
-                payload: { type: "changePage", page: "link_customer" },
-            }, {
-                title: "Settings",
-                payload: "settings",
-            }],
-        });
+
+        // Redundant in app v1 -- we don't link customers and we don't link to admin settings
+        // client?.registerElement("shopifyMenu", {
+        //     type: "menu",
+        //     items: [{
+        //         title: "Change Linked Customer",
+        //         payload: { type: "changePage", page: "link_customer" },
+        //     }, {
+        //         title: "Settings",
+        //         payload: "settings",
+        //     }],
+        // });
+
     }, [client, state])
 
     const onChangePageOrder = (orderId: Order['legacyResourceId']) => {
@@ -43,23 +46,36 @@ export const Home: FC = () => {
             return;
         }
 
-        getEntityCustomerList(client, userId)
-            .then(async (customers: string[]) => {
-                const customerId = customers[0];
+        // todo: change the getCustomer() method to accept an email
+        getCustomer(
+            client,
+            state.context?.type === 'ticket' ? state.context?.data.ticket.primaryUser.email : state.context?.data.email
+        ).then((customer) => {
+            if (customer) {
+                // todo: if we have a customer, link it to th app state, e.g. dispatch({ type: "linkedCustomer", customer }) so we can reference it in the various pages
+            } else {
+                // todo: if we don't have a customer then we don't show the app home page (show a message saying "Shopify customer could not be found for joe.bloggs@example.com")
+            }
+        });
 
-                try {
-                    const { customer } = await getCustomer(client, customerId);
-                    const { orders } = customer;
+        // getEntityCustomerList(client, userId)
+        //     .then(async (customers: string[]) => {
+        //         const customerId = customers[0];
+        //
+        //         try {
+        //             const { customer } = await getCustomer(client, customerId);
+        //             const { orders } = customer;
+        //
+        //             dispatch({ type: "linkedCustomer", customer });
+        //             dispatch({ type: "linkedOrders", orders });
+        //         } catch (e) {
+        //             const error = e as Error;
+        //
+        //             throw new Error(error.message || "Failed to fetch");
+        //         }
+        //     })
+        //     .catch((error: Error) => dispatch({ type: "error", error }));
 
-                    dispatch({ type: "linkedCustomer", customer });
-                    dispatch({ type: "linkedOrders", orders });
-                } catch (e) {
-                    const error = e as Error;
-
-                    throw new Error(error.message || "Failed to fetch");
-                }
-            })
-            .catch((error: Error) => dispatch({ type: "error", error }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, userId]);
 
