@@ -51,8 +51,6 @@ export const LinkCustomer: FC = () => {
         }
 
         getCustomers(client, { querySearch: q })
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
             .then(({ customers }) => {
                 if (Array.isArray(customers)) {
                     setCustomers(customers);
@@ -84,9 +82,7 @@ export const LinkCustomer: FC = () => {
 
         setEntityCustomer(client, user.id, selectedCustomerId)
             .then(() => dispatch({ type: "changePage", page: "home" }))
-            .catch((error: Error) => {
-                dispatch({ type: "error", error });
-            });
+            .catch((error: Error) => dispatch({ type: "error", error }));
     };
 
     return (
@@ -100,14 +96,14 @@ export const LinkCustomer: FC = () => {
                 <Customer
                     {...customer}
                     key={customer.id}
-                    checked={selectedCustomerId === String(customer.id)}
+                    checked={selectedCustomerId === customer.id}
                     onChange={onChangeSelectedCustomer}
                 />
             ))}
             <HorizontalDivider style={{ margin: "10px 0" }} />
             {!customers.length && <NoFound />}
             <footer style={{ margin: "14px 0 8px" }}>
-                <Button text="Add" onClick={onAdd} />
+                <Button disabled={!selectedCustomerId} text="Add" onClick={onAdd} />
             </footer>
         </>
     )
