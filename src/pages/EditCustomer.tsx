@@ -9,6 +9,7 @@ export const EditCustomer: FC = () => {
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
     const [loading, setLoading] = useState<boolean>(true);
+    const [customer, setCustomer] = useState<CustomerType | null>(null);
 
     useEffect(() => {
         client?.setTitle("Edit Customer Details");
@@ -34,21 +35,16 @@ export const EditCustomer: FC = () => {
             return;
         }
 
-        if (state?.customer && state.customer.id === state.pageParams.customerId) {
-            setLoading(false);
-            return;
-        }
-
         getCustomer(client, state.pageParams.customerId)
             .then(({ customer }) => {
                 setLoading(false);
-                dispatch({ type: "linkedCustomer", customer });
+                setCustomer(customer);
             })
             .catch((error) => dispatch({ type: "error", error }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, state.pageParams?.customerId]);
 
-    return (loading || !state.customer)
+    return (loading || !customer)
         ? (<>Loading...</>)
-        : (<EditCustomerForm {...state.customer as CustomerType} />);
+        : (<EditCustomerForm {...customer} />);
 };

@@ -11,7 +11,7 @@ type ResponseType = {
 export const getCustomers = (
     client: IDeskproClient,
     params: CustomerSearchParams = {}
-): Promise<{ customers: CustomerType[] } | void> => {
+): Promise<{ customers: CustomerType[] }> => {
     const { querySearch = '', email = '' } = params;
     const search = `${querySearch}${!email ? '' : `email:${email}`}`;
 

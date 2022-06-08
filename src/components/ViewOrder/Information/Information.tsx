@@ -6,7 +6,7 @@ import {
     Pill,
     useDeskproAppTheme,
 } from "@deskpro/app-sdk";
-import { Order, Address } from "../../../services/shopify/types";
+import { Order } from "../../../services/shopify/types";
 import {TextBlockWithLabel} from "../../common";
 import {
     getTime,
