@@ -46,10 +46,10 @@ export const ViewOrder: FC = () => {
             items: [{
                 title: "Cancel order",
                 payload: { type: "changePage", page: "list_orders" },
-            }, {
+            }/*, {
                 title: "Settings",
                 payload: "settings",
-            }],
+            }*/],
         });
         if (shopName && order?.legacyResourceId) {
             client?.registerElement("shopifyExternalCtaLink", {

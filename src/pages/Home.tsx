@@ -29,10 +29,10 @@ export const Home: FC = () => {
             items: [{
                 title: "Change Linked Customer",
                 payload: { type: "changePage", page: "link_customer" },
-            }, {
+            }/*, {
                 title: "Settings",
                 payload: "settings",
-            }],
+            }*/],
         });
     }, [client, state])
 
