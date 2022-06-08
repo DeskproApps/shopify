@@ -68,6 +68,7 @@ const useTryToLinkCustomer = (
                     onLinkedCallback();
                 }
             })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, user?.id]);
 
     return { loading };

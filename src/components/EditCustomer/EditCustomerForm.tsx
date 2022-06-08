@@ -172,7 +172,11 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
                 <Button
                     text="Cancel"
                     intent="tertiary"
-                    onClick={() => dispatch({ type: "changePage", page: "view_customer" })}
+                    onClick={() => dispatch({
+                        type: "changePage",
+                        page: "view_customer",
+                        params: { customerId: id }
+                    })}
                     style={{ minWidth: "70px", justifyContent: "center" }}
                 />
             </Stack>

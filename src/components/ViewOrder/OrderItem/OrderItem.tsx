@@ -42,7 +42,7 @@ const Header: FC<OrderItemType> = (({
     title,
     originalUnitPriceSet: { presentmentMoney: { amount } },
 }) => (
-    <Stack>
+    <Stack justify="space-between">
         <Title>{title}</Title>
         <H0>{amount}</H0>
     </Stack>

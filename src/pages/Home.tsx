@@ -66,7 +66,11 @@ export const Home: FC = () => {
                     <CustomerInfo
                         {...customer}
                         link={`https://${getShopName(state)}.myshopify.com/admin/customers/${customer.legacyResourceId}`}
-                        onChangePage={() => dispatch({ type: "changePage", page: "view_customer" })}
+                        onChangePage={() => dispatch({
+                            type: "changePage",
+                            page: "view_customer",
+                            params: { customerId: customer.id },
+                        })}
                     />
                 )}
                 {orders && (

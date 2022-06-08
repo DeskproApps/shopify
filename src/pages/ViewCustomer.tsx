@@ -7,10 +7,8 @@ import {
 } from "@deskpro/app-sdk";
 import { Tag, Toggle } from "@deskpro/deskpro-ui";
 import { useStore } from "../context/StoreProvider/hooks";
-import { TextBlockWithLabel } from "../components/common";
+import { TextBlockWithLabel, Loading } from "../components/common";
 import { getShopName, getTagColorSchema } from "../utils";
-import { useSetFullNameInTitle } from "../hooks";
-import { getEntityCustomerList } from "../services/entityAssociation";
 import { getCustomer } from "../services/shopify";
 import { CustomerType } from "../services/shopify/types";
 
@@ -18,17 +16,20 @@ export const ViewCustomer: FC = () => {
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
     const { theme } = useDeskproAppTheme();
+    const [loading, setLoading] = useState<boolean>(true);
     const [customer, setCustomer] = useState<CustomerType | null>(null);
     const shopName = getShopName(state);
     const userId = state.context?.data.ticket?.primaryUser.id || state.context?.data.user.id;
-
-    useSetFullNameInTitle();
 
     useEffect(() => {
         client?.deregisterElement("shopifyMenu");
         client?.deregisterElement("shopifyEditButton");
         client?.deregisterElement("shopifyHomeButton");
         client?.deregisterElement("shopifyRefreshButton");
+
+        if (customer?.displayName) {
+            client?.setTitle(customer.displayName);
+        }
 
         if (shopName) {
             client?.registerElement("shopifyExternalCtaLink", {
@@ -47,24 +48,28 @@ export const ViewCustomer: FC = () => {
         });
         client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [client, state.customer]);
+    }, [client, customer]);
 
     useEffect(() => {
         if (!client) {
             return;
         }
 
-        getEntityCustomerList(client, userId)
-            .then((customers: string[]) => {
-                return getCustomer(client, customers[0]);
-            })
-            .then(({ customer }) => {
-                client?.setTitle(customer.displayName);
-                setCustomer(customer);
-            })
-            .catch((error: Error) => dispatch({ type: "error", error }));
+        if (!state.pageParams?.customerId) {
+            dispatch({ type: "error", error: "CustomerId not found" });
+            return;
+        }
+
+        getCustomer(client, state.pageParams.customerId)
+            .then(({ customer }) => setCustomer(customer))
+            .catch((error: Error) => dispatch({ type: "error", error }))
+            .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, userId]);
+
+    if (loading) {
+        return <Loading />
+    }
 
     return (
         <>

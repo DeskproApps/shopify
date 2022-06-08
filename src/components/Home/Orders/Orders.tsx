@@ -1,6 +1,5 @@
 import { FC } from "react";
 import isEmpty from "lodash/isEmpty";
-import { HorizontalDivider, P1 } from "@deskpro/app-sdk";
 import { OrderInfo, SubHeader, NoFound } from "../../common";
 import { Props } from "./types";
 

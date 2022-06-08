@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import {FC, useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
@@ -8,7 +8,9 @@ import { Order, CustomerType } from "../services/shopify/types";
 import { getShopName } from "../utils";
 import { OrderInfo, NoFound, Loading } from "../components/common";
 
-export const ListOrders = () => {
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+export const ListOrders: FC = () => {
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
     const [loading, setLoading] = useState<boolean>(true);
