@@ -8,7 +8,7 @@ import {
 import { Props } from "./types";
 
 const InputSearch: FC<Props> = ({ value, onChange, onClear }) => (
-    <Label htmlFor="searchCustomer" label="Name or email address" required>
+    <Label htmlFor="searchCustomer" label="Name or email address" required style={{ marginBottom: 5 }}>
         <Input
             id="searchCustomer"
             value={value}

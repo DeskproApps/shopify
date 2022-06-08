@@ -28,13 +28,17 @@ export const Home: FC = () => {
             type: "menu",
             items: [{
                 title: "Change Linked Customer",
-                payload: { type: "changePage", page: "link_customer" },
+                payload: {
+                    type: "changePage",
+                    page: "link_customer",
+                    params: { customerId: customer?.id },
+                },
             }/*, {
                 title: "Settings",
                 payload: "settings",
             }*/],
         });
-    }, [client, state])
+    }, [client, customer?.id])
 
     const onChangePageOrder = (orderId: Order['legacyResourceId']) => {
         dispatch({ type: "changePage", page: "view_order", params: { orderId } })
