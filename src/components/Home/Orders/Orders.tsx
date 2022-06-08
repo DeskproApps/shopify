@@ -1,7 +1,7 @@
 import { FC } from "react";
 import isEmpty from "lodash/isEmpty";
-import { HorizontalDivider } from "@deskpro/app-sdk";
-import { OrderInfo, SubHeader } from "../../common";
+import { HorizontalDivider, P1 } from "@deskpro/app-sdk";
+import { OrderInfo, SubHeader, NoFound } from "../../common";
 import { Props } from "./types";
 
 const Orders: FC<Props> = ({
@@ -19,7 +19,7 @@ const Orders: FC<Props> = ({
             onChangePage={onChangePage}
         />
         {isEmpty(orders)
-            ? <HorizontalDivider style={{ marginBottom: 9 }}/>
+            ? (<NoFound/>)
             : orders.map(({ id, legacyResourceId,...order }) => (
                 <OrderInfo
                     {...order}

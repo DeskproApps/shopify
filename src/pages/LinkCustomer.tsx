@@ -101,7 +101,7 @@ export const LinkCustomer: FC = () => {
                 />
             ))}
             <HorizontalDivider style={{ margin: "10px 0" }} />
-            {!customers.length && <NoFound />}
+            {!customers.length && <NoFound text="No matching customers found. Please try again." />}
             <footer style={{ margin: "14px 0 8px" }}>
                 <Button disabled={!selectedCustomerId} text="Add" onClick={onAdd} />
             </footer>
