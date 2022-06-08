@@ -21,10 +21,11 @@ export const Main: FC = () => {
         console.error(`Shopify: ${state._error}`);
     }
 
-    useTryToLinkCustomer(
-        useCallback(() => dispatch({ type: "changePage", page: "home" }), [dispatch]),
-        useCallback(() => dispatch({ type: "changePage", page: "link_customer" }), [dispatch]),
-    );
+    // we don't need this as we simply match based on DP user's email address (and never show the link customer screen
+    // useTryToLinkCustomer(
+    //     useCallback(() => dispatch({ type: "changePage", page: "home" }), [dispatch]),
+    //     useCallback(() => dispatch({ type: "changePage", page: "link_customer" }), [dispatch]),
+    // );
 
     useDeskproAppEvents({
         onShow: () => {
@@ -44,13 +45,13 @@ export const Main: FC = () => {
 
     const page = match<Page|undefined>(state.page)
         .with("home", () => <Home />)
-        .with("link_customer", () => <LinkCustomer />)
+        // .with("link_customer", () => <LinkCustomer />) // Link customers page is redundant in v1
         .with("view_customer", () => <ViewCustomer />)
         .with("edit_customer", () => <EditCustomer />)
         .with("list_orders", () => <ListOrders />)
         .with("view_order", () => <ViewOrder />)
         .with("edit_order", () => <EditOrder />)
-        .otherwise(() => <LinkCustomer />)
+        .otherwise(() => <Home />) // Always default to home page as we don't need to link customers
 
     return (
         <>
