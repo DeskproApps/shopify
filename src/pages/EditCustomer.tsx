@@ -4,6 +4,7 @@ import { useStore } from "../context/StoreProvider/hooks";
 import { getCustomer } from "../services/shopify";
 import { CustomerType } from "../services/shopify/types";
 import { EditCustomerForm } from "../components/EditCustomer";
+import { Loading } from "../components/common";
 
 export const EditCustomer: FC = () => {
     const { client } = useDeskproAppClient();
@@ -45,6 +46,6 @@ export const EditCustomer: FC = () => {
     }, [client, state.pageParams?.customerId]);
 
     return (loading || !customer)
-        ? (<>Loading...</>)
+        ? (<Loading />)
         : (<EditCustomerForm {...customer} />);
 };

@@ -4,6 +4,7 @@ import { useStore } from "../context/StoreProvider/hooks";
 import { getOrder } from "../services/shopify";
 import { Order } from "../services/shopify/types";
 import { EditOrderForm } from "../components/EditOrder";
+import { Loading } from "../components/common";
 
 export const EditOrder: FC = () => {
     const { client } = useDeskproAppClient();
@@ -43,6 +44,6 @@ export const EditOrder: FC = () => {
     }, [client, state?.pageParams?.orderId]);
 
     return (loading || !order)
-        ? (<>Loading...</>)
+        ? (<Loading />)
         : (<EditOrderForm {...order as Order} />);
 };
