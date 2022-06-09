@@ -75,7 +75,11 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
             };
 
             await setCustomer(client, id, newValues)
-                .then(() => dispatch({ type: "changePage", page: "view_customer" }))
+                .then(() => dispatch({
+                    type: "changePage",
+                    page: "view_customer",
+                    params: { customerId: id },
+                }))
                 .catch((error) => dispatch({ type: "error", error }));
         },
     });
