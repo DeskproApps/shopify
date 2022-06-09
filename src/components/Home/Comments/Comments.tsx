@@ -1,5 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
+import ReactTimeAgo from "react-time-ago";
 import {
     H1,
     P1,
@@ -7,13 +8,13 @@ import {
     Stack,
     HorizontalDivider,
 } from "@deskpro/app-sdk";
-import { getDate } from "../../../utils";
 import { Props } from "./types";
 
-const Date = styled(P11)`
+const DateContainer = styled(P11)`
   white-space: nowrap;
   width: 100%;
   max-width: 52px;
+  min-width: 32px;
   color: ${({ theme }) => theme.colors.grey80};
 `;
 
@@ -27,7 +28,9 @@ const Comments: FC<Props> = ({ comments }) => (
         {comments.map(({ id, message, createdAt }) => (
             <div key={id}>
                 <Stack align="baseline">
-                    <Date>{getDate(createdAt)}</Date>
+                    <DateContainer>
+                        <ReactTimeAgo date={new Date(createdAt)} timeStyle="mini" />
+                    </DateContainer>
                     <P1 dangerouslySetInnerHTML={{ __html: message }} />
                 </Stack>
                 <HorizontalDivider style={{ margin: "10px 0" }}/>
