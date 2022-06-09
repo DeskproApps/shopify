@@ -89,15 +89,22 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
             await setCustomer(client, id, newValues)
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
-                .then(({ customerUpdate: { userErrors } }) => {
-                    if (isEmpty(userErrors)) {
+                .then(([
+                    { customerUpdate: { userErrors: customerErrors } },
+                    { customerEmailMarketingConsentUpdate: { emailErrors } }
+                ]) => {
+                    if (isEmpty(customerErrors) && isEmpty(emailErrors)) {
                         dispatch({
                             type: "changePage",
                             page: "view_customer",
                             params: { customerId: id },
                         });
                     } else {
-                        setError(getApiErrors(userErrors));
+                        const errors = [
+                            ...getApiErrors(customerErrors),
+                            ...getApiErrors(emailErrors),
+                        ]
+                        setError(errors);
                     }
                 })
                 .catch((error) => dispatch({ type: "error", error }));

@@ -15,7 +15,7 @@ export type Page =
 
 export type PageParams = {
     orderId?: Order['id'],
-    customerId?: CustomerType['id']
+    customerId?: CustomerType['id'],
 };
 
 export interface State {
