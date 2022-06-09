@@ -1,6 +1,7 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from 'yup';
+import isEmpty from "lodash/isEmpty";
 import {
     H3,
     Pill,
@@ -13,10 +14,14 @@ import {
 } from "@deskpro/app-sdk";
 import { InputWithDisplay } from "@deskpro/deskpro-ui";
 import { useStore } from "../../context/StoreProvider/hooks";
-import { fulfillmentStatuses, financialStatuses } from "../../utils";
+import {
+    getApiErrors,
+    financialStatuses,
+    fulfillmentStatuses,
+} from "../../utils";
 import { setOrder } from "../../services/shopify";
 import { Order } from "../../services/shopify/types";
-import { Label, TextBlockWithLabel } from "../common";
+import { Label, TextBlockWithLabel, ErrorBlock } from "../common";
 import { FormState } from "./type";
 
 const validationSchema = yup.object().shape({
@@ -35,6 +40,7 @@ const EditOrderForm: FC<Order> = ({
     const { client } = useDeskproAppClient();
     const { theme } = useDeskproAppTheme();
     const [, dispatch] = useStore();
+    const [error, setError] = useState<string | string[]>([]);
     const { values, handleSubmit, isSubmitting, getFieldProps } = useFormik<FormState>({
         validationSchema,
         initialValues: {
@@ -59,6 +65,8 @@ const EditOrderForm: FC<Order> = ({
                 return;
             }
 
+            setError([]);
+
             await setOrder(client, id, {
                 note: values.note,
                 shippingAddress: {
@@ -71,180 +79,193 @@ const EditOrderForm: FC<Order> = ({
                     zip: values.shippingZip,
                 }
             })
-                .then(() => dispatch({ type: "changePage", page: "view_order", params: { orderId: id } }))
+                .then(({ orderUpdate: { userErrors } }) => {
+                    if (isEmpty(userErrors)) {
+                        dispatch({
+                            type: "changePage",
+                            page: "view_order",
+                            params: { orderId: id },
+                        });
+                    } else {
+                        setError(getApiErrors(userErrors));
+                    }
+                })
                 .catch((error) => dispatch({ type: "error", error }));
         }
     });
 
     return (
-        <form onSubmit={handleSubmit}>
-            <TextBlockWithLabel
-                label="Payment status"
-                text={(
-                    <Pill
-                        label="Paid"
-                        textColor={theme.colors.white}
-                        backgroundColor={theme.colors.turquoise100}
+        <>
+            {!isEmpty(error) && <ErrorBlock text={error}/>}
+            <form onSubmit={handleSubmit}>
+                <TextBlockWithLabel
+                    label="Payment status"
+                    text={(
+                        <Pill
+                            label="Paid"
+                            textColor={theme.colors.white}
+                            backgroundColor={theme.colors.turquoise100}
+                        />
+                    )}
+                />
+                <TextBlockWithLabel
+                    label="Fulfillment status"
+                    text={(
+                        <Pill
+                            label="Unfulfilled"
+                            textColor={theme.colors.white}
+                            backgroundColor={theme.colors.systemShade80}
+                        />
+                    )}
+                />
+                <Label htmlFor="note" label="Order notes">
+                    <TextAreaWithDisplay
+                        placeholder="Enter note"
+                        {...getFieldProps("note")}
                     />
-                )}
-            />
-            <TextBlockWithLabel
-                label="Fulfillment status"
-                text={(
-                    <Pill
-                        label="Unfulfilled"
-                        textColor={theme.colors.white}
-                        backgroundColor={theme.colors.systemShade80}
-                    />
-                )}
-            />
-            <Label htmlFor="note" label="Order notes">
-                <TextAreaWithDisplay
-                    placeholder="Enter note"
-                    {...getFieldProps("note")}
-                />
-            </Label>
+                </Label>
 
-            <HorizontalDivider style={{ marginBottom: "10px" }} />
-            <H3 style={{ marginBottom: "8px" }}>Shipping Address</H3>
-            <Label htmlFor="shippingFirstName" label="First name">
-                <InputWithDisplay
-                    type="text"
-                    id="firstName"
-                    {...getFieldProps("shippingFirstName")}
-                    placeholder="Enter first name"
-                    inputsize="small"
-                />
-            </Label>
-            <Label htmlFor="shippingLastName" label="Last name">
-                <InputWithDisplay
-                    type="text"
-                    id="shippingLastName"
-                    {...getFieldProps("shippingLastName")}
-                    placeholder="Enter last name"
-                    inputsize="small"
-                />
-            </Label>
-            <Label htmlFor="shippingFirstLine" label="First Line">
-                <InputWithDisplay
-                    type="text"
-                    id="shippingFirstLine"
-                    {...getFieldProps("shippingAddress1")}
-                    placeholder="Enter first line"
-                    inputsize="small"
-                />
-            </Label>
-            <Label htmlFor="shippingSecondLine" label="Second Line">
-                <InputWithDisplay
-                    type="text"
-                    id="shippingSecondLine"
-                    {...getFieldProps("shippingAddress2")}
-                    placeholder="Enter second line"
-                    inputsize="small"
-                />
-            </Label>
-            <Label htmlFor="shippingCity" label="City">
-                <InputWithDisplay
-                    type="text"
-                    id="shippingCity"
-                    {...getFieldProps("shippingCity")}
-                    placeholder="Enter city"
-                    inputsize="small"
-                />
-            </Label>
-            <Label htmlFor="shippingZip" label="Zip/Post code">
-                <InputWithDisplay
-                    type="text"
-                    id="shippingZip"
-                    {...getFieldProps("shippingZip")}
-                    placeholder="Enter zip"
-                    inputsize="small"
-                />
-            </Label>
-
-            <HorizontalDivider style={{ marginBottom: "10px" }} />
-
-            <H3 style={{ marginBottom: "8px" }}>Billing Address</H3>
-            <Label htmlFor="billingFirstName" label="First name">
-                <InputWithDisplay
-                    disabled
-                    type="text"
-                    id="firstName"
-                    {...getFieldProps("billingFirstName")}
-                    placeholder="Enter first name"
-                    inputsize="small"
-                />
-            </Label>
-            <Label htmlFor="billingLastName" label="Last name">
-                <InputWithDisplay
-                    disabled
-                    type="text"
-                    id="billingLastName"
-                    {...getFieldProps("billingLastName")}
-                    placeholder="Enter last name"
-                    inputsize="small"
-                />
-            </Label>
-            <Label htmlFor="billingFirstLine" label="First Line">
-                <InputWithDisplay
-                    disabled
-                    type="text"
-                    id="billingFirstLine"
-                    {...getFieldProps("billingAddress1")}
-                    placeholder="Enter first line"
-                    inputsize="small"
-                />
-            </Label>
-
-            {values.billingAddress2 && (
-                <Label htmlFor="billingSecondLine" label="Second Line">
+                <HorizontalDivider style={{ marginBottom: "10px" }} />
+                <H3 style={{ marginBottom: "8px" }}>Shipping Address</H3>
+                <Label htmlFor="shippingFirstName" label="First name">
                     <InputWithDisplay
-                        disabled
                         type="text"
-                        id="billingSecondLine"
-                        {...getFieldProps("billingAddress2")}
+                        id="firstName"
+                        {...getFieldProps("shippingFirstName")}
+                        placeholder="Enter first name"
+                        inputsize="small"
+                    />
+                </Label>
+                <Label htmlFor="shippingLastName" label="Last name">
+                    <InputWithDisplay
+                        type="text"
+                        id="shippingLastName"
+                        {...getFieldProps("shippingLastName")}
+                        placeholder="Enter last name"
+                        inputsize="small"
+                    />
+                </Label>
+                <Label htmlFor="shippingFirstLine" label="First Line">
+                    <InputWithDisplay
+                        type="text"
+                        id="shippingFirstLine"
+                        {...getFieldProps("shippingAddress1")}
+                        placeholder="Enter first line"
+                        inputsize="small"
+                    />
+                </Label>
+                <Label htmlFor="shippingSecondLine" label="Second Line">
+                    <InputWithDisplay
+                        type="text"
+                        id="shippingSecondLine"
+                        {...getFieldProps("shippingAddress2")}
                         placeholder="Enter second line"
                         inputsize="small"
                     />
                 </Label>
-            )}
-            <Label htmlFor="billingCity" label="City">
-                <InputWithDisplay
-                    disabled
-                    type="text"
-                    id="billingCity"
-                    {...getFieldProps("billingCity")}
-                    placeholder="Enter city"
-                    inputsize="small"
-                />
-            </Label>
-            <Label htmlFor="billingZip" label="Zip/Post code">
-                <InputWithDisplay
-                    disabled
-                    type="text"
-                    id="billingZip"
-                    {...getFieldProps("billingZip")}
-                    placeholder="Enter zip"
-                    inputsize="small"
-                />
-            </Label>
+                <Label htmlFor="shippingCity" label="City">
+                    <InputWithDisplay
+                        type="text"
+                        id="shippingCity"
+                        {...getFieldProps("shippingCity")}
+                        placeholder="Enter city"
+                        inputsize="small"
+                    />
+                </Label>
+                <Label htmlFor="shippingZip" label="Zip/Post code">
+                    <InputWithDisplay
+                        type="text"
+                        id="shippingZip"
+                        {...getFieldProps("shippingZip")}
+                        placeholder="Enter zip"
+                        inputsize="small"
+                    />
+                </Label>
 
-            <Stack justify="space-between">
-                <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    loading={isSubmitting}
-                    text="Save"
-                    style={{ minWidth: "70px", justifyContent: "center" }}
-                />
-                <Button
-                    text="Cancel"
-                    intent="tertiary"
-                    onClick={() => dispatch({ type: "changePage", page: "view_order", params: { orderId: id } })}
-                    style={{ minWidth: "70px", justifyContent: "center" }}
-                />
-            </Stack>
-        </form>
+                <HorizontalDivider style={{ marginBottom: "10px" }} />
+
+                <H3 style={{ marginBottom: "8px" }}>Billing Address</H3>
+                <Label htmlFor="billingFirstName" label="First name">
+                    <InputWithDisplay
+                        disabled
+                        type="text"
+                        id="firstName"
+                        {...getFieldProps("billingFirstName")}
+                        placeholder="Enter first name"
+                        inputsize="small"
+                    />
+                </Label>
+                <Label htmlFor="billingLastName" label="Last name">
+                    <InputWithDisplay
+                        disabled
+                        type="text"
+                        id="billingLastName"
+                        {...getFieldProps("billingLastName")}
+                        placeholder="Enter last name"
+                        inputsize="small"
+                    />
+                </Label>
+                <Label htmlFor="billingFirstLine" label="First Line">
+                    <InputWithDisplay
+                        disabled
+                        type="text"
+                        id="billingFirstLine"
+                        {...getFieldProps("billingAddress1")}
+                        placeholder="Enter first line"
+                        inputsize="small"
+                    />
+                </Label>
+
+                {values.billingAddress2 && (
+                    <Label htmlFor="billingSecondLine" label="Second Line">
+                        <InputWithDisplay
+                            disabled
+                            type="text"
+                            id="billingSecondLine"
+                            {...getFieldProps("billingAddress2")}
+                            placeholder="Enter second line"
+                            inputsize="small"
+                        />
+                    </Label>
+                )}
+                <Label htmlFor="billingCity" label="City">
+                    <InputWithDisplay
+                        disabled
+                        type="text"
+                        id="billingCity"
+                        {...getFieldProps("billingCity")}
+                        placeholder="Enter city"
+                        inputsize="small"
+                    />
+                </Label>
+                <Label htmlFor="billingZip" label="Zip/Post code">
+                    <InputWithDisplay
+                        disabled
+                        type="text"
+                        id="billingZip"
+                        {...getFieldProps("billingZip")}
+                        placeholder="Enter zip"
+                        inputsize="small"
+                    />
+                </Label>
+
+                <Stack justify="space-between">
+                    <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        loading={isSubmitting}
+                        text="Save"
+                        style={{ minWidth: "70px", justifyContent: "center" }}
+                    />
+                    <Button
+                        text="Cancel"
+                        intent="tertiary"
+                        onClick={() => dispatch({ type: "changePage", page: "view_order", params: { orderId: id } })}
+                        style={{ minWidth: "70px", justifyContent: "center" }}
+                    />
+                </Stack>
+            </form>
+        </>
     );
 };
 

@@ -12,3 +12,4 @@ export {
     getShippingStatusName,
     getShippingStatusColorSchema,
 } from "./getShippingStatus";
+export { getApiErrors } from "./getApiErrors";
