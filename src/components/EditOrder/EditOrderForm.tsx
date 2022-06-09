@@ -35,7 +35,7 @@ const EditOrderForm: FC<Order> = ({
     const { client } = useDeskproAppClient();
     const { theme } = useDeskproAppTheme();
     const [, dispatch] = useStore();
-    const { handleSubmit, isSubmitting, getFieldProps } = useFormik<FormState>({
+    const { values, handleSubmit, isSubmitting, getFieldProps } = useFormik<FormState>({
         validationSchema,
         initialValues: {
             note,
@@ -163,10 +163,11 @@ const EditOrderForm: FC<Order> = ({
             </Label>
 
             <HorizontalDivider style={{ marginBottom: "10px" }} />
-            {/*
+
             <H3 style={{ marginBottom: "8px" }}>Billing Address</H3>
             <Label htmlFor="billingFirstName" label="First name">
                 <InputWithDisplay
+                    disabled
                     type="text"
                     id="firstName"
                     {...getFieldProps("billingFirstName")}
@@ -176,6 +177,7 @@ const EditOrderForm: FC<Order> = ({
             </Label>
             <Label htmlFor="billingLastName" label="Last name">
                 <InputWithDisplay
+                    disabled
                     type="text"
                     id="billingLastName"
                     {...getFieldProps("billingLastName")}
@@ -185,6 +187,7 @@ const EditOrderForm: FC<Order> = ({
             </Label>
             <Label htmlFor="billingFirstLine" label="First Line">
                 <InputWithDisplay
+                    disabled
                     type="text"
                     id="billingFirstLine"
                     {...getFieldProps("billingAddress1")}
@@ -192,17 +195,22 @@ const EditOrderForm: FC<Order> = ({
                     inputsize="small"
                 />
             </Label>
-            <Label htmlFor="billingSecondLine" label="Second Line">
-                <InputWithDisplay
-                    type="text"
-                    id="billingSecondLine"
-                    {...getFieldProps("billingAddress2")}
-                    placeholder="Enter second line"
-                    inputsize="small"
-                />
-            </Label>
+
+            {values.billingAddress2 && (
+                <Label htmlFor="billingSecondLine" label="Second Line">
+                    <InputWithDisplay
+                        disabled
+                        type="text"
+                        id="billingSecondLine"
+                        {...getFieldProps("billingAddress2")}
+                        placeholder="Enter second line"
+                        inputsize="small"
+                    />
+                </Label>
+            )}
             <Label htmlFor="billingCity" label="City">
                 <InputWithDisplay
+                    disabled
                     type="text"
                     id="billingCity"
                     {...getFieldProps("billingCity")}
@@ -212,6 +220,7 @@ const EditOrderForm: FC<Order> = ({
             </Label>
             <Label htmlFor="billingZip" label="Zip/Post code">
                 <InputWithDisplay
+                    disabled
                     type="text"
                     id="billingZip"
                     {...getFieldProps("billingZip")}
@@ -219,7 +228,6 @@ const EditOrderForm: FC<Order> = ({
                     inputsize="small"
                 />
             </Label>
-            */}
 
             <Stack justify="space-between">
                 <Button

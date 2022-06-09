@@ -1,5 +1,6 @@
 import { FC } from "react";
-import { OrderInfo, SubHeader } from "../../common";
+import isEmpty from "lodash/isEmpty";
+import { OrderInfo, SubHeader, NoFound } from "../../common";
 import { Props } from "./types";
 
 const Orders: FC<Props> = ({
@@ -16,16 +17,19 @@ const Orders: FC<Props> = ({
             link={link}
             onChangePage={onChangePage}
         />
-        {orders.map(({ id, legacyResourceId,...order }) => (
-            <OrderInfo
-                {...order}
-                key={id}
-                id={id}
-                legacyResourceId={legacyResourceId}
-                linkOrder={`${link}/${legacyResourceId}`}
-                onChangePage={onChangePageOrder}
-            />
-        ))}
+        {isEmpty(orders)
+            ? (<NoFound/>)
+            : orders.map(({ id, legacyResourceId,...order }) => (
+                <OrderInfo
+                    {...order}
+                    key={id}
+                    id={id}
+                    legacyResourceId={legacyResourceId}
+                    linkOrder={`${link}/${legacyResourceId}`}
+                    onChangePage={onChangePageOrder}
+                />
+            ))
+        }
     </>
 );
 

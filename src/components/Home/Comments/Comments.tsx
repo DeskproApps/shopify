@@ -28,7 +28,7 @@ const Comments: FC<Props> = ({ comments }) => (
             <div key={id}>
                 <Stack align="baseline">
                     <Date>{getDate(createdAt)}</Date>
-                    <P1>{message}</P1>
+                    <P1 dangerouslySetInnerHTML={{ __html: message }} />
                 </Stack>
                 <HorizontalDivider style={{ margin: "10px 0" }}/>
             </div>

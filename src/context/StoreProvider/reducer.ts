@@ -20,13 +20,5 @@ export const reducer: StoreReducer = (state: State, action: Action): State => {
             ...prevState,
             _error: action.error,
         }))
-        .with([__, { type: "linkedCustomer" }], ([prevState, action]) => ({
-            ...prevState,
-            customer: action.customer,
-        }))
-        .with([__, { type: "linkedOrders" }], ([prevState, action]) => ({
-            ...prevState,
-            orders: action.orders,
-        }))
         .otherwise(() => state);
 };
