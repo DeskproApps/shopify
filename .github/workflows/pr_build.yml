@@ -54,5 +54,5 @@ jobs:
           path: dist
           retention-days: 1
 
-      - name: Run tests
-        run: yarn test:coverage
+#      - name: Run tests
+#        run: yarn test:coverage

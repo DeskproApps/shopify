@@ -1,4 +1,5 @@
 import { FC } from "react";
+import isString from "lodash/isString";
 import { match } from "ts-pattern";
 import {
     Context,
@@ -7,9 +8,9 @@ import {
 } from "@deskpro/app-sdk";
 import { Page, AppElementPayload } from "../context/StoreProvider/types";
 import { useStore } from "../context/StoreProvider/hooks";
-import { useTryToLinkCustomer } from "../hooks";
-import { ErrorBlock, Loading } from "../components/common";
+import { ErrorBlock } from "../components/common";
 import { Home } from "./Home";
+import { LoadingApp } from "./LoadingApp";
 import { ViewOrder } from "./ViewOrder";
 import { EditOrder } from "./EditOrder";
 import { ListOrders } from "./ListOrders";
@@ -24,11 +25,6 @@ export const Main: FC = () => {
     if (state._error) {
         console.error(`Shopify: ${state._error}`);
     }
-
-    const { loading } = useTryToLinkCustomer(
-        () => dispatch({ type: "changePage", page: "home" }),
-        () => dispatch({ type: "changePage", page: "link_customer" }),
-    );
 
     useDeskproAppEvents({
         onShow: () => {
@@ -54,15 +50,16 @@ export const Main: FC = () => {
         .with("list_orders", () => <ListOrders />)
         .with("view_order", () => <ViewOrder />)
         .with("edit_order", () => <EditOrder />)
-        .otherwise(() => <LinkCustomer />)
+        .otherwise(() => <LoadingApp />)
 
     return (
         <>
-            {state._error && (<ErrorBlock text="An error occurred" />)}
-            {loading
-                ? (<Loading />)
-                : page
-            }
+            {state._error && (
+                <ErrorBlock
+                    text={isString(state._error) ? state._error : "An error occurred"}
+                />
+            )}
+            {page}
         </>
     );
 };

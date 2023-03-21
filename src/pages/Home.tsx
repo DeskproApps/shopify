@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from "react";
+import get from "lodash/get";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { CustomerInfo, Orders, Comments } from "../components/Home";
@@ -58,7 +59,9 @@ export const Home: FC = () => {
                 setCustomer(customer);
                 setOrders(orders);
             })
-            .catch((error: Error) => dispatch({ type: "error", error }));
+            .catch((error: Error) => {
+                dispatch({ type: "error", error: get(error, ["errors"], error) })
+            });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, userId]);
 

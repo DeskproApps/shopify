@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from 'yup';
+import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import {
     H3,
@@ -90,7 +91,7 @@ const EditOrderForm: FC<Order> = ({
                         setError(getApiErrors(userErrors));
                     }
                 })
-                .catch((error) => dispatch({ type: "error", error }));
+                .catch((error) => dispatch({ type: "error", error: get(error, ["errors"], error) }));
         }
     });
 

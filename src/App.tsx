@@ -1,5 +1,8 @@
-import { DeskproAppProvider } from "@deskpro/app-sdk";
+import { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { DeskproAppProvider, LoadingSpinner } from "@deskpro/app-sdk";
 import { StoreProvider } from "./context/StoreProvider";
+import { ErrorFallback } from "./components/ErrorFallback";
 import { Main } from "./pages/Main";
 import "./App.css";
 
@@ -14,7 +17,11 @@ function App() {
   return (
       <DeskproAppProvider>
           <StoreProvider>
-              <Main />
+              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                  <Suspense fallback={<LoadingSpinner/>}>
+                      <Main/>
+                  </Suspense>
+              </ErrorBoundary>
           </StoreProvider>
       </DeskproAppProvider>
   );
