@@ -7,17 +7,17 @@ configured.
 Basic Usage
 ---
 
-We recommend using [Yarn](https://yarnpkg.com/) to manage this project. First, start by installing the project 
+We recommend using [pnpm](https://pnpm.io/) to manage this project. First, start by installing the project 
 dependencies from inside the project directory `app-template-vite`.
 
 ```bash
-yarn install
+pnpm install
 ```
 
 Then, run the development server.
 
 ```bash
-yarn start
+pnpm start
 ```
 
 You should now be able to view the bare-bones app in your browser.
@@ -85,7 +85,7 @@ We've included `jest` to run your tests. It will look anywhere in `/src` for tes
 You can run all tests using:
 
 ```bash
-yarn test
+pnpm test
 ```
 
 We've also included a sample test suite in `src/App.test.tsx`
@@ -93,7 +93,7 @@ We've also included a sample test suite in `src/App.test.tsx`
 We maintain a minimum level of code coverage, to check that your code meets this threshold, run the following:
 
 ```bash
-yarn test:coverage
+pnpm test:coverage
 ```
 
 > Our code coverage threshold is 60%, so your coverage report must show that all analyses are at or greater than 60% for
@@ -108,14 +108,14 @@ To package your app we've included a packaging script that will allow you to bui
 for building and packaging your app are as follows:
 
 ```bash
-yarn build
-yarn package
+pnpm build
+pnpm package
 ```
 
 Or, as a shortcut, you can use:
 
 ```bash
-yarn build:package
+pnpm build:package
 ```
 
 Once your app has been built and packaged, you should find your package artifact in `./build`. You can now [upload this 
