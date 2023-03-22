@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from "react";
+import get from "lodash/get";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { getCustomer } from "../services/shopify";
@@ -41,7 +42,7 @@ export const EditCustomer: FC = () => {
                 setLoading(false);
                 setCustomer(customer);
             })
-            .catch((error) => dispatch({ type: "error", error }));
+            .catch((error) => dispatch({ type: "error", error: get(error, ["errors"], error) }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, state.pageParams?.customerId]);
 

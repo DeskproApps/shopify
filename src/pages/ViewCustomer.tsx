@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from "react";
+import get from "lodash/get";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import {
     Stack,
@@ -62,7 +63,7 @@ export const ViewCustomer: FC = () => {
 
         getCustomer(client, state.pageParams.customerId)
             .then(({ customer }) => setCustomer(customer))
-            .catch((error: Error) => dispatch({ type: "error", error }))
+            .catch((error: Error) => dispatch({ type: "error", error: get(error, ["errors"], error) }))
             .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, userId]);
