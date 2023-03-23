@@ -32,7 +32,11 @@ const baseGraphQLRequest = async (
      * @see https://shopify.dev/api/admin-graphql#status_and_error_codes
      */
     if (res.status < 200 || res.status >= 400) {
-        throw new Error(`${GRAPHQL_URL}: Response Status [${res.status}]`);
+        if (res.status == 401) {
+            return Promise.reject(await res.json());
+        } else {
+            throw new Error(`${GRAPHQL_URL}: Response Status [${res.status}]: ${await res.text()}`);
+        }
     }
 
     try {

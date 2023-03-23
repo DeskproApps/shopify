@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from 'yup';
+import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -107,7 +108,7 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
                         setError(errors);
                     }
                 })
-                .catch((error) => dispatch({ type: "error", error }));
+                .catch((error) => dispatch({ type: "error", error: get(error, ["errors"], error) }));
         },
     });
 

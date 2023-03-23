@@ -1,4 +1,5 @@
 import {FC, useState, useEffect } from "react";
+import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
@@ -57,7 +58,7 @@ export const ListOrders: FC = () => {
             })
             .catch((error: Error) => {
                 setLoading(false);
-                dispatch({ type: "error", error })
+                dispatch({ type: "error", error: get(error, ["errors"], error) })
             });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [client, userId]);
