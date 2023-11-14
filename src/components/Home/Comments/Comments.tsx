@@ -1,13 +1,8 @@
 import { FC } from "react";
 import styled from "styled-components";
 import ReactTimeAgo from "react-time-ago";
-import {
-    H1,
-    P1,
-    P11,
-    Stack,
-    HorizontalDivider,
-} from "@deskpro/app-sdk";
+import { H1, P1, P11, Stack } from "@deskpro/deskpro-ui";
+import { HorizontalDivider } from "@deskpro/app-sdk";
 import { Props } from "./types";
 
 const DateContainer = styled(P11)`

@@ -1,11 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { H0, P5, P8, P11, Stack } from "@deskpro/deskpro-ui";
 import {
-    H0,
-    P5,
-    P8,
-    P11,
-    Stack,
     VerticalDivider,
     HorizontalDivider,
     useDeskproAppTheme,

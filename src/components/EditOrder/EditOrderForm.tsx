@@ -8,9 +8,11 @@ import {
     Pill,
     Stack,
     Button,
+    TextAreaWithDisplay,
+} from "@deskpro/deskpro-ui";
+import {
     HorizontalDivider,
     useDeskproAppTheme,
-    TextAreaWithDisplay,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
 import { InputWithDisplay } from "@deskpro/deskpro-ui";

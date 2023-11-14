@@ -7,9 +7,12 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import {
     Stack,
     Button,
+    AnyIcon,
+    TextAreaWithDisplay,
+} from "@deskpro/deskpro-ui";
+import {
     useDeskproAppTheme,
     useDeskproAppClient,
-    TextAreaWithDisplay,
 } from "@deskpro/app-sdk";
 import { InputWithDisplay, Tag, Toggle } from "@deskpro/deskpro-ui";
 import { useStore } from "../../context/StoreProvider/hooks";
@@ -167,7 +170,7 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
                                 <Tag
                                     key={tag}
                                     label={tag}
-                                    closeIcon={faTimes}
+                                    closeIcon={faTimes as AnyIcon}
                                     color={{
                                         ...getTagColorSchema(theme, tag),
                                         textColor: "#4C4F50",

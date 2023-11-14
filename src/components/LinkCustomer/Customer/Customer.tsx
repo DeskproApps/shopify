@@ -1,11 +1,6 @@
 import { FC } from "react";
-import {
-    P1,
-    Label,
-    Stack,
-    Checkbox,
-    useDeskproAppTheme,
-} from "@deskpro/app-sdk";
+import { P1, Label, Stack, Checkbox } from "@deskpro/deskpro-ui";
+import { useDeskproAppTheme } from "@deskpro/app-sdk";
 import { Props } from "./types";
 
 const Customer: FC<Props> = ({

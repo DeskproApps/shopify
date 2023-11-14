@@ -1,16 +1,33 @@
-import React from "react";
+import { Suspense, StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import { ErrorBoundary } from "react-error-boundary";
+import { DeskproAppProvider, LoadingSpinner } from "@deskpro/app-sdk";
+import { StoreProvider } from "./context/StoreProvider";
+import { ErrorFallback } from "./components/ErrorFallback";
+import { App } from "./App";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
+
+import "flatpickr/dist/themes/light.css";
+import "tippy.js/dist/tippy.css";
+import "simplebar/dist/simplebar.min.css";
+import "@deskpro/deskpro-ui/dist/deskpro-ui.css";
+import "@deskpro/deskpro-ui/dist/deskpro-custom-icons.css";
 import "iframe-resizer/js/iframeResizer.contentWindow.js";
-import "./index.css";
 
 TimeAgo.addDefaultLocale(en)
 
 const root = ReactDOM.createRoot(document.getElementById("root") as Element);
 root.render((
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>
+    <StrictMode>
+      <DeskproAppProvider>
+        <StoreProvider>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Suspense fallback={<LoadingSpinner/>}>
+              <App />
+            </Suspense>
+          </ErrorBoundary>
+        </StoreProvider>
+      </DeskproAppProvider>
+    </StrictMode>
 ));
