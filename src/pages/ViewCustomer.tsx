@@ -1,17 +1,17 @@
 import { FC, useState, useEffect } from "react";
 import get from "lodash/get";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { Stack, Tag, Toggle } from "@deskpro/deskpro-ui";
 import {
-    Stack,
     useDeskproAppTheme,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { Tag, Toggle } from "@deskpro/deskpro-ui";
 import { useStore } from "../context/StoreProvider/hooks";
 import { TextBlockWithLabel, Loading } from "../components/common";
 import { getShopName, getTagColorSchema } from "../utils";
 import { getCustomer } from "../services/shopify";
 import { CustomerType } from "../services/shopify/types";
+import type { AnyIcon } from "@deskpro/deskpro-ui";
 
 export const ViewCustomer: FC = () => {
     const [state, dispatch] = useStore();
@@ -94,7 +94,7 @@ export const ViewCustomer: FC = () => {
                                     textColor: theme.colors.grey100,
                                 }}
                                 label={tag}
-                                closeIcon={faTimes}
+                                closeIcon={faTimes as AnyIcon}
                             />
                         ))}
                     </Stack>

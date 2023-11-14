@@ -3,8 +3,9 @@ import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
 import {
     Label,
     Input,
+    AnyIcon,
     IconButton,
-} from "@deskpro/app-sdk";
+} from "@deskpro/deskpro-ui";
 import { Props } from "./types";
 
 const InputSearch: FC<Props> = ({ value, onChange, onClear }) => (
@@ -13,8 +14,8 @@ const InputSearch: FC<Props> = ({ value, onChange, onClear }) => (
             id="searchCustomer"
             value={value}
             onChange={onChange}
-            leftIcon={faSearch}
-            rightIcon={<IconButton icon={faTimes} minimal onClick={onClear} />}
+            leftIcon={faSearch as AnyIcon}
+            rightIcon={<IconButton icon={faTimes as never} minimal onClick={onClear} />}
         />
     </Label>
 );

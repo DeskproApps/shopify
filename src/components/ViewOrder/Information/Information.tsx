@@ -1,11 +1,7 @@
 import { FC } from "react";
 import omit from "lodash/omit";
-import {
-    H1,
-    P5,
-    Pill,
-    useDeskproAppTheme,
-} from "@deskpro/app-sdk";
+import { H1, P5, Pill } from "@deskpro/deskpro-ui";
+import { useDeskproAppTheme } from "@deskpro/app-sdk";
 import { Order } from "../../../services/shopify/types";
 import {TextBlockWithLabel} from "../../common";
 import {

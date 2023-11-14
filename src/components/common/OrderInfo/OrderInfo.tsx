@@ -1,7 +1,6 @@
 import { FC } from "react";
+import { Pill, Stack } from "@deskpro/deskpro-ui";
 import {
-    Pill,
-    Stack,
     VerticalDivider,
     HorizontalDivider,
     useDeskproAppTheme,

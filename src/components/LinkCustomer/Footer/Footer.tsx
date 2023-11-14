@@ -1,8 +1,5 @@
 import { FC } from "react";
-import {
-    Stack,
-    Button,
-} from "@deskpro/app-sdk";
+import { Stack, Button } from "@deskpro/deskpro-ui";
 import { CustomerType } from "../../../services/shopify/types";
 
 type Props = {
