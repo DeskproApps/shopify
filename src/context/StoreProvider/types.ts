@@ -1,13 +1,13 @@
 import { Reducer } from "react";
 import { Context, User } from "@deskpro/app-sdk";
-import { CustomerType, Orders } from "../../services/shopify/types";
+import { CustomerType, Order } from "../../services/shopify/types";
 
 export type ErrorType = Error | string | unknown;
 
 export interface State {
     context?: Context,
     customer?: CustomerType,
-    orders?: Orders,
+    orders?: Order[],
     _error?: ErrorType,
 }
 
@@ -15,7 +15,7 @@ export type Action =
     | { type: "loadContext", context: Context }
     | { type: "error", error: ErrorType }
     | { type: "linkedCustomer", customer: CustomerType }
-    | { type: "linkedOrders", orders: Orders };
+    | { type: "linkedOrders", orders: Order[] };
 
 export type Dispatch = (action: Action) => void;
 
