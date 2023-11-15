@@ -1,6 +1,7 @@
 import { FC, ChangeEvent, useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import { useDebouncedCallback } from "use-debounce";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
     HorizontalDivider,
     useDeskproAppClient,
@@ -17,7 +18,10 @@ import { Customer, InputSearch, Footer } from "../components/LinkCustomer";
 import { NoFound, Loading } from "../components/common";
 
 export const LinkCustomer: FC = () => {
-    const [state, dispatch] = useStore();
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const customerId = searchParams.get("customerId") as CustomerType["id"];
+    const [state] = useStore();
     const { client } = useDeskproAppClient();
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [customers, setCustomers] = useState<CustomerType[]>([]);
@@ -38,17 +42,17 @@ export const LinkCustomer: FC = () => {
         if (isEditMode) {
             client?.registerElement("shopifyHomeButton", {
                 type: "home_button",
-                payload: { type: "changePage", page: "home" }
+                payload: { type: "changePage", path: "/home" }
             });
         }
     }, [client, state, isEditMode]);
 
     useEffect(() => {
-        if (state?.pageParams?.customerId) {
-            setSelectedCustomerId(state.pageParams.customerId);
+        if (customerId) {
+            setSelectedCustomerId(customerId);
             setIsEditMode(true);
         }
-    }, [state?.pageParams?.customerId]);
+    }, [customerId]);
 
     const searchInShopify = useDebouncedCallback<(q: string) => void>((q) => {
         if (!client) {
@@ -103,7 +107,7 @@ export const LinkCustomer: FC = () => {
             .then((customerIds) => {
                 if ((customerIds.length === 1) && (customerIds[0] === selectedCustomerId)) {
                     // nothing change
-                    dispatch({ type: "changePage", page: "home" });
+                    navigate("/home");
                 } else  {
                     return deleteAllEntityCustomer(client, user.id, customerIds);
                 }
@@ -120,13 +124,13 @@ export const LinkCustomer: FC = () => {
                     onClearSearch();
                     client?.deregisterElement("shopifyHomeButton");
                 } else {
-                    dispatch({ type: "changePage", page: "home" })
+                    navigate("/home");
                 }
             })
             .finally(() => setLoading(false));
     };
 
-    const onCancel = () => dispatch({ type: "changePage", page: "home" });
+    const onCancel = () => navigate("/home");
 
     return (
         <>

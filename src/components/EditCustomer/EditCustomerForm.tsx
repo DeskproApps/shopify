@@ -4,6 +4,7 @@ import * as yup from 'yup';
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 import {
     Stack,
     Button,
@@ -54,6 +55,7 @@ const getInitValues = ({
 });
 
 const EditCustomerForm: FC<CustomerType> = (props) => {
+    const navigate = useNavigate();
     const {
         id,
         tags,
@@ -98,10 +100,9 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
                     { customerEmailMarketingConsentUpdate: { emailErrors } }
                 ]) => {
                     if (isEmpty(customerErrors) && isEmpty(emailErrors)) {
-                        dispatch({
-                            type: "changePage",
-                            page: "view_customer",
-                            params: { customerId: id },
+                        navigate({
+                          pathname: `/view_customer`,
+                          search: `?customerId=${id}`,
                         });
                     } else {
                         const errors = [
@@ -209,11 +210,7 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
                     <Button
                         text="Cancel"
                         intent="tertiary"
-                        onClick={() => dispatch({
-                            type: "changePage",
-                            page: "view_customer",
-                            params: { customerId: id }
-                        })}
+                        onClick={() => navigate({ pathname: `/view_customer`, search: `?customerId=${id}` })}
                         style={{ minWidth: "70px", justifyContent: "center" }}
                     />
                 </Stack>

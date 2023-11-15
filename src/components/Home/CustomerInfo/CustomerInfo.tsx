@@ -1,7 +1,8 @@
-import { FC } from "react";
-import { HorizontalDivider } from "@deskpro/app-sdk";
-import { SubHeader, TextBlockWithLabel } from "../../common";
-import { Props } from "./types";
+import { useCallback } from "react";
+import { Link, Title, HorizontalDivider } from "@deskpro/app-sdk";
+import { TextBlockWithLabel, ShopifyLogo } from "../../common";
+import type { FC, MouseEventHandler } from "react";
+import type { Props } from "./types";
 
 const CustomerInfo: FC<Props> = ({
     link,
@@ -11,12 +12,18 @@ const CustomerInfo: FC<Props> = ({
     displayName,
     onChangePage,
 }) => {
+    const onClick: MouseEventHandler<HTMLAnchorElement> = useCallback((e) => {
+      e.preventDefault();
+      onChangePage && onChangePage();
+    }, [onChangePage]);
     return (
         <>
-            <SubHeader
-                text={displayName}
+            <Title
+                title={(
+                    <Link href="#" onClick={onClick}>{displayName}</Link>
+                )}
                 link={link}
-                onChangePage={onChangePage}
+                icon={<ShopifyLogo/>}
             />
             <TextBlockWithLabel
                 label="Email"

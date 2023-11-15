@@ -1,7 +1,9 @@
-import { FC } from "react";
+import { useCallback } from "react";
 import isEmpty from "lodash/isEmpty";
-import { OrderInfo, SubHeader, NoFound } from "../../common";
-import { Props } from "./types";
+import { Title, Link } from "@deskpro/app-sdk";
+import { OrderInfo, NoFound, ShopifyLogo } from "../../common";
+import type { FC, MouseEventHandler } from "react";
+import type { Props } from "./types";
 
 const Orders: FC<Props> = ({
     link,
@@ -9,28 +11,38 @@ const Orders: FC<Props> = ({
     onChangePage,
     onChangePageOrder,
     numberOfOrders,
-}) => (
+}) => {
+  const onClick: MouseEventHandler<HTMLAnchorElement> = useCallback((e) => {
+    e.preventDefault();
+    onChangePage && onChangePage();
+  }, [onChangePage]);
+
+  return (
     <>
-        <SubHeader
-            marginBottom={14}
-            text={`Orders ${numberOfOrders ? `(${numberOfOrders})` : ''}`}
-            link={link}
-            onChangePage={onChangePage}
-        />
-        {isEmpty(orders)
-            ? (<NoFound/>)
-            : orders.map(({ id, legacyResourceId,...order }) => (
-                <OrderInfo
-                    {...order}
-                    key={id}
-                    id={id}
-                    legacyResourceId={legacyResourceId}
-                    linkOrder={`${link}/${legacyResourceId}`}
-                    onChangePage={onChangePageOrder}
-                />
-            ))
-        }
+      <Title
+        title={(
+            <Link href="#" onClick={onClick}>
+                {`Orders ${numberOfOrders ? `(${numberOfOrders})` : ''}`}
+            </Link>
+        )}
+        link={link}
+        icon={<ShopifyLogo/>}
+      />
+      {isEmpty(orders)
+        ? (<NoFound/>)
+        : orders.map(({ id, legacyResourceId,...order }) => (
+          <OrderInfo
+            {...order}
+            key={id}
+            id={id}
+            legacyResourceId={legacyResourceId}
+            linkOrder={`${link}/${legacyResourceId}`}
+            onChangePage={onChangePageOrder}
+          />
+        ))
+      }
     </>
-);
+  );
+}
 
 export { Orders };

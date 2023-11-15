@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from "react";
 import get from "lodash/get";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { useSearchParams } from "react-router-dom";
 import { Stack, Tag, Toggle } from "@deskpro/deskpro-ui";
 import {
     useDeskproAppTheme,
@@ -14,6 +15,8 @@ import { CustomerType } from "../services/shopify/types";
 import type { AnyIcon } from "@deskpro/deskpro-ui";
 
 export const ViewCustomer: FC = () => {
+    const [searchParams] = useSearchParams();
+    const customerId = searchParams.get("customerId") as CustomerType["id"];
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
     const { theme } = useDeskproAppTheme();
@@ -41,11 +44,17 @@ export const ViewCustomer: FC = () => {
         }
         client?.registerElement("shopifyHomeButton", {
             type: "home_button",
-            payload: { type: "changePage", page: "home" }
+            payload: { type: "changePage", path: "/home" }
         });
         client?.registerElement("shopifyEditButton", {
             type: "edit_button",
-            payload: { type: "changePage", page: "edit_customer", params: { customerId: customer?.id } },
+            payload: {
+              type: "changePage",
+              path: {
+                pathname: "/edit_customer",
+                search: `?customerId=${customer?.id}`,
+              }
+            },
         });
         client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -56,12 +65,12 @@ export const ViewCustomer: FC = () => {
             return;
         }
 
-        if (!state.pageParams?.customerId) {
+        if (!customerId) {
             dispatch({ type: "error", error: "CustomerId not found" });
             return;
         }
 
-        getCustomer(client, state.pageParams.customerId)
+        getCustomer(client, customerId)
             .then(({ customer }) => setCustomer(customer))
             .catch((error: Error) => dispatch({ type: "error", error: get(error, ["errors"], error) }))
             .finally(() => setLoading(false));

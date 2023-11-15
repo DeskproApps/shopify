@@ -1,5 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import get from "lodash/get";
+import { useNavigate } from "react-router-dom";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { CustomerInfo, Orders, Comments } from "../components/Home";
@@ -10,6 +11,7 @@ import { Order, CustomerType } from "../services/shopify/types";
 import { Loading } from "../components/common";
 
 export const Home: FC = () => {
+    const navigate = useNavigate();
     const { client } = useDeskproAppClient();
     const [state, dispatch] = useStore();
     const [customer, setCustomer] = useState<CustomerType | null>(null);
@@ -31,18 +33,14 @@ export const Home: FC = () => {
                 title: "Change Linked Customer",
                 payload: {
                     type: "changePage",
-                    page: "link_customer",
-                    params: { customerId: customer?.id },
+                    path: `/link_customer/${customer?.id}`,
                 },
-            }/*, {
-                title: "Settings",
-                payload: "settings",
-            }*/],
+            }],
         });
     }, [client, customer?.id])
 
     const onChangePageOrder = (orderId: Order['legacyResourceId']) => {
-        dispatch({ type: "changePage", page: "view_order", params: { orderId } })
+        navigate({ pathname: `/view_order`, search: `?orderId=${orderId}` });
     };
 
     useEffect(() => {
@@ -73,11 +71,7 @@ export const Home: FC = () => {
                     <CustomerInfo
                         {...customer}
                         link={`https://${getShopName(state)}.myshopify.com/admin/customers/${customer.legacyResourceId}`}
-                        onChangePage={() => dispatch({
-                            type: "changePage",
-                            page: "view_customer",
-                            params: { customerId: customer.id },
-                        })}
+                        onChangePage={() => navigate(`/view_customer?customerId=${customer.id}`)}
                     />
                 )}
                 {orders && (
@@ -85,7 +79,7 @@ export const Home: FC = () => {
                         numberOfOrders={customer?.numberOfOrders || '0'}
                         orders={orders}
                         link={`https://${getShopName(state)}.myshopify.com/admin/orders`}
-                        onChangePage={() => dispatch({ type: "changePage", page: "list_orders" })}
+                        onChangePage={() => navigate("/list_orders")}
                         onChangePageOrder={onChangePageOrder}
                     />
                 )}
