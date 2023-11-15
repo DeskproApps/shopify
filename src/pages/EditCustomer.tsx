@@ -1,5 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import get from "lodash/get";
+import { useSearchParams } from "react-router-dom";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { getCustomer } from "../services/shopify";
@@ -8,8 +9,10 @@ import { EditCustomerForm } from "../components/EditCustomer";
 import { Loading } from "../components/common";
 
 export const EditCustomer: FC = () => {
+    const [searchParams] = useSearchParams();
+    const customerId = searchParams.get("customerId") as CustomerType["id"];
     const { client } = useDeskproAppClient();
-    const [state, dispatch] = useStore();
+    const [, dispatch] = useStore();
     const [loading, setLoading] = useState<boolean>(true);
     const [customer, setCustomer] = useState<CustomerType | null>(null);
 
@@ -23,7 +26,7 @@ export const EditCustomer: FC = () => {
 
         client?.registerElement("shopifyHomeButton", {
             type: "home_button",
-            payload: { type: "changePage", page: "home" }
+            payload: { type: "changePage", path: "/home" }
         });
     }, [client]);
 
@@ -32,19 +35,19 @@ export const EditCustomer: FC = () => {
             return;
         }
 
-        if (!state.pageParams?.customerId) {
+        if (!customerId) {
             dispatch({ type: "error", error: "CustomerId not found" });
             return;
         }
 
-        getCustomer(client, state.pageParams.customerId)
+        getCustomer(client, customerId)
             .then(({ customer }) => {
                 setLoading(false);
                 setCustomer(customer);
             })
             .catch((error) => dispatch({ type: "error", error: get(error, ["errors"], error) }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [client, state.pageParams?.customerId]);
+    }, [client, customerId]);
 
     return (loading || !customer)
         ? (<Loading />)

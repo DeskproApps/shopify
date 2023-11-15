@@ -1,5 +1,6 @@
 import { Suspense, StrictMode } from "react";
 import ReactDOM from "react-dom/client";
+import { HashRouter } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 import { DeskproAppProvider, LoadingSpinner } from "@deskpro/app-sdk";
 import { StoreProvider } from "./context/StoreProvider";
@@ -21,13 +22,15 @@ const root = ReactDOM.createRoot(document.getElementById("root") as Element);
 root.render((
     <StrictMode>
       <DeskproAppProvider>
-        <StoreProvider>
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <Suspense fallback={<LoadingSpinner/>}>
-              <App />
-            </Suspense>
-          </ErrorBoundary>
-        </StoreProvider>
+        <HashRouter>
+          <StoreProvider>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <Suspense fallback={<LoadingSpinner/>}>
+                <App />
+              </Suspense>
+            </ErrorBoundary>
+          </StoreProvider>
+        </HashRouter>
       </DeskproAppProvider>
     </StrictMode>
 ));

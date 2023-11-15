@@ -1,5 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
+import { useSearchParams } from "react-router-dom";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { getOrder } from "../services/shopify";
@@ -11,6 +12,8 @@ import { OrderItem, TotalPrice, Information } from "../components/ViewOrder";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 export const ViewOrder: FC = () => {
+    const [searchParams] = useSearchParams();
+    const orderId = searchParams.get("orderId") as Order["id"];
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
     const [loading, setLoading] = useState(true);
@@ -22,19 +25,19 @@ export const ViewOrder: FC = () => {
             return;
         }
 
-        if (!state?.pageParams?.orderId) {
+        if (!orderId) {
             dispatch({ type: "error", error: "OrderId not found" });
             return;
         }
 
-        getOrder(client, state.pageParams.orderId)
+        getOrder(client, orderId)
             .then(({ order }) => {
                 client?.setTitle(`#${order?.legacyResourceId}`);
                 setOrder(order);
             })
             .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [client, state?.pageParams?.orderId]);
+    }, [client, orderId]);
 
     useEffect(() => {
         client?.deregisterElement("shopifyMenu");
@@ -46,18 +49,15 @@ export const ViewOrder: FC = () => {
 
         client?.registerElement("shopifyHomeButton", {
             type: "home_button",
-            payload: { type: "changePage", page: "home" }
+            payload: { type: "changePage", path: "/home" }
         });
         client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
         client?.registerElement("shopifyMenu", {
             type: "menu",
             items: [{
                 title: "Cancel order",
-                payload: { type: "changePage", page: "list_orders" },
-            }/*, {
-                title: "Settings",
-                payload: "settings",
-            }*/],
+                payload: { type: "changePage", path: "/list_orders" },
+            }],
         });
         if (shopName && order?.legacyResourceId) {
             client?.registerElement("shopifyExternalCtaLink", {
@@ -66,18 +66,20 @@ export const ViewOrder: FC = () => {
                 hasIcon: true,
             });
         }
-        if (state?.pageParams?.orderId) {
+        if (orderId) {
             client?.registerElement("shopifyEditButton", {
                 type: "edit_button",
                 payload: {
                     type: "changePage",
-                    page: "edit_order",
-                    params: { orderId: state.pageParams.orderId }
+                    path: {
+                      pathname: `/edit_order`,
+                      search: `?orderId=${orderId}`,
+                    }
                 },
             });
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [client, state?.pageParams?.orderId]);
+    }, [client, orderId]);
 
     if (loading) {
         return (

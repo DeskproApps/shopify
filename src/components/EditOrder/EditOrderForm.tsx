@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import * as yup from 'yup';
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
+import { useNavigate } from "react-router-dom";
 import {
     H3,
     Pill,
@@ -40,6 +41,7 @@ const EditOrderForm: FC<Order> = ({
     displayFinancialStatus,
     displayFulfillmentStatus,
 }) => {
+    const navigate = useNavigate();
     const { client } = useDeskproAppClient();
     const { theme } = useDeskproAppTheme();
     const [, dispatch] = useStore();
@@ -84,11 +86,7 @@ const EditOrderForm: FC<Order> = ({
             })
                 .then(({ orderUpdate: { userErrors } }) => {
                     if (isEmpty(userErrors)) {
-                        dispatch({
-                            type: "changePage",
-                            page: "view_order",
-                            params: { orderId: id },
-                        });
+                        navigate({ pathname: `/view_order`, search: `?orderId=${id}` });
                     } else {
                         setError(getApiErrors(userErrors));
                     }
@@ -263,7 +261,7 @@ const EditOrderForm: FC<Order> = ({
                     <Button
                         text="Cancel"
                         intent="tertiary"
-                        onClick={() => dispatch({ type: "changePage", page: "view_order", params: { orderId: id } })}
+                        onClick={() => navigate({ pathname: `/view_order`, search: `?orderId=${id}` })}
                         style={{ minWidth: "70px", justifyContent: "center" }}
                     />
                 </Stack>

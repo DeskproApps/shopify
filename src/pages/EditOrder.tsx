@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { getOrder } from "../services/shopify";
@@ -7,8 +8,10 @@ import { EditOrderForm } from "../components/EditOrder";
 import { Loading } from "../components/common";
 
 export const EditOrder: FC = () => {
+    const [searchParams] = useSearchParams();
+    const orderId = searchParams.get("orderId") as Order["id"];
     const { client } = useDeskproAppClient();
-    const [state, dispatch] = useStore();
+    const [, dispatch] = useStore();
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -20,7 +23,7 @@ export const EditOrder: FC = () => {
 
         client?.registerElement("shopifyHomeButton", {
             type: "home_button",
-            payload: { type: "changePage", page: "home" }
+            payload: { type: "changePage", path: "/home" }
         });
     }, [client]);
 
@@ -29,19 +32,19 @@ export const EditOrder: FC = () => {
             return;
         }
 
-        if (!state?.pageParams?.orderId) {
+        if (!orderId) {
             dispatch({ type: "error", error: "OrderId not found" });
             return;
         }
 
-        getOrder(client, state.pageParams.orderId)
+        getOrder(client, orderId)
             .then(({ order }) => {
                 setLoading(false);
                 client?.setTitle(`Edit Order #${order.legacyResourceId}`);
                 setOrder(order);
             });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [client, state?.pageParams?.orderId]);
+    }, [client, orderId]);
 
     return (loading || !order)
         ? (<Loading />)

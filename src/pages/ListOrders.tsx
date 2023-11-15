@@ -1,6 +1,7 @@
 import {FC, useState, useEffect } from "react";
 import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
+import { useNavigate } from "react-router-dom";
 import { useDeskproAppClient } from "@deskpro/app-sdk";
 import { useStore } from "../context/StoreProvider/hooks";
 import { getEntityCustomerList } from "../services/entityAssociation";
@@ -12,6 +13,7 @@ import { OrderInfo, NoFound, Loading } from "../components/common";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 export const ListOrders: FC = () => {
+    const navigate = useNavigate();
     const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
     const [loading, setLoading] = useState<boolean>(true);
@@ -27,7 +29,7 @@ export const ListOrders: FC = () => {
 
         client?.registerElement("shopifyHomeButton", {
             type: "home_button",
-            payload: { type: "changePage", page: "home" }
+            payload: { type: "changePage", path: "/home" }
         });
         client?.registerElement("shopifyRefreshButton", { type: "refresh_button" });
     }, [client]);
@@ -64,7 +66,7 @@ export const ListOrders: FC = () => {
     }, [client, userId]);
 
     const onChangePageOrder = (orderId: Order['id']) => {
-        dispatch({ type: "changePage", page: "view_order", params: { orderId } })
+        navigate({ pathname: "/view_order", search: `?orderId=${orderId}` });
     };
 
     if (loading) {
