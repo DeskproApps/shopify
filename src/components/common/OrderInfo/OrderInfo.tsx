@@ -3,14 +3,12 @@ import { Pill, Stack } from "@deskpro/deskpro-ui";
 import {
   Link,
   Title,
+  Property,
   VerticalDivider,
   HorizontalDivider,
   useDeskproAppTheme,
 } from "@deskpro/app-sdk";
-import {
-  ShopifyLogo,
-  TextBlockWithLabel,
-} from "../../common";
+import { ShopifyLogo } from "../../common";
 import { getShippingStatusName, getShippingStatusColorSchema, getDate } from "../../../utils";
 import type { FC, MouseEventHandler } from "react";
 import type { Props } from "./types";
@@ -41,7 +39,7 @@ const OrderInfo: FC<Props> = ({
       />
       <Stack align="stretch" style={{ marginBottom: 10 }}>
         <Stack grow={1}>
-          <TextBlockWithLabel
+          <Property
             marginBottom={0}
             label="Date"
             text={getDate(createdAt)}
@@ -49,7 +47,7 @@ const OrderInfo: FC<Props> = ({
         </Stack>
         <VerticalDivider width={1} />
         <Stack grow={1}>
-          <TextBlockWithLabel
+          <Property
             marginBottom={0}
             label="Status"
             text={(

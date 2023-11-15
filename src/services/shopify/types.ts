@@ -73,7 +73,7 @@ export type CustomerType = {
     amountSpent: Money,
     numberOfOrders: string,
     tags: string[],
-    orders: Orders
+    orders: Order[],
     comments: Comments,
     emailMarketingConsent: EmailMarketingConsent,
 };
@@ -117,8 +117,6 @@ export type Order = {
         presentmentMoney: Money,
     }
 };
-
-export type Orders = Array<Order>;
 
 export type CommentEvent = {
     id: string,

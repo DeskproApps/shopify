@@ -1,0 +1,1 @@
+export { LinkCustomerPage } from "./LinkCustomerPage";

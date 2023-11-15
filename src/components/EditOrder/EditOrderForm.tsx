@@ -9,14 +9,15 @@ import {
     Pill,
     Stack,
     Button,
+    InputWithDisplay,
     TextAreaWithDisplay,
 } from "@deskpro/deskpro-ui";
 import {
+    Property,
     HorizontalDivider,
     useDeskproAppTheme,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { InputWithDisplay } from "@deskpro/deskpro-ui";
 import { useStore } from "../../context/StoreProvider/hooks";
 import {
     getApiErrors,
@@ -25,7 +26,7 @@ import {
 } from "../../utils";
 import { setOrder } from "../../services/shopify";
 import { Order } from "../../services/shopify/types";
-import { Label, TextBlockWithLabel, ErrorBlock } from "../common";
+import { Label, ErrorBlock } from "../common";
 import { FormState } from "./type";
 
 const validationSchema = yup.object().shape({
@@ -99,7 +100,7 @@ const EditOrderForm: FC<Order> = ({
         <>
             {!isEmpty(error) && <ErrorBlock text={error}/>}
             <form onSubmit={handleSubmit}>
-                <TextBlockWithLabel
+                <Property
                     label="Payment status"
                     text={(
                         <Pill
@@ -109,7 +110,7 @@ const EditOrderForm: FC<Order> = ({
                         />
                     )}
                 />
-                <TextBlockWithLabel
+                <Property
                     label="Fulfillment status"
                     text={(
                         <Pill

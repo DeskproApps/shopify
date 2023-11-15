@@ -9,18 +9,20 @@ import {
     Stack,
     Button,
     AnyIcon,
+    InputWithDisplay,
+    Tag,
+    Toggle,
     TextAreaWithDisplay,
 } from "@deskpro/deskpro-ui";
 import {
+    Property,
     useDeskproAppTheme,
     useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { InputWithDisplay, Tag, Toggle } from "@deskpro/deskpro-ui";
 import { useStore } from "../../context/StoreProvider/hooks";
 import {
     Label,
     ErrorBlock,
-    TextBlockWithLabel,
 } from "../common";
 import {
     getApiErrors,
@@ -163,7 +165,7 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
                         inputsize="small"
                     />
                 </Label>
-                <TextBlockWithLabel
+                <Property
                     label="Tags"
                     text={(
                         <Stack gap={6} wrap="wrap">
@@ -181,7 +183,7 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
                         </Stack>
                     )}
                 />
-                <TextBlockWithLabel
+                <Property
                     label="Receive Marketing Email"
                     text={(
                         <Toggle
