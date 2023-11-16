@@ -15,6 +15,7 @@ import type { Props } from "./types";
 
 const OrderInfo: FC<Props> = ({
   id,
+  isLast,
   createdAt,
   lineItems,
   linkOrder,
@@ -34,8 +35,8 @@ const OrderInfo: FC<Props> = ({
         title={(
           <Link href="#" onClick={onClick}>{title}</Link>
         )}
-        icon={<ShopifyLogo/>}
-        link={linkOrder}
+        {...(!linkOrder ? {} : { link: linkOrder })}
+        {...(!linkOrder ? {} : { icon: <ShopifyLogo/> })}
       />
       <Stack align="stretch" style={{ marginBottom: 10 }}>
         <Stack grow={1}>
@@ -62,7 +63,7 @@ const OrderInfo: FC<Props> = ({
           />
         </Stack>
       </Stack>
-      <HorizontalDivider style={{ marginBottom: 9 }}/>
+      {!isLast && <HorizontalDivider style={{ marginBottom: 9 }}/>}
     </>
   );
 }

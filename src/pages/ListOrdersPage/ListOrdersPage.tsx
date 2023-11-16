@@ -1,26 +1,23 @@
-import { useState, useEffect } from "react";
-import get from "lodash/get";
+import { useCallback } from "react";
 import size from "lodash/size";
 import { useNavigate } from "react-router-dom";
-import { useDeskproAppClient, LoadingSpinner } from "@deskpro/app-sdk";
+import {
+  LoadingSpinner,
+  useDeskproAppClient,
+} from "@deskpro/app-sdk";
 import { useSetTitle, useRegisterElements } from "../../hooks";
-import { useStore } from "../../context/StoreProvider/hooks";
-import { getEntityCustomerList } from "../../services/entityAssociation";
-import { getCustomer } from "../../services/shopify";
+import { useLinkedCustomer, useExternalLink } from "../../hooks";
 import { ListOrders } from "../../components";
 import type { FC } from "react";
-import type { Order, CustomerType } from "../../services/shopify/types";
+import type { Order } from "../../services/shopify/types";
 
 const ListOrdersPage: FC = () => {
     const navigate = useNavigate();
-    const [state, dispatch] = useStore();
     const { client } = useDeskproAppClient();
-    const [loading, setLoading] = useState<boolean>(true);
-    const [customer, setCustomer] = useState<CustomerType | null>(null);
-    const [orders, setOrders] = useState<Order[]>([]);
-    const userId = state.context?.data.ticket?.primaryUser.id || state.context?.data.user.id;
+    const { getOrderLink } = useExternalLink();
+    const { isLoading, orders } = useLinkedCustomer();
 
-    useSetTitle(`Orders (${size(customer?.numberOfOrders)})`);
+    useSetTitle(`Orders (${size(orders)})`);
 
     useRegisterElements(({ registerElement }) => {
         registerElement("refresh", { type: "refresh_button" });
@@ -30,43 +27,18 @@ const ListOrdersPage: FC = () => {
         });
     }, [client]);
 
-    useEffect(() => {
-        if (!client) {
-            return;
-        }
+    const onNavigateToOrder = useCallback((orderId: Order['id']) => {
+      navigate({ pathname: "/view_order", search: `?orderId=${orderId}` });
+    }, [navigate]);
 
-        setLoading(true);
-
-        getEntityCustomerList(client, userId)
-            .then((customers: string[]) => {
-                return getCustomer(client, customers[0]);
-            })
-            .then(({ customer }) => {
-                const { orders } = customer;
-
-                setCustomer(customer);
-                setOrders(orders);
-                setLoading(false);
-            })
-            .catch((error: Error) => {
-                setLoading(false);
-                dispatch({ type: "error", error: get(error, ["errors"], error) })
-            });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [client, userId]);
-
-    const onNavigateToOrder = (orderId: Order['id']) => {
-        navigate({ pathname: "/view_order", search: `?orderId=${orderId}` });
-    };
-
-    if (loading) {
+    if (isLoading) {
         return (<LoadingSpinner />);
     }
 
     return (
       <ListOrders
-        state={state}
         orders={orders}
+        getOrderLink={getOrderLink}
         onNavigateToOrder={onNavigateToOrder}
       />
     );

@@ -1,8 +1,9 @@
-import { Order } from "../../services/shopify/types";
+import type { Maybe } from "../../types";
+import type { Order } from "../../services/shopify/types";
 
 export type FormState = {
-    financialStatus: Order["displayFinancialStatus"],
-    fulfillmentStatus: Order["displayFulfillmentStatus"],
+    financialStatus: Order["displayFinancialStatus"]|string,
+    fulfillmentStatus: Order["displayFulfillmentStatus"]|string,
     note: Order["note"],
     shippingFirstName: Order["shippingAddress"]["firstName"],
     shippingLastName: Order["shippingAddress"]["lastName"],
@@ -16,4 +17,11 @@ export type FormState = {
     billingAddress2: Order['billingAddress']["address2"],
     billingCity: Order['billingAddress']["city"],
     billingZip: Order['billingAddress']["zip"],
+};
+
+export type FormProps = {
+  order?: Order,
+  error: Maybe<string|string[]>,
+  onCancel: () => void,
+  onSubmit: (values: FormState) => Promise<void>,
 };

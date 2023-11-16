@@ -1,9 +1,6 @@
 import { IDeskproClient } from "@deskpro/app-sdk";
 import { baseGraphQLRequest } from "./baseGraphQLRequest";
-import { CustomerType } from "./types";
-
-export type CustomerUpdateValues =
-    Pick<CustomerType, "firstName" | "lastName" | "email" | "phone" | "note" | "emailMarketingConsent">;
+import { CustomerType, CustomerUpdateValues } from "./types";
 
 const setCustomer = (
     client: IDeskproClient,
@@ -22,7 +19,7 @@ const setCustomer = (
                 userErrors { field, message },
                 customer {
                     id, ${Object.keys(values).join(', ')}, emailMarketingConsent { marketingState },
-                    
+
                 }
             }
         }

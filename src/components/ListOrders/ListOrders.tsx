@@ -1,17 +1,16 @@
 import size from "lodash/size";
-import { getShopName } from "../../utils";
 import { NoFound, OrderInfo, Container } from "../common";
 import type { FC } from "react";
-import type { State } from "../../context/StoreProvider/types";
+import type { Maybe } from "../../types";
 import type { Order } from "../../services/shopify/types";
 
 type Props = {
-  state: State,
   orders: Order[],
+  getOrderLink: (id: Order["legacyResourceId"]) => Maybe<string>,
   onNavigateToOrder: (orderId: Order['id']) => void,
 };
 
-const ListOrders: FC<Props> = ({ orders, onNavigateToOrder, state }) => {
+const ListOrders: FC<Props> = ({ orders, onNavigateToOrder, getOrderLink }) => {
   return (
     <Container>
       {(!Array.isArray(orders) || !size(orders))
@@ -20,9 +19,7 @@ const ListOrders: FC<Props> = ({ orders, onNavigateToOrder, state }) => {
           <OrderInfo
             {...order}
             key={order.id}
-            linkOrder={
-              `https://${getShopName(state)}.myshopify.com/admin/orders/${order.legacyResourceId}`
-            }
+            linkOrder={getOrderLink(order.legacyResourceId)}
             onChangePage={onNavigateToOrder}
           />
         ))}

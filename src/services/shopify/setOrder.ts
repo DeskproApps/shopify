@@ -1,14 +1,6 @@
 import { IDeskproClient } from "@deskpro/app-sdk";
 import { baseGraphQLRequest } from "./baseGraphQLRequest";
-import { Order } from "./types";
-
-export type OrderUpdateValue =
-    Pick<Order, "note">
-    & {
-        shippingAddress:
-            Omit<Order["shippingAddress"], "countryCodeV2">
-            & { countryCode: Order["shippingAddress"]["countryCodeV2"] }
-    };
+import { Order, OrderUpdateValue } from "./types";
 
 const setOrder = (
     client: IDeskproClient,
