@@ -1,20 +1,60 @@
-import { FC, useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import get from "lodash/get";
-import { useSearchParams } from "react-router-dom";
-import { useDeskproAppClient, LoadingSpinner } from "@deskpro/app-sdk";
+import isEmpty from "lodash/isEmpty";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import {
+  LoadingSpinner,
+  useDeskproAppClient,
+} from "@deskpro/app-sdk";
 import { useRegisterElements, useSetTitle } from "../../hooks";
-import { useStore } from "../../context/StoreProvider/hooks";
-import { getCustomer } from "../../services/shopify";
-import { CustomerType } from "../../services/shopify/types";
+import { useCustomer } from "../../hooks";
 import { EditCustomerForm } from "../../components/EditCustomer";
+import { setCustomer } from "../../services/shopify";
+import { getApiErrors } from "../../utils";
+import { getValues } from "../../components/EditCustomer";
+import type { FC } from "react";
+import type { Maybe } from "../../types";
+import type { FormState } from "../../components/EditCustomer";
 
 const EditCustomerPage: FC = () => {
+    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const customerId = searchParams.get("customerId") as CustomerType["id"];
+    const customerId = searchParams.get("customerId");
     const { client } = useDeskproAppClient();
-    const [, dispatch] = useStore();
-    const [loading, setLoading] = useState<boolean>(true);
-    const [customer, setCustomer] = useState<CustomerType | null>(null);
+    const [error, setError] = useState<Maybe<string|string[]>>(null);
+    const { isLoading, customer } = useCustomer(customerId);
+
+    const onCancel = useCallback(() => {
+      navigate({ pathname: `/view_customer`, search: `?customerId=${customerId}` })
+    }, [navigate, customerId]);
+
+    const onSubmit = useCallback((values: FormState) => {
+        if (!client || !customer?.id) {
+          return Promise.resolve();
+        }
+
+        setError(null);
+
+        return setCustomer(client, customer.id, getValues(values, customer))
+          .then(([
+             { customerUpdate: { userErrors: customerErrors } },
+             { customerEmailMarketingConsentUpdate: { emailErrors } }
+           ]) => {
+            if (isEmpty(customerErrors) && isEmpty(emailErrors)) {
+              navigate({
+                pathname: `/view_customer`,
+                search: `?customerId=${customer.id}`,
+              });
+            } else {
+              const errors = [
+                ...getApiErrors(customerErrors),
+                ...getApiErrors(emailErrors),
+              ]
+              setError(errors);
+            }
+          })
+          .catch((error) => setError(get(error, ["errors"], error)));
+    }, [client, navigate, customer]);
 
     useSetTitle("Edit Customer");
 
@@ -23,30 +63,22 @@ const EditCustomerPage: FC = () => {
             type: "home_button",
             payload: { type: "changePage", path: "/home" }
         });
-    }, [client]);
+    });
 
-    useEffect(() => {
-        if (!client) {
-            return;
-        }
+    if (isLoading) {
+      return (
+        <LoadingSpinner />
+      );
+    }
 
-        if (!customerId) {
-            dispatch({ type: "error", error: "CustomerId not found" });
-            return;
-        }
-
-        getCustomer(client, customerId)
-            .then(({ customer }) => {
-                setLoading(false);
-                setCustomer(customer);
-            })
-            .catch((error) => dispatch({ type: "error", error: get(error, ["errors"], error) }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [client, customerId]);
-
-    return (loading || !customer)
-        ? (<LoadingSpinner />)
-        : (<EditCustomerForm {...customer} />);
+    return (
+      <EditCustomerForm
+        error={error}
+        customer={customer}
+        onCancel={onCancel}
+        onSubmit={onSubmit}
+      />
+    );
 };
 
 export { EditCustomerPage };

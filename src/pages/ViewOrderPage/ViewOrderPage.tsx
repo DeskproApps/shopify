@@ -1,40 +1,23 @@
-import { FC, useState, useEffect } from "react";
+import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
+import { LoadingSpinner } from "@deskpro/app-sdk";
 import {
-  LoadingSpinner,
-  useDeskproAppClient,
-} from "@deskpro/app-sdk";
-import { useSetTitle, useRegisterElements } from "../../hooks";
-import { useStore } from "../../context/StoreProvider/hooks";
-import { getOrder } from "../../services/shopify";
-import { Order } from "../../services/shopify/types";
-import { getShopName } from "../../utils";
+  useSetTitle,
+  useExternalLink,
+  useRegisterElements,
+} from "../../hooks";
+import { useOrder } from "../../hooks";
 import { ViewOrder } from "../../components";
+import type { FC } from "react";
 
 const ViewOrderPage: FC = () => {
     const [searchParams] = useSearchParams();
-    const orderId = searchParams.get("orderId") as Order["id"];
-    const [state, dispatch] = useStore();
-    const { client } = useDeskproAppClient();
-    const [loading, setLoading] = useState(true);
-    const [order, setOrder] = useState<null | Order>(null);
-    const shopName = getShopName(state);
-
-    useEffect(() => {
-        if (!client) {
-            return;
-        }
-
-        if (!orderId) {
-            dispatch({ type: "error", error: "OrderId not found" });
-            return;
-        }
-
-        getOrder(client, orderId)
-            .then(({ order }) => setOrder(order))
-            .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [client, orderId]);
+    const orderId = searchParams.get("orderId");
+    const { isLoading, order } = useOrder(orderId);
+    const { getOrderLink } = useExternalLink();
+    const orderLink = useMemo(() => {
+      return getOrderLink(order?.legacyResourceId);
+    }, [getOrderLink, order]);
 
     useSetTitle(order?.legacyResourceId ? `#${order?.legacyResourceId}` : "Shopify");
 
@@ -51,10 +34,10 @@ const ViewOrderPage: FC = () => {
                 payload: { type: "changePage", path: "/list_orders" },
             }],
         });
-        if (shopName && order?.legacyResourceId) {
+        if (orderLink) {
             registerElement("external", {
                 type: "cta_external_link",
-                url: `https://${shopName}.myshopify.com/admin/orders/${order.legacyResourceId}`,
+                url: orderLink,
                 hasIcon: true,
             });
         }
@@ -67,10 +50,9 @@ const ViewOrderPage: FC = () => {
                 },
             });
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [client, orderId]);
+    }, [orderId]);
 
-    if (loading) {
+    if (isLoading) {
         return (
             <LoadingSpinner />
         );

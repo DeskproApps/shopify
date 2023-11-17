@@ -1,5 +1,4 @@
 export { getFullName } from "./getFullName";
-export { getShopName } from "./getShopName";
 export { getDate, getTime, parseDateTime } from "./date";
 export { getTagColorSchema } from "./getTagColorSchema";
 export {

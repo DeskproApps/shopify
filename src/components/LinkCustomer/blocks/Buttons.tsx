@@ -1,3 +1,4 @@
+import size from "lodash/size";
 import { FC } from "react";
 import { Stack, Button } from "@deskpro/deskpro-ui";
 import { CustomerType } from "../../../services/shopify/types";
@@ -7,6 +8,7 @@ type Props = {
     isEditMode: boolean,
     onSave: () => void,
     onCancel: () => void,
+    isSubmitting: boolean,
 };
 
 const Buttons: FC<Props> = ({
@@ -14,16 +16,20 @@ const Buttons: FC<Props> = ({
     isEditMode,
     onSave,
     onCancel,
+    isSubmitting,
 }) => (
     <Stack justify="space-between">
         <Button
-            disabled={!isEditMode && !selectedId}
+            type="button"
             text={isEditMode ? "Save" : "Add"}
             onClick={onSave}
+            disabled={!size(selectedId) || isSubmitting}
+            loading={isSubmitting}
             style={{ minWidth: "70px", justifyContent: "center" }}
         />
         {isEditMode && (
             <Button
+                type="button"
                 text="Cancel"
                 intent="tertiary"
                 onClick={onCancel}

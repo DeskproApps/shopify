@@ -1,9 +1,10 @@
 import { Suspense, StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { HashRouter } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "react-error-boundary";
 import { DeskproAppProvider, LoadingSpinner } from "@deskpro/app-sdk";
-import { StoreProvider } from "./context/StoreProvider";
+import { queryClient } from "./query";
 import { ErrorFallback } from "./components/ErrorFallback";
 import { App } from "./App";
 import TimeAgo from "javascript-time-ago";
@@ -23,13 +24,13 @@ root.render((
     <StrictMode>
       <DeskproAppProvider>
         <HashRouter>
-          <StoreProvider>
+          <QueryClientProvider client={queryClient}>
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               <Suspense fallback={<LoadingSpinner/>}>
                 <App />
               </Suspense>
             </ErrorBoundary>
-          </StoreProvider>
+          </QueryClientProvider>
         </HashRouter>
       </DeskproAppProvider>
     </StrictMode>

@@ -1,6 +1,8 @@
-import { Order } from "../../../services/shopify/types";
+import type { Maybe } from "../../../types";
+import type { Order } from "../../../services/shopify/types";
 
 export type Props = Order & {
-    linkOrder: string,
-    onChangePage: (orderId: Order['id']) => void
+  isLast?: boolean,
+  linkOrder: Maybe<string>,
+  onChangePage: (orderId: Order['id']) => void
 };

@@ -1,10 +1,6 @@
-import { FC, useState } from "react";
 import { useFormik } from "formik";
-import * as yup from 'yup';
-import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
 import {
     Stack,
     Button,
@@ -17,56 +13,25 @@ import {
 import {
     Property,
     useDeskproAppTheme,
-    useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { useStore } from "../../context/StoreProvider/hooks";
 import {
     Label,
+    Container,
     ErrorBlock,
 } from "../common";
-import {
-    getApiErrors,
-    parseDateTime,
-    getTagColorSchema,
-} from "../../utils";
-import { setCustomer } from "../../services/shopify";
-import { CustomerType } from "../../services/shopify/types";
-import { FormState } from "./types";
-import { CustomerUpdateValues } from "../../services/shopify/setCustomer";
+import { getTagColorSchema } from "../../utils";
+import { validationSchema, getInitValues } from "./utils";
+import type { FC } from "react";
+import type { FormState, FormProps } from "./types";
 
-const validationSchema = yup.object().shape({
-    lastName: yup.string().required(),
-    firstName: yup.string().required(),
-    email: yup.string().required().email(),
-});
-
-const getInitValues = ({
-    note,
-    email,
-    phone,
-    lastName,
-    firstName,
-    emailMarketingConsent: { marketingState },
-}: CustomerType): FormState => ({
-    firstName,
-    lastName,
-    email,
-    phone,
-    note,
-    isReceiveMarketingEmail: marketingState === "SUBSCRIBED",
-});
-
-const EditCustomerForm: FC<CustomerType> = (props) => {
-    const navigate = useNavigate();
-    const {
-        id,
-        tags,
-        emailMarketingConsent: {marketingOptInLevel },
-    } = props;
-    const { client } = useDeskproAppClient();
+const EditCustomerForm: FC<FormProps> = ({
+    customer,
+    error,
+    onSubmit,
+    onCancel,
+}) => {
+    const { tags } = customer;
     const { theme } = useDeskproAppTheme();
-    const [, dispatch] = useStore();
-    const [error, setError] = useState<string | string[]>([]);
     const {
         values,
         errors,
@@ -76,46 +41,9 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
         handleChange,
         getFieldProps,
     } = useFormik<FormState>({
-        initialValues: getInitValues(props),
+        initialValues: getInitValues(customer),
         validationSchema,
-        onSubmit: async ({ isReceiveMarketingEmail, ...values }) => {
-            if (!client) {
-                return;
-            }
-
-            setError([]);
-
-            const newValues: CustomerUpdateValues = {
-                ...values,
-                emailMarketingConsent: {
-                    marketingState: isReceiveMarketingEmail ? "SUBSCRIBED" : "UNSUBSCRIBED",
-                    marketingOptInLevel,
-                    consentUpdatedAt: parseDateTime(),
-                },
-            };
-
-            await setCustomer(client, id, newValues)
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore
-                .then(([
-                    { customerUpdate: { userErrors: customerErrors } },
-                    { customerEmailMarketingConsentUpdate: { emailErrors } }
-                ]) => {
-                    if (isEmpty(customerErrors) && isEmpty(emailErrors)) {
-                        navigate({
-                          pathname: `/view_customer`,
-                          search: `?customerId=${id}`,
-                        });
-                    } else {
-                        const errors = [
-                            ...getApiErrors(customerErrors),
-                            ...getApiErrors(emailErrors),
-                        ]
-                        setError(errors);
-                    }
-                })
-                .catch((error) => dispatch({ type: "error", error: get(error, ["errors"], error) }));
-        },
+        onSubmit,
     });
 
     const isValid = (fieldName: keyof FormState): boolean => {
@@ -123,7 +51,7 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
     };
 
     return (
-        <>
+        <Container>
             {!isEmpty(error) && <ErrorBlock text={error}/>}
             <form onSubmit={handleSubmit}>
                 <Label htmlFor="firstName" label="First name" required>
@@ -212,12 +140,12 @@ const EditCustomerForm: FC<CustomerType> = (props) => {
                     <Button
                         text="Cancel"
                         intent="tertiary"
-                        onClick={() => navigate({ pathname: `/view_customer`, search: `?customerId=${id}` })}
+                        onClick={onCancel}
                         style={{ minWidth: "70px", justifyContent: "center" }}
                     />
                 </Stack>
             </form>
-        </>
+        </Container>
     )
 };
 

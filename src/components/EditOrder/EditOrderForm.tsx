@@ -1,9 +1,5 @@
-import { FC, useState } from "react";
 import { useFormik } from "formik";
-import * as yup from 'yup';
-import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
-import { useNavigate } from "react-router-dom";
 import {
     H3,
     Pill,
@@ -16,88 +12,22 @@ import {
     Property,
     HorizontalDivider,
     useDeskproAppTheme,
-    useDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { useStore } from "../../context/StoreProvider/hooks";
-import {
-    getApiErrors,
-    financialStatuses,
-    fulfillmentStatuses,
-} from "../../utils";
-import { setOrder } from "../../services/shopify";
-import { Order } from "../../services/shopify/types";
-import { Label, ErrorBlock } from "../common";
-import { FormState } from "./type";
+import { validationSchema, getInitValues } from "./utils";
+import { Label, ErrorBlock, Container } from "../common";
+import type { FC } from "react";
+import type { FormState, FormProps } from "./type";
 
-const validationSchema = yup.object().shape({
-    financialStatus: yup.string().required().oneOf(financialStatuses),
-    fulfillmentStatus: yup.string().required().oneOf(fulfillmentStatuses),
-});
-
-const EditOrderForm: FC<Order> = ({
-    id,
-    note,
-    billingAddress,
-    shippingAddress,
-    displayFinancialStatus,
-    displayFulfillmentStatus,
-}) => {
-    const navigate = useNavigate();
-    const { client } = useDeskproAppClient();
+const EditOrderForm: FC<FormProps> = ({ order, onCancel, onSubmit, error }) => {
     const { theme } = useDeskproAppTheme();
-    const [, dispatch] = useStore();
-    const [error, setError] = useState<string | string[]>([]);
     const { values, handleSubmit, isSubmitting, getFieldProps } = useFormik<FormState>({
         validationSchema,
-        initialValues: {
-            note,
-            financialStatus: displayFinancialStatus,
-            fulfillmentStatus: displayFulfillmentStatus,
-            shippingAddress1: shippingAddress.address1 || "",
-            shippingAddress2: shippingAddress.address2 || "",
-            shippingCity: shippingAddress.city || "",
-            shippingZip: shippingAddress.zip || "",
-            shippingFirstName: shippingAddress.firstName || "",
-            shippingLastName: shippingAddress.lastName || "",
-            billingAddress1: billingAddress.address1 || "",
-            billingAddress2: billingAddress.address2 || "",
-            billingCity: billingAddress.city || "",
-            billingZip: billingAddress.zip || "",
-            billingFirstName: billingAddress.firstName || "",
-            billingLastName: billingAddress.lastName || "",
-        },
-        onSubmit: async (values) => {
-            if (!client) {
-                return;
-            }
-
-            setError([]);
-
-            await setOrder(client, id, {
-                note: values.note,
-                shippingAddress: {
-                    firstName: values.shippingFirstName,
-                    lastName: values.shippingLastName,
-                    address1: values.shippingAddress1,
-                    address2: values.shippingAddress2,
-                    city: values.shippingCity,
-                    countryCode: shippingAddress.countryCodeV2,
-                    zip: values.shippingZip,
-                }
-            })
-                .then(({ orderUpdate: { userErrors } }) => {
-                    if (isEmpty(userErrors)) {
-                        navigate({ pathname: `/view_order`, search: `?orderId=${id}` });
-                    } else {
-                        setError(getApiErrors(userErrors));
-                    }
-                })
-                .catch((error) => dispatch({ type: "error", error: get(error, ["errors"], error) }));
-        }
+        initialValues: getInitValues(order),
+        onSubmit
     });
 
     return (
-        <>
+        <Container>
             {!isEmpty(error) && <ErrorBlock text={error}/>}
             <form onSubmit={handleSubmit}>
                 <Property
@@ -262,12 +192,12 @@ const EditOrderForm: FC<Order> = ({
                     <Button
                         text="Cancel"
                         intent="tertiary"
-                        onClick={() => navigate({ pathname: `/view_order`, search: `?orderId=${id}` })}
+                        onClick={onCancel}
                         style={{ minWidth: "70px", justifyContent: "center" }}
                     />
                 </Stack>
             </form>
-        </>
+        </Container>
     );
 };
 

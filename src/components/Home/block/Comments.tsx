@@ -4,6 +4,7 @@ import size from "lodash/size";
 import ReactTimeAgo from "react-time-ago";
 import { P5, P11, Stack } from "@deskpro/deskpro-ui";
 import { Title, HorizontalDivider } from "@deskpro/app-sdk";
+import { isLast } from "../../../utils";
 import { CommentEvent } from "../../../services/shopify/types";
 
 type Props = {
@@ -21,7 +22,7 @@ const DateContainer = styled(P11)`
 const Comments: FC<Props> = ({ comments }) => (
     <>
         <Title title={`Comments (${size(comments)})`} />
-        {comments.map(({ id, message, createdAt }) => (
+        {comments.map(({ id, message, createdAt }, idx) => (
             <div key={id}>
                 <Stack align="baseline">
                     <DateContainer>
@@ -29,7 +30,7 @@ const Comments: FC<Props> = ({ comments }) => (
                     </DateContainer>
                     <P5 dangerouslySetInnerHTML={{ __html: message }} />
                 </Stack>
-                <HorizontalDivider style={{ margin: "10px 0" }}/>
+                {!isLast(comments, idx) && <HorizontalDivider style={{ margin: "10px 0" }}/>}
             </div>
         ))}
     </>

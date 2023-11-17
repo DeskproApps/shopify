@@ -1,10 +1,14 @@
-import { useState, useEffect, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 import get from "lodash/get";
-import { IDeskproClient, useDeskproAppClient } from "@deskpro/app-sdk";
-import { useStore } from "../context/StoreProvider/hooks";
-import { UserType } from "../context/StoreProvider/types";
+import {
+  useDeskproLatestAppContext,
+  useInitialisedDeskproAppClient,
+} from "@deskpro/app-sdk";
+import { useAsyncError } from "./useAsyncError";
 import { getCustomers } from "../services/shopify";
-import { getEntityCustomerList, setEntityCustomer } from "../services/entityAssociation";
+import { getEntityCustomerList, setEntityCustomer } from "../services/deskpro";
+import type { IDeskproClient } from "@deskpro/app-sdk";
+import type { DPUser, DPTicketUser } from "../types";
 
 const checkIsLinkedCustomer = (client: IDeskproClient, userId: string): Promise<boolean> => {
     return getEntityCustomerList(client, userId)
@@ -14,11 +18,12 @@ const checkIsLinkedCustomer = (client: IDeskproClient, userId: string): Promise<
 
 const tryLinkCustomer = (
     client: IDeskproClient,
-    user: UserType,
+    user: DPUser|DPTicketUser,
     onLinked: () => void,
     onNoLinked: () => void,
 ): Promise<void> => {
-    return getCustomers(client, { email: user.email })
+    const email = get(user, ["email"]) || get(user, ["primaryEmail"]);
+    return getCustomers(client, { email })
         .then(({ customers }) => {
             if (customers.length === 1) {
                 const customerId = customers[0].id;
@@ -36,43 +41,28 @@ const useTryToLinkCustomer = (
     onLinkedItems: () => void,
     onNoLinkedItems: () => void,
 ) => {
-    const { client } = useDeskproAppClient();
-    const [state, dispatch] = useStore();
-    const [loading, setLoading] = useState<boolean>(true);
+    const { context } = useDeskproLatestAppContext();
+    const { asyncErrorHandler } = useAsyncError();
+    const user = useMemo(() => {
+      return get(context, ["data", "ticket", "primaryUser"]) || get(context, ["data", "user"]);
+    }, [context]);
 
-    const user = state.context?.data.ticket?.primaryUser || state.context?.data.user;
+    const onLinkedCallback = useCallback(onLinkedItems, [onLinkedItems]);
 
-    const onLinkedCallback = useCallback(() => {
-        setLoading(false);
-        onLinkedItems();
-    }, [onLinkedItems]);
+    const onNoLinkedCallback = useCallback(onNoLinkedItems, [onNoLinkedItems]);
 
-    const onNoLinkedCallback = useCallback(() => {
-        setLoading(false);
-        onNoLinkedItems();
-    }, [onNoLinkedItems]);
-
-    useEffect(() => {
-        if (!client || !user?.id) {
-            return
+    useInitialisedDeskproAppClient((client) => {
+        if (!user?.id) {
+            return;
         }
 
         checkIsLinkedCustomer(client, user.id)
-            .then((isLinkedCustomer) => {
-                if (!isLinkedCustomer) {
-                    return tryLinkCustomer(client, user, onLinkedCallback, onNoLinkedCallback)
-                } else {
-                    return onLinkedCallback();
-                }
-            })
-            .catch((err) => {
-                dispatch({ type: "error", error: get(err, ["errors"], err) });
-            })
-            .finally(() => setLoading(false))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [client, user?.id]);
-
-    return { loading };
+            .then((isLinkedCustomer) => !isLinkedCustomer
+                ? tryLinkCustomer(client, user, onLinkedCallback, onNoLinkedCallback)
+                : onLinkedCallback()
+            )
+            .catch(asyncErrorHandler)
+    }, [user]);
 };
 
 export { useTryToLinkCustomer };

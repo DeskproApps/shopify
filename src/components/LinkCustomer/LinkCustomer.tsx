@@ -6,6 +6,7 @@ import type { CustomerType } from "../../services/shopify/types";
 
 type Props = {
   isLoading: boolean,
+  isSubmitting: boolean,
   isEditMode: boolean,
   onSave: () => void,
   onCancel: () => void,
@@ -21,6 +22,7 @@ const LinkCustomer: FC<Props> = ({
   isLoading,
   customers,
   isEditMode,
+  isSubmitting,
   onChangeSearch,
   selectedCustomerId,
   onChangeSelectedCustomer,
@@ -35,6 +37,7 @@ const LinkCustomer: FC<Props> = ({
           isEditMode={isEditMode}
           onSave={onSave}
           onCancel={onCancel}
+          isSubmitting={isSubmitting}
         />
       </Container>
 

@@ -3,10 +3,11 @@ import get from "lodash/get";
 import { Link, Title, Property } from "@deskpro/app-sdk";
 import { ShopifyLogo } from "../../common";
 import type { FC, MouseEventHandler } from "react";
+import type { Maybe } from "../../../types";
 import type { CustomerType } from "../../../services/shopify/types";
 
 export type Props = {
-  link: string,
+  link: Maybe<string>,
   customer: CustomerType,
   onNavigateToCustomer: (customerId: CustomerType["id"]) => void,
 };
@@ -30,8 +31,8 @@ const CustomerInfo: FC<Props> = ({
                 title={(
                     <Link href="#" onClick={onClick}>{get(customer, ["displayName"])}</Link>
                 )}
-                link={link}
-                icon={<ShopifyLogo/>}
+                {...(!link ? {} : { link })}
+                {...(!link ? {} : { icon: <ShopifyLogo/> })}
             />
             <Property
                 label="Email"

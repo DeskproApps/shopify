@@ -78,6 +78,11 @@ export type CustomerType = {
     emailMarketingConsent: EmailMarketingConsent,
 };
 
+export type CustomerUpdateValues = Pick<
+  CustomerType,
+  "firstName" | "lastName" | "email" | "phone" | "note" | "emailMarketingConsent"
+>;
+
 export type OrderItemType = {
     id: string,
     quantity: number,
@@ -116,6 +121,12 @@ export type Order = {
     totalPriceSet: {
         presentmentMoney: Money,
     }
+};
+
+export type OrderUpdateValue = Pick<Order, "note"> & {
+  shippingAddress:
+    & Omit<Order["shippingAddress"], "countryCodeV2">
+    & { countryCode: Order["shippingAddress"]["countryCodeV2"] }
 };
 
 export type CommentEvent = {

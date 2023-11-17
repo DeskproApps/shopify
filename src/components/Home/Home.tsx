@@ -1,35 +1,38 @@
 import get from "lodash/get";
 import { HorizontalDivider } from "@deskpro/app-sdk";
-import { getShopName } from "../../utils";
 import { Container } from "../common";
 import { CustomerInfo, Orders, Comments } from "./block";
 import type { FC } from "react";
-import type { State } from "../../context/StoreProvider/types";
+import type { Maybe } from "../../types";
 import type { CustomerType, Order } from "../../services/shopify/types";
 
 type Props = {
-  state: State,
   orders: Order[],
-  customer: CustomerType;
+  customer: CustomerType,
   onNavigateToCustomer: (customerId: CustomerType["id"]) => void,
   onNavigateToOrders: () => void,
   onNavigateToOrder: (orderId: Order['id']) => void,
+  getOrdersLink: () => Maybe<string>,
+  getCustomerLink: (id: CustomerType["legacyResourceId"]) => Maybe<string>,
+  getOrderLink: (id: Order["legacyResourceId"]) => Maybe<string>,
 };
 
 const Home: FC<Props> = ({
-  state,
   orders,
   customer,
   onNavigateToCustomer,
   onNavigateToOrders,
   onNavigateToOrder,
+  getOrderLink,
+  getOrdersLink,
+  getCustomerLink,
 }) => {
   return (
     <>
       <Container>
         <CustomerInfo
           customer={customer}
-          link={`https://${getShopName(state)}.myshopify.com/admin/customers/${customer.legacyResourceId}`}
+          link={getCustomerLink(customer?.legacyResourceId)}
           onNavigateToCustomer={onNavigateToCustomer}
         />
       </Container>
@@ -39,7 +42,8 @@ const Home: FC<Props> = ({
       <Container>
         <Orders
           orders={orders}
-          link={`https://${getShopName(state)}.myshopify.com/admin/orders`}
+          link={getOrdersLink()}
+          getOrderLink={getOrderLink}
           onNavigateToOrder={onNavigateToOrder}
           onNavigateToOrders={onNavigateToOrders}
         />

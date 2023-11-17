@@ -23,7 +23,7 @@ const ViewOrder: FC<Props> = ({ order }) => {
       <Container>
         {order.lineItems.map((item, idx) => (
           <OrderItem
-            key={order.id}
+            key={item.id}
             item={item}
             isLast={isLast(order.lineItems, idx)}
           />

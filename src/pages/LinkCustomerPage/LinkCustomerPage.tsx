@@ -1,29 +1,38 @@
-import { FC, ChangeEvent, useState, useEffect } from "react";
+import {useMemo, useState, useEffect, useCallback} from "react";
+import get from "lodash/get";
 import isEmpty from "lodash/isEmpty";
 import { useDebouncedCallback } from "use-debounce";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useDeskproAppClient } from "@deskpro/app-sdk";
+import {
+  useDeskproAppClient,
+  useDeskproLatestAppContext,
+} from "@deskpro/app-sdk";
 import { useSetTitle, useRegisterElements } from "../../hooks";
-import { useStore } from "../../context/StoreProvider/hooks";
 import {
     setEntityCustomer,
     getEntityCustomerList,
     deleteAllEntityCustomer,
-} from "../../services/entityAssociation";
-import { getCustomers } from "../../services/shopify";
-import { CustomerType } from "../../services/shopify/types";
+} from "../../services/deskpro";
+import { useSearch } from "./hooks";
 import { LinkCustomer } from "../../components";
+import type { FC, ChangeEvent } from "react";
+import type { CustomerType } from "../../services/shopify/types";
 
 const LinkCustomerPage: FC = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const customerId = searchParams.get("customerId") as CustomerType["id"];
-    const [state] = useStore();
     const { client } = useDeskproAppClient();
-    const [customers, setCustomers] = useState<CustomerType[]>([]);
+    const { context } = useDeskproLatestAppContext();
+    const [search, setSearch] = useState<string>("");
     const [selectedCustomerId, setSelectedCustomerId] = useState<CustomerType["id"]>("");
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const { isLoading, customers } = useSearch(search);
+    const customerId = useMemo(() => searchParams.get("customerId"), [searchParams]);
+    const dpUser = useMemo(() => {
+      return get(context, ["data", "ticket", "primaryUser"])
+        || get(context, ["data", "user"])
+    }, [context]);
 
     useSetTitle("Link Customer");
 
@@ -45,31 +54,7 @@ const LinkCustomerPage: FC = () => {
         }
     }, [customerId]);
 
-    const searchInShopify = useDebouncedCallback<(q: string) => void>((q) => {
-        if (!client) {
-            return;
-        }
-
-        if (!q || q.length < 2) {
-            setCustomers([]);
-            return;
-        }
-
-        setLoading(true);
-
-        getCustomers(client, { querySearch: q })
-            .then(({ customers }) => {
-                if (Array.isArray(customers)) {
-                    setCustomers(customers);
-                }
-            })
-            .catch(() => {})
-            .finally(() => setLoading(false));
-    }, 500);
-
-    const onChangeSearch = (q: string) => {
-        searchInShopify(q);
-    };
+    const onChangeSearch = useDebouncedCallback(setSearch, 1000);
 
     const onChangeSelectedCustomer = ({ target: { value: customerId } }: ChangeEvent<HTMLInputElement>) => {
         if (selectedCustomerId === customerId) {
@@ -79,28 +64,25 @@ const LinkCustomerPage: FC = () => {
         }
     }
 
-    const onSave = () => {
-        if (!client) {
+    const onSave = useCallback(() => {
+        if (!client || !dpUser?.id) {
             return;
         }
 
-        const user = state.context?.data.ticket?.primaryUser || state.context?.data.user;
+        setIsSubmitting(true);
 
-        setLoading(true);
-
-        getEntityCustomerList(client, user.id)
+        getEntityCustomerList(client, dpUser.id)
             .then((customerIds) => {
                 if ((customerIds.length === 1) && (customerIds[0] === selectedCustomerId)) {
                     navigate("/home");
                 } else  {
-                    return deleteAllEntityCustomer(client, user.id, customerIds);
+                    return deleteAllEntityCustomer(client, dpUser.id, customerIds);
                 }
             })
             .then(() => {
                 if (!isEmpty(selectedCustomerId)) {
-                    return setEntityCustomer(client, user.id, selectedCustomerId);
+                    return setEntityCustomer(client, dpUser.id, selectedCustomerId);
                 }
-
                 return;
             })
             .then(() => {
@@ -110,8 +92,8 @@ const LinkCustomerPage: FC = () => {
                     navigate("/home");
                 }
             })
-            .finally(() => setLoading(false));
-    };
+            .finally(() => setIsSubmitting(false));
+    }, [client, dpUser, navigate, selectedCustomerId]);
 
     const onCancel = () => navigate("/home");
 
@@ -119,7 +101,8 @@ const LinkCustomerPage: FC = () => {
       <LinkCustomer
         onSave={onSave}
         onCancel={onCancel}
-        isLoading={loading}
+        isLoading={isLoading}
+        isSubmitting={isSubmitting}
         customers={customers}
         isEditMode={isEditMode}
         onChangeSearch={onChangeSearch}
