@@ -1,23 +1,21 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import {
-    LoadingSpinner,
-    useDeskproAppTheme,
-    useDeskproAppClient,
-} from "@deskpro/app-sdk";
+import { LoadingSpinner, useDeskproAppClient } from "@deskpro/app-sdk";
 import {
   useSetTitle,
   useExternalLink,
   useRegisterElements,
 } from "../../hooks";
 import { useCustomer } from "../../hooks";
-import { ViewCustomer } from "../../components";
+import {
+  PageBuilder,
+  defaultBlocksMap,
+} from "../../components/PageBuilder";
 import type { FC } from "react";
 
 const ViewCustomerPage: FC = () => {
     const [searchParams] = useSearchParams();
     const customerId = searchParams.get("customerId");
-    const { theme } = useDeskproAppTheme();
     const { client } = useDeskproAppClient();
     const { getCustomerLink } = useExternalLink();
     const { isLoading, customer } = useCustomer(customerId);
@@ -25,7 +23,7 @@ const ViewCustomerPage: FC = () => {
       return getCustomerLink(customer?.legacyResourceId);
     }, [getCustomerLink, customer?.legacyResourceId]);
 
-    useSetTitle(customer?.displayName || "Shopify");
+    useSetTitle("Shopify");
 
     useRegisterElements(({ registerElement }) => {
         registerElement("refresh", { type: "refresh_button" });
@@ -43,14 +41,6 @@ const ViewCustomerPage: FC = () => {
               }
             },
         });
-
-        if (customerLink) {
-            registerElement("external", {
-                type: "cta_external_link",
-                url: customerLink,
-                hasIcon: true,
-            });
-        }
     }, [client, customer]);
 
 
@@ -59,9 +49,60 @@ const ViewCustomerPage: FC = () => {
     }
 
     return (
-      <ViewCustomer
-        customer={customer}
-        theme={theme}
+      <PageBuilder
+        blocksMap={defaultBlocksMap}
+        store={{ customer }}
+        config={{
+          structure: [
+            ["fullName"],
+            ["email"],
+            ["phone"],
+            ["tags"],
+            ["marketingEmail"],
+            ["note"],
+          ],
+          blocks: {
+            fullName: {
+              type: "title",
+              pathInStore: ["customer", "displayName"],
+              props: {
+                link: `${customerLink}`,
+              },
+            },
+            email: {
+              type: "text",
+              label: "Email",
+              pathInStore: ["customer", "email"],
+            },
+            phone: {
+              type: "text",
+              label: "Phone number",
+              pathInStore: ["customer", "phone"],
+            },
+            tags: {
+              type: "tags",
+              label: "Tags",
+              pathInStore: ["customer", "tags"],
+            },
+            marketingEmail: {
+              type: "toggle",
+              label: "Receive Marketing Email",
+              pathInStore: ["customer", "emailMarketingConsent", "marketingState"],
+              props: {
+                disabled: true,
+                label: "Yes",
+                rules: {
+                  eq: "SUBSCRIBED",
+                },
+              },
+            },
+            note: {
+              type: "text",
+              label: "Note",
+              pathInStore: ["customer", "note"],
+            },
+          },
+        }}
       />
     );
 };

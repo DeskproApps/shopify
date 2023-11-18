@@ -1,1 +1,0 @@
-export { ViewCustomer } from "./ViewCustomer";
