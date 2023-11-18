@@ -1,40 +1,45 @@
-import { IDeskproClient } from "@deskpro/app-sdk";
+/* eslint-disable */
+import get from "lodash/get";
+import size from "lodash/size";
 import { baseGraphQLRequest } from "./baseGraphQLRequest";
-import { CustomerSearchParams, CustomerType } from "./types";
+import { gql } from "../../utils";
+import type { IDeskproClient } from "@deskpro/app-sdk";
+import type { CustomerSearchParams, CustomerType } from "./types";
 
 type ResponseType = {
-    customers: {
-        edges?: Array<{ node: CustomerType }>
-    }
+  customers: {
+    edges?: Array<{ node: CustomerType }>
+  }
 };
 
 export const getCustomers = (
-    client: IDeskproClient,
-    params: CustomerSearchParams = {}
-): Promise<{ customers: CustomerType[] }> => {
-    const { querySearch = '', email = '' } = params;
-    const search = `${querySearch}${!email ? '' : `email:${email}`}`;
+  client: IDeskproClient,
+  params: CustomerSearchParams = {}
+) => {
+  const { querySearch = "", email = "" } = params;
+  const search = `${querySearch}${!email ? "" : `email:${email}`}`;
 
-    const query = `query getCustomers ($q: String) {
-        customers(first: 100, query: $q) {
-            edges {
-                node {
-                    id, createdAt, displayName, email, hasTimelineComment, locale, note, phone
-                }
-            }
+  const query = gql({ q: search })`query getCustomers ($q: String) {
+    customers(first: 100, query: $q) {
+      edges {
+        node {
+          id, createdAt, displayName, email, hasTimelineComment, locale, note, phone
         }
-    }`;
+      }
+    }
+  }`;
 
-    const variables = { q: search };
+  return baseGraphQLRequest<{ customers: CustomerType[] }>(client, {data: query})
+    // @ts-ignore
+    .then((res: ResponseType) => {
+      const customers = get(res, ["data", "customers", "edges"], []) || [];
 
-    return baseGraphQLRequest(client, { query, variables })
-        .then(({ customers }: ResponseType) => {
-            if (!customers?.edges?.length) {
-                return { customers: [] };
-            }
+      if (!Array.isArray(customers) || !size(customers)) {
+        return { customers: [] };
+      }
 
-            return {
-                customers: customers.edges.map(({ node }: { node: CustomerType }) => ({ ...node }))
-            };
-        });
+      return {
+        customers: customers.map(({node}: { node: CustomerType }) => ({ ...node }))
+      };
+    });
 };
