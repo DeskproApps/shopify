@@ -36,10 +36,13 @@ const EditCustomerPage: FC = () => {
         setError(null);
 
         return setCustomer(client, customer.id, getValues(values, customer))
-          .then(([
-             { customerUpdate: { userErrors: customerErrors } },
-             { customerEmailMarketingConsentUpdate: { emailErrors } }
-           ]) => {
+          .then(([customerUpdate, customerEmailMarketingConsentUpdate]) => {
+            const customerErrors = get(customerUpdate,["data", "customerUpdate", "userErrors"]);
+            const emailErrors = get(
+              customerEmailMarketingConsentUpdate,
+              ["data", "customerEmailMarketingConsentUpdate", "emailErrors"],
+            );
+
             if (isEmpty(customerErrors) && isEmpty(emailErrors)) {
               navigate({
                 pathname: `/view_customer`,

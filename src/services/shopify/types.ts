@@ -1,4 +1,8 @@
-export type ApiRequestMethod = "GET" | "POST" | "PUT" | "DELETE";
+export type Response<T> = Promise<{ data: T }>;
+
+export type ShopifyGraphQLError = {
+  errors: string,
+};
 
 export type CustomerSearchParams = {
     querySearch?: string,

@@ -1,19 +1,17 @@
-import { IDeskproClient } from "@deskpro/app-sdk";
 import { baseGraphQLRequest } from "./baseGraphQLRequest";
-import { CustomerType, CustomerUpdateValues } from "./types";
+import { gql } from "../../utils";
+import type { IDeskproClient } from "@deskpro/app-sdk";
+import type { CustomerType, CustomerUpdateValues } from "./types";
 
 const setCustomer = (
     client: IDeskproClient,
     customerId: CustomerType['id'],
     { emailMarketingConsent, ...values }: CustomerUpdateValues,
 ) => {
-    const variables = {
-        input: {
-            ...values,
-            id: customerId,
-        },
-    };
-    const query = `
+    const query = gql({ input: {
+      ...values,
+        id: customerId,
+    }})`
         mutation customerUpdate($input: CustomerInput!) {
             customerUpdate(input: $input) {
                 userErrors { field, message },
@@ -24,13 +22,10 @@ const setCustomer = (
             }
         }
     `;
-    const variablesEmail = {
-        input: {
-            customerId,
-            emailMarketingConsent,
-        },
-    };
-    const queryEmail = `
+    const queryEmail = gql({ input: {
+      customerId,
+      emailMarketingConsent,
+    }})`
         mutation customerEmailMarketingConsentUpdate($input: CustomerEmailMarketingConsentUpdateInput!) {
             customerEmailMarketingConsentUpdate(input: $input) {
                 userErrors { field, message },
@@ -40,8 +35,8 @@ const setCustomer = (
     `;
 
     return Promise.all([
-        baseGraphQLRequest(client, { query, variables }),
-        baseGraphQLRequest(client, { query: queryEmail, variables: variablesEmail }),
+        baseGraphQLRequest(client, { data: query }),
+        baseGraphQLRequest(client, { data: queryEmail }),
     ])
         .catch((errors) => {
             let error = "";

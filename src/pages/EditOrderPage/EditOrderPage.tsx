@@ -23,6 +23,8 @@ const EditOrderPage: FC = () => {
   const { isLoading, order } = useOrder(orderId);
   const [error, setError] = useState<Maybe<string | string[]>>(null);
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const onSubmit: FormProps["onSubmit"] = useCallback((values) => {
     if (!client || !order) {
       return Promise.resolve();
@@ -31,11 +33,15 @@ const EditOrderPage: FC = () => {
     setError(null);
 
     return setOrder(client, order.id, getOrderValues(values, order))
-      .then(({ orderUpdate: { userErrors } }) => {
-        if (isEmpty(userErrors)) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      .then(({ data }/*{ orderUpdate: { userErrors } }*/) => {
+        const orderErrors = get(data, ["orderUpdate", "userErrors"]);
+
+        if (isEmpty(orderErrors)) {
           navigate({ pathname: `/view_order`, search: `?orderId=${order.id}` });
         } else {
-          setError(getApiErrors(userErrors));
+          setError(getApiErrors(orderErrors));
         }
       })
       .catch((error) => get(error, ["errors"], error));
