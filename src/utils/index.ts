@@ -17,3 +17,4 @@ export { isLast } from "./isLast";
 export { isForm } from "./isForm";
 export { getQueryParams } from "./getQueryParams";
 export { gql } from "./gql";
+export { formatPrice } from "./formatPrice";

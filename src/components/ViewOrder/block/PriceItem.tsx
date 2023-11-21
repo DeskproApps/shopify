@@ -1,7 +1,8 @@
-import { FC } from "react";
 import styled from "styled-components";
 import { H1, Stack } from "@deskpro/deskpro-ui";
-import { Money } from "../../../services/shopify/types";
+import { formatPrice } from "../../../utils";
+import type { FC } from "react";
+import type { Money } from "../../../services/shopify/types";
 
 type Props =
     & Money
@@ -15,7 +16,7 @@ const Container = styled(Stack)`
 const PriceItem: FC<Props> = ({ title, amount, currencyCode, ...props }) => (
     <Container justify="space-between" {...props}>
         <H1>{title}:</H1>
-        <H1>{amount} {currencyCode}</H1>
+        <H1>{formatPrice(amount, { currency: currencyCode })}</H1>
     </Container>
 );
 

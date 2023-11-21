@@ -7,7 +7,8 @@ import {
     HorizontalDivider,
     useDeskproAppTheme,
 } from "@deskpro/app-sdk";
-import { OrderItemType } from "../../../services/shopify/types";
+import { formatPrice } from "../../../utils";
+import type { OrderItemType } from "../../../services/shopify/types";
 
 const Card = styled.div`
     display: flex;
@@ -34,7 +35,7 @@ const Header: FC<OrderItemType> = ({
 }) => (
     <Stack justify="space-between">
         <Title title={title} />
-        <H0>{amount}</H0>
+        <H0>{formatPrice(amount, { style: "decimal" })}</H0>
     </Stack>
 );
 

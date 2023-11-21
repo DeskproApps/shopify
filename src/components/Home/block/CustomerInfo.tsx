@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import get from "lodash/get";
 import { Link, Title, Property } from "@deskpro/app-sdk";
+import { formatPrice } from "../../../utils";
 import { ShopifyLogo } from "../../common";
 import type { FC, MouseEventHandler } from "react";
 import type { Maybe } from "../../../types";
@@ -18,6 +19,10 @@ const CustomerInfo: FC<Props> = ({
     customer,
     onNavigateToCustomer,
 }) => {
+    const totalSpent = formatPrice(get(customer, ["amountSpent", "amount"]), {
+      currency: get(customer, ["amountSpent", "currencyCode"]),
+    });
+
     const onClick: MouseEventHandler<HTMLAnchorElement> = useCallback((e) => {
       e.preventDefault();
 
@@ -40,7 +45,7 @@ const CustomerInfo: FC<Props> = ({
             />
             <Property
                 label="Total spent"
-                text={`${get(customer, ["amountSpent", "amount"])} ${get(customer, ["amountSpent", "currencyCode"])}`}
+                text={totalSpent}
             />
             <Property
                 label="Customer Note"
