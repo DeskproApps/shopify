@@ -34,7 +34,8 @@ const getCustomer = (
       orders(first: 50) {
         edges {
           node {
-            id, legacyResourceId, createdAt, displayFinancialStatus, displayFulfillmentStatus,
+            id, legacyResourceId, createdAt, displayFinancialStatus, displayFulfillmentStatus, name
+            customer { lastName firstName displayName }
             lineItems(first: 6) {
               edges {
                 node {

@@ -1,29 +1,36 @@
 import { useCallback } from "react";
-import { Pill, Stack } from "@deskpro/deskpro-ui";
+import { Pill } from "@deskpro/deskpro-ui";
 import {
   Link,
   Title,
-  Property,
-  VerticalDivider,
+  TwoProperties,
   HorizontalDivider,
   useDeskproAppTheme,
 } from "@deskpro/app-sdk";
 import { ShopifyLogo } from "../../common";
-import { getShippingStatusName, getShippingStatusColorSchema, getDate } from "../../../utils";
+import {
+  getDate,
+  getFullName,
+  getShippingStatusName,
+  getShippingStatusColorSchema,
+  getPaymentStatusName,
+  getPaymentStatusColorSchema
+} from "../../../utils";
 import type { FC, MouseEventHandler } from "react";
 import type { Props } from "./types";
 
 const OrderInfo: FC<Props> = ({
   id,
+  name,
   isLast,
+  customer,
   createdAt,
-  lineItems,
   linkOrder,
   onChangePage,
+  displayFinancialStatus,
   displayFulfillmentStatus,
 }) => {
   const { theme } = useDeskproAppTheme();
-  const title = lineItems.map(({ title }) => title).join(' & ');
   const onClick: MouseEventHandler<HTMLAnchorElement> = useCallback((e) => {
     e.preventDefault();
     onChangePage && onChangePage(id);
@@ -33,36 +40,35 @@ const OrderInfo: FC<Props> = ({
     <>
       <Title
         title={(
-          <Link href="#" onClick={onClick}>{title}</Link>
+          <Link href="#" onClick={onClick}>{name}</Link>
         )}
         {...(!linkOrder ? {} : { link: linkOrder })}
         {...(!linkOrder ? {} : { icon: <ShopifyLogo/> })}
       />
-      <Stack align="stretch" style={{ marginBottom: 10 }}>
-        <Stack grow={1}>
-          <Property
-            marginBottom={0}
-            label="Date"
-            text={getDate(createdAt)}
+      <TwoProperties
+        leftLabel="Customer"
+        leftText={getFullName(customer)}
+        rightLabel="Date"
+        rightText={getDate(createdAt)}
+      />
+      <TwoProperties
+        leftLabel="Payment status"
+        leftText={(
+          <Pill
+            textColor={theme.colors.white}
+            label={getPaymentStatusName(displayFinancialStatus)}
+            backgroundColor={getPaymentStatusColorSchema(theme, displayFinancialStatus)}
           />
-        </Stack>
-        <VerticalDivider width={1} />
-        <Stack grow={1}>
-          <Property
-            marginBottom={0}
-            label="Status"
-            text={(
-              <>
-                <Pill
-                  textColor={theme.colors.white}
-                  backgroundColor={getShippingStatusColorSchema(theme, displayFulfillmentStatus)}
-                  label={getShippingStatusName(displayFulfillmentStatus)}
-                />
-              </>
-            )}
+        )}
+        rightLabel="Fulfillment status"
+        rightText={(
+          <Pill
+            textColor={theme.colors.white}
+            label={getShippingStatusName(displayFulfillmentStatus)}
+            backgroundColor={getShippingStatusColorSchema(theme, displayFulfillmentStatus)}
           />
-        </Stack>
-      </Stack>
+        )}
+      />
       {!isLast && <HorizontalDivider style={{ marginBottom: 9 }}/>}
     </>
   );

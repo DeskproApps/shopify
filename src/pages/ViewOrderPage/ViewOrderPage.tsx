@@ -19,7 +19,7 @@ const ViewOrderPage: FC = () => {
       return getOrderLink(order?.legacyResourceId);
     }, [getOrderLink, order]);
 
-    useSetTitle(order?.legacyResourceId ? `#${order?.legacyResourceId}` : "Shopify");
+    useSetTitle(order?.name || "Shopify");
 
     useRegisterElements(({ registerElement }) => {
         registerElement("home", {

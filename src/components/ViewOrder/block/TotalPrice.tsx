@@ -16,7 +16,7 @@ const TotalPrice: FC<Order> = ({
     <>
       <PriceItem title="Subtotal" {...subtotalPriceSet.presentmentMoney} />
       <PriceItem title="Shipping" {...totalShippingPriceSet.presentmentMoney} />
-      <PriceItem title="Taxes:" {...totalTaxSet.presentmentMoney} />
+      <PriceItem title="Taxes" {...totalTaxSet.presentmentMoney} />
       <PriceItem
         title={`Total Value (${lineItems.length})`}
         {...totalPriceSet.presentmentMoney}

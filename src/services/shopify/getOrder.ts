@@ -17,6 +17,8 @@ const getOrder = (
       displayFinancialStatus,
       displayFulfillmentStatus,
       note,
+      name,
+      customer { lastName firstName displayName }
       subtotalPriceSet {
         presentmentMoney { amount, currencyCode }
       },
