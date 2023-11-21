@@ -3,7 +3,7 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { Stack, Tag, Toggle } from "@deskpro/deskpro-ui";
 import { Property } from "@deskpro/app-sdk";
 import { getTagColorSchema } from "../../utils";
-import { Container } from "../common";
+import { Container, DPNormalize } from "../common";
 import type { FC } from "react";
 import type { DeskproTheme, AnyIcon } from "@deskpro/deskpro-ui";
 import type { CustomerType } from "../../services/shopify/types";
@@ -55,7 +55,7 @@ const ViewCustomer: FC<Props> = ({ customer, theme }) => {
       />
       <Property
         label="Customer Note"
-        text={get(customer, ["note"], "-") || "-"}
+        text={<DPNormalize text={get(customer, ["note"])}/>}
       />
     </Container>
   );

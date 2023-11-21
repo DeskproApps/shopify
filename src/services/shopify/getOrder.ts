@@ -29,12 +29,12 @@ const getOrder = (
       totalPriceSet {
         presentmentMoney { amount, currencyCode }
       },
-      shippingAddress { address1, address2, city, countryCodeV2, zip, firstName, lastName },
-      billingAddress { address1, address2, city, countryCodeV2, zip, firstName, lastName }
+      shippingAddress { id firstName lastName name address1 address2 city company country countryCodeV2 formatted formattedArea phone province provinceCode timeZone zip },
+      billingAddress { id firstName lastName name address1 address2 city company country countryCodeV2 formatted formattedArea phone province provinceCode timeZone zip }
       lineItems(first: 10) {
         edges {
           node {
-            id, quantity, title,
+            id, quantity, title, sku,
             image { altText, url },
             product { id, title, description }
             originalUnitPriceSet {

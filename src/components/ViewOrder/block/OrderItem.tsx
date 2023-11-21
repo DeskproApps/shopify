@@ -1,13 +1,15 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { H0, P5, P11, Stack } from "@deskpro/deskpro-ui";
+import truncate from "lodash/truncate";
+import { H0, P11, Stack } from "@deskpro/deskpro-ui";
 import {
     Title,
+    Property,
     TwoProperties,
     HorizontalDivider,
-    useDeskproAppTheme,
 } from "@deskpro/app-sdk";
 import { formatPrice } from "../../../utils";
+import { DPNormalize } from "../../common";
 import type { OrderItemType } from "../../../services/shopify/types";
 
 const Card = styled.div`
@@ -31,42 +33,30 @@ const CardBody = styled.div`
 
 const Header: FC<OrderItemType> = ({
     title,
-    originalUnitPriceSet: { presentmentMoney: { amount } },
+    originalUnitPriceSet: { presentmentMoney: { amount, currencyCode } },
 }) => (
     <Stack justify="space-between">
-        <Title title={title} />
-        <H0>{formatPrice(amount, { style: "decimal" })}</H0>
+        <Title title={title} marginBottom={0} />
+        <Stack vertical align="end">
+          <H0>{formatPrice(amount, { style: "decimal" })}</H0>
+          <P11>{currencyCode}</P11>
+        </Stack>
     </Stack>
 );
 
-const SubHeader: FC<OrderItemType> = (({
-    sku,
-    originalUnitPriceSet: { presentmentMoney: { currencyCode } }
-}) => {
-    const { theme } = useDeskproAppTheme();
-
-    return (
-        <Stack justify="space-between" style={{ marginBottom: 10 }}>
-            <P11 style={{ color: theme.colors.grey80 }}>{sku}</P11>
-            <P11>{currencyCode}</P11>
-        </Stack>
-    )
-});
-
-const Description = styled(P5)`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const DescriptionBlock: FC<OrderItemType> = ({ quantity, product: { description } }) => (
-  <TwoProperties
-    leftLabel="Description"
-    leftText={<Description>{description}</Description>}
-    rightLabel="Qty"
-    rightText={quantity}
-
-  />
+const DescriptionBlock: FC<OrderItemType> = ({ sku, quantity, product: { description } }) => (
+  <>
+    <TwoProperties
+      leftLabel="Sku"
+      leftText={sku}
+      rightLabel="Qty"
+      rightText={quantity}
+    />
+    <Property
+      label="Description"
+      text={<DPNormalize text={truncate(description, { length: 130 })}/>}
+    />
+  </>
 );
 
 const OrderItem: FC<{ item: OrderItemType, isLast: boolean }> = ({ item, isLast }) => {
@@ -80,10 +70,9 @@ const OrderItem: FC<{ item: OrderItemType, isLast: boolean }> = ({ item, isLast 
                 </CardMedia>
                 <CardBody>
                     <Header {...item} />
-                    <SubHeader {...item} />
-                    <DescriptionBlock {...item} />
                 </CardBody>
             </Card>
+            <DescriptionBlock {...item} />
             {!isLast && <HorizontalDivider style={{ margin: "10px 0" }} />}
         </>
     );

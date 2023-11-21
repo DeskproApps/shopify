@@ -1,3 +1,4 @@
+export * from "./Typography";
 export { ErrorBlock } from "./Error";
 export { NoFound } from "./NoFound";
 export { ShopifyLink, ShopifyLogo } from "./ShopifyLink";

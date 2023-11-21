@@ -1,3 +1,6 @@
+/** Typo */
+export const nbsp = "\u00A0";
+
 /** Deskpro */
 export const APP_PREFIX = "shopify";
 

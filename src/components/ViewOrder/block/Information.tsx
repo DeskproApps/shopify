@@ -1,14 +1,15 @@
-import omit from "lodash/omit";
-import { P5, Pill } from "@deskpro/deskpro-ui";
+import { Pill } from "@deskpro/deskpro-ui";
 import { useDeskproAppTheme, Title, Property } from "@deskpro/app-sdk";
 import {
   getTime,
   getDate,
+  formatAddress,
   getPaymentStatusColorSchema,
   getPaymentStatusName,
   getShippingStatusColorSchema,
   getShippingStatusName,
 } from "../../../utils";
+import { DPNormalize } from "../../common";
 import type { FC } from "react";
 import type { Order } from "../../../services/shopify/types";
 
@@ -47,15 +48,15 @@ const Information: FC<Order> = ({
       />
       <Property
         label="Order notes"
-        text={note || (<P5 style={{color: theme.colors.grey40}}>None</P5>)}
+        text={<DPNormalize text={note}/>}
       />
       <Property
         label="Shipping Address"
-        text={Object.values(omit(shippingAddress, ["firstName", "lastName"])).join(", ")}
+        text={<DPNormalize text={formatAddress(shippingAddress)} />}
       />
       <Property
         label="Billing Address"
-        text={Object.values(omit(billingAddress, ["firstName", "lastName"])).join(", ")}
+        text={<DPNormalize text={formatAddress(billingAddress)} />}
       />
       <Property
         label="Created"

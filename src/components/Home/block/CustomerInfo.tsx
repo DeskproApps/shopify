@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import get from "lodash/get";
 import { Link, Title, Property } from "@deskpro/app-sdk";
 import { formatPrice } from "../../../utils";
-import { ShopifyLogo } from "../../common";
+import { ShopifyLogo, DPNormalize } from "../../common";
 import type { FC, MouseEventHandler } from "react";
 import type { Maybe } from "../../../types";
 import type { CustomerType } from "../../../services/shopify/types";
@@ -30,6 +30,7 @@ const CustomerInfo: FC<Props> = ({
         onNavigateToCustomer(customer.id);
       }
     }, [onNavigateToCustomer, customer]);
+
     return (
         <>
             <Title
@@ -49,7 +50,7 @@ const CustomerInfo: FC<Props> = ({
             />
             <Property
                 label="Customer Note"
-                text={get(customer, ["note"], "-") || "-"}
+                text={<DPNormalize text={get(customer, ["note"])}/>}
             />
         </>
     );

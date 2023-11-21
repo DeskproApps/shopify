@@ -53,13 +53,23 @@ export type EmailMarketingConsent = {
 }
 
 export type Address = {
-    address1: string,
-    address2: string,
-    city: string,
-    countryCodeV2: string,
-    zip: string,
-    firstName: string,
-    lastName: string,
+  id?: string,
+  address1: string,
+  address2: string,
+  city: string,
+  company: string,
+  country: string,
+  countryCodeV2: string,
+  firstName: string,
+  formatted: string[],
+  formattedArea: string,
+  lastName: string,
+  name: string,
+  phone: string,
+  province: string,
+  provinceCode: string,
+  timeZone: string,
+  zip: string,
 }
 
 export type CustomerType = {
@@ -129,7 +139,7 @@ export type Order = {
 
 export type OrderUpdateValue = Pick<Order, "note"> & {
   shippingAddress:
-    & Omit<Order["shippingAddress"], "countryCodeV2">
+    & Omit<Order["shippingAddress"], "countryCodeV2"|"company"|"country"|"formatted"|"formattedArea"|"name"|"phone"|"province"|"provinceCode"|"timeZone">
     & { countryCode: Order["shippingAddress"]["countryCodeV2"] }
 };
 

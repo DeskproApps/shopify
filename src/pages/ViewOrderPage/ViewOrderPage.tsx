@@ -50,7 +50,7 @@ const ViewOrderPage: FC = () => {
                 },
             });
         }
-    }, [orderId]);
+    }, [orderId, orderLink]);
 
     if (isLoading) {
         return (

@@ -18,3 +18,5 @@ export { isForm } from "./isForm";
 export { getQueryParams } from "./getQueryParams";
 export { gql } from "./gql";
 export { formatPrice } from "./formatPrice";
+export { addBlankTargetToLinks } from "./addBlankTargetToLinks";
+export { formatAddress } from "./formatAddress";
