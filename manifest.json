@@ -25,14 +25,24 @@
       "description": "Your Shop name",
       "type": "string",
       "isRequired": true,
-      "isBackendOnly": false
+      "isBackendOnly": false,
+      "order": 10
     },
     "access_token": {
       "title": "Access Token",
-      "description": "Your shopify access token",
+      "description": "Your shopify access token, please follow the app setup guide to get this",
       "type": "string",
       "isRequired": true,
-      "isBackendOnly": true
+      "isBackendOnly": true,
+      "order": 20
+    },
+    "verify_settings": {
+      "title": "",
+      "type": "app_embedded",
+      "options": { "entrypoint": "#/admin/verify_settings" },
+      "isRequired": false,
+      "isBackendOnly": true,
+      "order": 30
     }
   },
   "proxy": {

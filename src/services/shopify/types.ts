@@ -19,6 +19,14 @@ export type Money = {
     currencyCode: string,
 }
 
+export type ShopInfo = {
+  id: string,
+  name: string,
+  email: string,
+  url: string,
+  description: string,
+};
+
 export type FinancialStatus =
     | "AUTHORIZED"
     | "EXPIRED"

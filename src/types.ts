@@ -16,6 +16,7 @@ export type RequestParams = {
   data?: Dict<string>|RequestInit["body"]|V2ProxyRequestInitBody["body"]
   headers?: Dict<string>,
   queryParams?: string|Dict<string>|ParamKeyValuePair[],
+  settings?: Maybe<Settings>,
 };
 
 export type Request = <T>(
@@ -27,6 +28,11 @@ export type Request = <T>(
 export type FetchOptions = Pick<RequestParams, "method"|"headers"> & V2ProxyRequestInitBody;
 
 /** Deskpro types */
+export type Settings = {
+  shop_name?: string,
+  access_token?: string,
+};
+
 export type NavigateToChangePage = { type: "changePage", path: To };
 
 export type EventPayload =

@@ -6,3 +6,4 @@ export { ListOrdersPage } from "./ListOrdersPage";
 export { LoadingAppPage } from "./LoadingAppPage";
 export { ViewCustomerPage } from "./ViewCustomerPage";
 export { ViewOrderPage } from "./ViewOrderPage";
+export { VerifySettings } from "./VerifySettings";

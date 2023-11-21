@@ -1,7 +1,7 @@
 import has from "lodash/has";
 import isEmpty from "lodash/isEmpty";
 import isString from "lodash";
-import { proxyFetch } from "@deskpro/app-sdk";
+import { proxyFetch, adminGenericProxyFetch } from "@deskpro/app-sdk";
 import { GRAPHQL_URL, placeholders } from "../../constants";
 import { getQueryParams } from "../../utils";
 import { ShopifyError } from "./ShopifyError";
@@ -13,11 +13,13 @@ const baseGraphQLRequest: Request = async (client, {
   data,
   method = "POST",
   queryParams = {},
+  settings = {},
   headers: customHeaders,
 }) => {
-  const dpFetch = await proxyFetch(client);
+  const isAdmin = settings?.shop_name && settings?.access_token;
+  const dpFetch = await (isAdmin ? adminGenericProxyFetch : proxyFetch)(client);
 
-  const baseUrl = rawUrl ? rawUrl : `${GRAPHQL_URL}${url || ""}`;
+  const baseUrl = rawUrl ? rawUrl : `${GRAPHQL_URL(settings?.shop_name)}${url || ""}`;
   const params = getQueryParams(queryParams);
 
   const requestUrl = `${baseUrl}${isEmpty(params) ? "": `?${params}`}`;
@@ -26,7 +28,7 @@ const baseGraphQLRequest: Request = async (client, {
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "X-Shopify-Access-Token": placeholders.ACCESS_TOKEN,
+      "X-Shopify-Access-Token": settings?.access_token || placeholders.ACCESS_TOKEN,
       ...customHeaders,
     },
   };

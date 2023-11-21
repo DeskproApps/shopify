@@ -12,6 +12,7 @@ import {
   EditOrderPage,
   LoadingAppPage,
   ListOrdersPage,
+  VerifySettings,
   EditCustomerPage,
   ViewCustomerPage,
   LinkCustomerPage,
@@ -40,13 +41,14 @@ const App: FC = () => {
 
   return (
     <Routes>
-      <Route path="home" element={<HomePage />}/>
-      <Route path="link_customer" element={<LinkCustomerPage />}/>
-      <Route path="view_customer" element={<ViewCustomerPage />}/>
-      <Route path="edit_customer" element={<EditCustomerPage />}/>
-      <Route path="list_orders" element={<ListOrdersPage />}/>
-      <Route path="view_order" element={<ViewOrderPage />}/>
-      <Route path="edit_order" element={<EditOrderPage />}/>
+      <Route path="/admin/verify_settings" element={<VerifySettings/>} />
+      <Route path="/home" element={<HomePage />}/>
+      <Route path="/link_customer" element={<LinkCustomerPage />}/>
+      <Route path="/view_customer" element={<ViewCustomerPage />}/>
+      <Route path="/edit_customer" element={<EditCustomerPage />}/>
+      <Route path="/list_orders" element={<ListOrdersPage />}/>
+      <Route path="/view_order" element={<ViewOrderPage />}/>
+      <Route path="/edit_order" element={<EditOrderPage />}/>
       <Route index element={<LoadingAppPage />}/>
     </Routes>
   );
