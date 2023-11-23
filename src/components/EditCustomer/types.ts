@@ -1,4 +1,5 @@
-import { CustomerType } from "../../services/shopify/types";
+import type { Maybe } from "../../types";
+import type { CustomerType } from "../../services/shopify/types";
 
 export type FormState = {
     firstName: CustomerType['firstName'],
@@ -8,3 +9,11 @@ export type FormState = {
     isReceiveMarketingEmail: boolean,
     note: CustomerType['note'],
 };
+
+export type FormProps = {
+  customer: CustomerType,
+  onSubmit: (values: FormState) => Promise<void>,
+  onCancel: () => void,
+  error: Maybe<string|string[]>,
+};
+

@@ -3,6 +3,7 @@ import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import {
     Icon,
     Stack,
+    AnyIcon,
     RoundedLabelTag,
 } from "@deskpro/deskpro-ui";
 import { useDeskproAppTheme } from "@deskpro/app-sdk";
@@ -34,12 +35,12 @@ const ShopifyLink = ({ href }: Props) => {
             backgroundColor={theme.colors.brandShade20}
             textColor="#4C4F50"
             borderColor={theme.colors.brandShade20}
-            closeIcon={faArrowUpRightFromSquare}
+            closeIcon={faArrowUpRightFromSquare as AnyIcon}
             label={(
                 <Container>
                     <ShopifyIcon icon={<ShopifyLogo/>} />
                     <Link target="_blank" href={href}>
-                        <Icon icon={faArrowUpRightFromSquare} />
+                        <Icon icon={faArrowUpRightFromSquare as AnyIcon} />
                     </Link>
                 </Container>
             )}

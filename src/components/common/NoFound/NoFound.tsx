@@ -1,15 +1,12 @@
 import { FC } from "react";
-import { HorizontalDivider, P1 } from "@deskpro/app-sdk";
+import { P5 } from "@deskpro/deskpro-ui";
 
-type Props = {
-    text?: string,
+export type Props = {
+  text?: string,
 };
 
 const NoFound: FC<Props> = ({ text = "No found" } = {}) => (
-    <>
-        <P1>{text}</P1>
-        <HorizontalDivider style={{ marginBottom: 9 }}/>
-    </>
+  <P5>{text}</P5>
 );
 
 export { NoFound };

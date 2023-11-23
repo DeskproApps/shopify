@@ -1,55 +1,79 @@
-import { IDeskproClient, proxyFetch } from "@deskpro/app-sdk";
-import { GRAPHQL_URL, placeholders } from "./constants";
+import has from "lodash/has";
+import isEmpty from "lodash/isEmpty";
+import isString from "lodash";
+import { proxyFetch, adminGenericProxyFetch } from "@deskpro/app-sdk";
+import { GRAPHQL_URL, placeholders } from "../../constants";
+import { getQueryParams } from "../../utils";
+import { ShopifyError } from "./ShopifyError";
+import type { Request, FetchOptions } from "../../types";
 
-/**
- * Base request service
- */
-const baseGraphQLRequest = async (
-    client: IDeskproClient,
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    { query, variables = {} }: { query: string, variables?: Record<string, any> },
-) => {
-    const dpFetch = await proxyFetch(client);
+const baseGraphQLRequest: Request = async (client, {
+  url,
+  rawUrl,
+  data,
+  method = "POST",
+  queryParams = {},
+  settings = {},
+  headers: customHeaders,
+}) => {
+  const isAdmin = settings?.shop_name && settings?.access_token;
+  const dpFetch = await (isAdmin ? adminGenericProxyFetch : proxyFetch)(client);
 
-    const headers: Record<string, string> = {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "X-Shopify-Access-Token": placeholders.ACCESS_TOKEN,
+  const baseUrl = rawUrl ? rawUrl : `${GRAPHQL_URL(settings?.shop_name)}${url || ""}`;
+  const params = getQueryParams(queryParams);
+
+  const requestUrl = `${baseUrl}${isEmpty(params) ? "": `?${params}`}`;
+  const options: FetchOptions = {
+    method,
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      "X-Shopify-Access-Token": settings?.access_token || placeholders.ACCESS_TOKEN,
+      ...customHeaders,
+    },
+  };
+
+  if (!isEmpty(data)) {
+    options.body = isString(data) ? data as string : JSON.stringify(data);
+    options.headers = {
+      "Content-Type": "application/json",
+      ...options.headers,
     };
+  }
 
-    const res = await dpFetch(GRAPHQL_URL, {
-        headers,
-        method: "POST",
-        body: JSON.stringify({ query, variables }),
-    });
+  const res = await dpFetch(requestUrl, options);
 
-    if (res.status === 400) {
-        return res.json();
-    }
-
-    /**
-     * ToDo: handle by status codes
-     * @see https://shopify.dev/api/admin-graphql#status_and_error_codes
-     */
-    if (res.status < 200 || res.status >= 400) {
-        if (res.status == 401) {
-            return Promise.reject(await res.json());
-        } else {
-            throw new Error(`${GRAPHQL_URL}: Response Status [${res.status}]: ${await res.text()}`);
-        }
-    }
+  if (res.status < 200 || res.status > 399) {
+    let errorData;
 
     try {
-        const response = await res.json();
-
-        if (response?.errors?.length) {
-            return Promise.reject(response?.errors);
-        }
-
-        return response.data;
+      errorData = await res.json();
     } catch (e) {
-        return {};
+      errorData = {};
     }
+
+    throw new ShopifyError({
+      status: res.status,
+      data: errorData,
+    });
+  }
+
+  let result;
+
+  try {
+    result = await res.json();
+  } catch (e) {
+    return {};
+  }
+
+  if (has(result, ["errors"])) {
+    throw new ShopifyError({
+      data: result,
+      status: res.status,
+    });
+  } else {
+    return result;
+  }
 };
 
 export { baseGraphQLRequest };

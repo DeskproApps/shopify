@@ -1,4 +1,8 @@
-export type ApiRequestMethod = "GET" | "POST" | "PUT" | "DELETE";
+export type Response<T> = Promise<{ data: T }>;
+
+export type ShopifyGraphQLError = {
+  errors: string,
+};
 
 export type CustomerSearchParams = {
     querySearch?: string,
@@ -14,6 +18,14 @@ export type Money = {
     amount: number,
     currencyCode: string,
 }
+
+export type ShopInfo = {
+  id: string,
+  name: string,
+  email: string,
+  url: string,
+  description: string,
+};
 
 export type FinancialStatus =
     | "AUTHORIZED"
@@ -49,13 +61,23 @@ export type EmailMarketingConsent = {
 }
 
 export type Address = {
-    address1: string,
-    address2: string,
-    city: string,
-    countryCodeV2: string,
-    zip: string,
-    firstName: string,
-    lastName: string,
+  id?: string,
+  address1: string,
+  address2: string,
+  city: string,
+  company: string,
+  country: string,
+  countryCodeV2: string,
+  firstName: string,
+  formatted: string[],
+  formattedArea: string,
+  lastName: string,
+  name: string,
+  phone: string,
+  province: string,
+  provinceCode: string,
+  timeZone: string,
+  zip: string,
 }
 
 export type CustomerType = {
@@ -73,10 +95,15 @@ export type CustomerType = {
     amountSpent: Money,
     numberOfOrders: string,
     tags: string[],
-    orders: Orders
+    orders: Order[],
     comments: Comments,
     emailMarketingConsent: EmailMarketingConsent,
 };
+
+export type CustomerUpdateValues = Pick<
+  CustomerType,
+  "firstName" | "lastName" | "email" | "phone" | "note" | "emailMarketingConsent"
+>;
 
 export type OrderItemType = {
     id: string,
@@ -98,9 +125,11 @@ export type Order = {
     id: string,
     note: string,
     legacyResourceId: string,
+    name: string,
     createdAt: DateTime,
     displayFinancialStatus: FinancialStatus,
     displayFulfillmentStatus: FulfillmentStatus,
+    customer: Pick<CustomerType, "firstName"|"lastName"|"displayName">,
     lineItems: Array<OrderItemType>,
     shippingAddress: Address,
     billingAddress: Address,
@@ -118,7 +147,11 @@ export type Order = {
     }
 };
 
-export type Orders = Array<Order>;
+export type OrderUpdateValue = Pick<Order, "note"> & {
+  shippingAddress:
+    & Omit<Order["shippingAddress"], "countryCodeV2"|"company"|"country"|"formatted"|"formattedArea"|"name"|"phone"|"province"|"provinceCode"|"timeZone">
+    & { countryCode: Order["shippingAddress"]["countryCodeV2"] }
+};
 
 export type CommentEvent = {
     id: string,

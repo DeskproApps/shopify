@@ -1,16 +1,37 @@
-import React from "react";
+import { Suspense, StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import { HashRouter } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { ErrorBoundary } from "react-error-boundary";
+import { DeskproAppProvider, LoadingSpinner } from "@deskpro/app-sdk";
+import { queryClient } from "./query";
+import { ErrorFallback } from "./components/ErrorFallback";
+import { App } from "./App";
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en.json";
+
+import "flatpickr/dist/themes/light.css";
+import "tippy.js/dist/tippy.css";
+import "simplebar/dist/simplebar.min.css";
+import "@deskpro/deskpro-ui/dist/deskpro-ui.css";
+import "@deskpro/deskpro-ui/dist/deskpro-custom-icons.css";
 import "iframe-resizer/js/iframeResizer.contentWindow.js";
-import "./index.css";
 
 TimeAgo.addDefaultLocale(en)
 
 const root = ReactDOM.createRoot(document.getElementById("root") as Element);
 root.render((
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>
+    <StrictMode>
+      <DeskproAppProvider>
+        <HashRouter>
+          <QueryClientProvider client={queryClient}>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <Suspense fallback={<LoadingSpinner/>}>
+                <App />
+              </Suspense>
+            </ErrorBoundary>
+          </QueryClientProvider>
+        </HashRouter>
+      </DeskproAppProvider>
+    </StrictMode>
 ));

@@ -1,27 +1,17 @@
-import { IDeskproClient } from "@deskpro/app-sdk";
 import { baseGraphQLRequest } from "./baseGraphQLRequest";
-import { Order } from "./types";
-
-export type OrderUpdateValue =
-    Pick<Order, "note">
-    & {
-        shippingAddress:
-            Omit<Order["shippingAddress"], "countryCodeV2">
-            & { countryCode: Order["shippingAddress"]["countryCodeV2"] }
-    };
+import { gql } from "../../utils";
+import type { IDeskproClient } from "@deskpro/app-sdk";
+import type { Order, OrderUpdateValue } from "./types";
 
 const setOrder = (
     client: IDeskproClient,
     orderId: Order['id'],
     values: OrderUpdateValue,
 ) => {
-    const variables = {
-        input: {
-            ...values,
-            id: orderId,
-        },
-    };
-    const query = `
+    const query = gql({ input: {
+      ...values,
+      id: orderId,
+    }})`
         mutation orderUpdate($input: OrderInput!) {
             orderUpdate(input: $input) {
                 userErrors { field, message }
@@ -32,6 +22,8 @@ const setOrder = (
                     displayFinancialStatus,
                     displayFulfillmentStatus,
                     note,
+                    name,
+                    customer { lastName firstName displayName }
                     subtotalPriceSet {
                         presentmentMoney { amount, currencyCode }
                     },
@@ -67,7 +59,7 @@ const setOrder = (
         }
     `;
 
-    return baseGraphQLRequest(client, { query, variables });
+    return baseGraphQLRequest(client, { data: query });
 };
 
 export { setOrder };
