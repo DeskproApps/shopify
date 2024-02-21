@@ -1,6 +1,7 @@
 import { FC, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoadingSpinner } from "@deskpro/app-sdk";
+import { PageBuilder } from "@deskpro/app-builder";
 import {
   useSetTitle,
   useExternalLink,
@@ -51,18 +52,108 @@ const HomePage: FC = () => {
       );
     }
 
+    // return (
+    //   <>HomePage</>
+    // );
     return (
-        <Home
-          orders={orders || []}
-          customer={customer}
-          onNavigateToCustomer={onNavigateToCustomer}
-          onNavigateToOrders={onNavigateToOrders}
-          onNavigateToOrder={onNavigateToOrder}
-          getCustomerLink={getCustomerLink}
-          getOrdersLink={getOrdersLink}
-          getOrderLink={getOrderLink}
-        />
+      <Home
+        orders={orders || []}
+        customer={customer}
+        onNavigateToCustomer={onNavigateToCustomer}
+        onNavigateToOrders={onNavigateToOrders}
+        onNavigateToOrder={onNavigateToOrder}
+        getCustomerLink={getCustomerLink}
+        getOrdersLink={getOrdersLink}
+        getOrderLink={getOrderLink}
+      />
     );
+    /*return (
+      <>
+        <PageBuilder
+          store={{ customer, orders }}
+          config={{
+            structure: [
+                ["fullName"],
+                ["email"],
+                ["totalSpent"],
+                ["note"],
+                ["---"],
+                // ["ordersTitle"],
+                ["orders"],
+            ],
+            blocks: {
+                fullName: {
+                    type: "title",
+                    pathInStore: ["customer", "displayName"],
+                    props: {
+                        link: `${getCustomerLink(customer?.legacyResourceId)}`,
+                        to: `/view_customer?customerId=${customer?.id}`,
+                    },
+                },
+                email: {
+                    type: "text",
+                    label: "Email",
+                    pathInStore: ["customer", "email"],
+                },
+                totalSpent: {
+                    type: "price",
+                    label: "Total Spent",
+                    pathInStore: ["customer", "amountSpent"],
+                    props: {
+                        mapper: {
+                            amount: "amount",
+                            currency: "currencyCode",
+                        },
+                    },
+                },
+                note: {
+                    type: "text",
+                    label: "Note",
+                    pathInStore: ["customer", "note"],
+                },
+                "---": {
+                    type: "divider",
+                    full: true,
+                },
+                /!*ordersTitle: {
+                    type: "title",
+                    props: {
+                        value: "Orders",
+                        to: `/list_orders`,
+                        link: `${getOrdersLink()}`,
+                    },
+                },*!/
+                orders: {
+                    type: "iterable",
+                    pathInStore: ["orders"],
+                    config: {
+                      structure: [
+                        ["title"],
+                        ["date", "status"],
+                      ],
+                      blocks: {
+                        title: {
+                          type: "title",
+                          pathInStore: ["id"],
+                        },
+                        date: {
+                          type: "text",
+                          label: "Date",
+                          pathInStore: ["createdAt"],
+                        },
+                        status: {
+                          type: "text",
+                          label: "Status",
+                          pathInStore: ["displayFulfillmentStatus"],
+                        },
+                      },
+                    },
+                },
+            },
+          }}
+        />
+      </>
+    );*/
 };
 
 export { HomePage };

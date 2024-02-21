@@ -1,0 +1,55 @@
+{
+  "data": {
+    "customers": {
+      "edges": [
+        {
+          "node": {
+            "id": "gid://shopify/Customer/7982046085440",
+            "createdAt": "2024-01-18T17:31:36Z",
+            "displayName": "Christian Hatfield",
+            "email": "egnition_sample_60@egnition.com",
+            "hasTimelineComment": false,
+            "locale": "en",
+            "note": null,
+            "phone": "+12423337689"
+          }
+        },
+        {
+          "node": {
+            "id": "gid://shopify/Customer/7982046183744",
+            "createdAt": "2024-01-18T17:31:37Z",
+            "displayName": "Hamish Orr",
+            "email": "egnition_sample_96@egnition.com",
+            "hasTimelineComment": false,
+            "locale": "en",
+            "note": null,
+            "phone": "+38614296549"
+          }
+        },
+        {
+          "node": {
+            "id": "gid://shopify/Customer/7982046347584",
+            "createdAt": "2024-01-18T17:31:38Z",
+            "displayName": "Ulric Lynch",
+            "email": "egnition_sample_98@egnition.com",
+            "hasTimelineComment": false,
+            "locale": "en",
+            "note": null,
+            "phone": "+262269600412"
+          }
+        }
+      ]
+    }
+  },
+  "extensions": {
+    "cost": {
+      "requestedQueryCost": 102,
+      "actualQueryCost": 5,
+      "throttleStatus": {
+        "maximumAvailable": 1000.0,
+        "currentlyAvailable": 995,
+        "restoreRate": 50.0
+      }
+    }
+  }
+}

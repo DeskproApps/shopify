@@ -1,9 +1,10 @@
 /* eslint-disable */
-import get from "lodash/get";
+import { get, random } from "lodash";
 import { IDeskproClient } from "@deskpro/app-sdk";
 import { baseGraphQLRequest } from "./baseGraphQLRequest";
 import { gql } from "../../utils";
 import type { CustomerType } from "./types";
+import { mockCustomer } from "../../../testing";
 
 const getCustomer = (
   client: IDeskproClient,

@@ -1,0 +1,18 @@
+{
+  "data": {
+    "customers": {
+      "edges": []
+    }
+  },
+  "extensions": {
+    "cost": {
+      "requestedQueryCost": 102,
+      "actualQueryCost": 2,
+      "throttleStatus": {
+        "maximumAvailable": 1000.0,
+        "currentlyAvailable": 998,
+        "restoreRate": 50.0
+      }
+    }
+  }
+}

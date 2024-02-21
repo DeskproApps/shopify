@@ -1,16 +1,13 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { LoadingSpinner, useDeskproAppClient } from "@deskpro/app-sdk";
+import { PageBuilder } from "@deskpro/app-builder";
 import {
   useSetTitle,
   useExternalLink,
   useRegisterElements,
 } from "../../hooks";
 import { useCustomer } from "../../hooks";
-import {
-  PageBuilder,
-  defaultBlocksMap,
-} from "../../components/PageBuilder";
 import type { FC } from "react";
 
 const ViewCustomerPage: FC = () => {
@@ -49,62 +46,64 @@ const ViewCustomerPage: FC = () => {
     }
 
     return (
-      <PageBuilder
-        blocksMap={defaultBlocksMap}
-        store={{ customer }}
-        config={{
-          structure: [
-            ["fullName"],
-            ["email"],
-            ["phone"],
-            ["tags"],
-            ["marketingEmail"],
-            ["note"],
-          ],
-          blocks: {
-            fullName: {
-              type: "title",
-              pathInStore: ["customer", "displayName"],
-              props: {
-                link: `${customerLink}`,
-              },
-            },
-            email: {
-              type: "text",
-              label: "Email",
-              pathInStore: ["customer", "email"],
-            },
-            phone: {
-              type: "text",
-              label: "Phone number",
-              pathInStore: ["customer", "phone"],
-            },
-            tags: {
-              type: "tags",
-              label: "Tags",
-              pathInStore: ["customer", "tags"],
-            },
-            marketingEmail: {
-              type: "toggle",
-              label: "Receive Marketing Email",
-              pathInStore: ["customer", "emailMarketingConsent", "marketingState"],
-              props: {
-                disabled: true,
-                label: "Yes",
-                rules: {
-                  eq: "SUBSCRIBED",
-                },
-              },
-            },
-            note: {
-              type: "text",
-              label: "Note",
-              pathInStore: ["customer", "note"],
-            },
-          },
-        }}
-      />
+      <>ViewCustomerPage</>
     );
+    // return (
+    //   <PageBuilder
+    //     store={{ customer }}
+    //     config={{
+    //       structure: [
+    //         ["fullName"],
+    //         ["email"],
+    //         ["phone"],
+    //         ["tags"],
+    //         ["marketingEmail"],
+    //         ["note"],
+    //       ],
+    //       blocks: {
+    //         fullName: {
+    //           type: "title",
+    //           pathInStore: ["customer", "displayName"],
+    //           props: {
+    //             link: `${customerLink}`,
+    //           },
+    //         },
+    //         email: {
+    //           type: "text",
+    //           label: "Email",
+    //           pathInStore: ["customer", "email"],
+    //         },
+    //         phone: {
+    //           type: "text",
+    //           label: "Phone number",
+    //           pathInStore: ["customer", "phone"],
+    //         },
+    //         tags: {
+    //           type: "tags",
+    //           label: "Tags",
+    //           pathInStore: ["customer", "tags"],
+    //         },
+    //         marketingEmail: {
+    //           type: "toggle",
+    //           label: "Receive Marketing Email",
+    //           pathInStore: ["customer", "emailMarketingConsent", "marketingState"],
+    //           props: {
+    //             disabled: true,
+    //             label: "Yes",
+    //             rules: {
+    //               eq: "SUBSCRIBED",
+    //             },
+    //           },
+    //         },
+    //         note: {
+    //           type: "text",
+    //           label: "Note",
+    //           pathInStore: ["customer", "note"],
+    //         },
+    //       },
+    //     }}
+    //   />
+    // );
 };
 
 export { ViewCustomerPage };

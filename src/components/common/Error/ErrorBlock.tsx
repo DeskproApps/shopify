@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import { P5 } from "@deskpro/deskpro-ui";
+import { DEFAULT_ERROR } from "../../../constants";
 import type { FC, JSX } from "react";
 import type { Maybe } from "../../../types";
 
-type Props = {
+export type Props = {
   text?: Maybe<string|JSX.Element|Array<string|JSX.Element>>,
 }
 
@@ -15,7 +16,7 @@ const StyledErrorBlock = styled(P5)`
   background-color: ${({ theme }) => theme.colors.red100};
 `;
 
-const ErrorBlock: FC<Props> = ({ text = "An error occurred" }) => (
+const ErrorBlock: FC<Props> = ({ text = DEFAULT_ERROR }) => (
   <>
     {Array.isArray(text)
       ? text.map((msg, idx) => (<StyledErrorBlock key={idx}>{msg}</StyledErrorBlock>))

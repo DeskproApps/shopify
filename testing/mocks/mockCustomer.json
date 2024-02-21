@@ -1,0 +1,669 @@
+{
+  "data": {
+    "customer": {
+      "id": "gid://shopify/Customer/7982046085440",
+      "legacyResourceId": "7982046085440",
+      "displayName": "Christian Hatfield",
+      "createdAt": "2024-01-18T17:31:36Z",
+      "email": "egnition_sample_60@egnition.com",
+      "hasTimelineComment": false,
+      "locale": "en",
+      "note": null,
+      "phone": "+12423337689",
+      "firstName": "Christian",
+      "lastName": "Hatfield",
+      "numberOfOrders": "20",
+      "tags": [
+        "egnition-sample-data",
+        "VIP"
+      ],
+      "amountSpent": {
+        "amount": "2.3",
+        "currencyCode": "UAH"
+      },
+      "emailMarketingConsent": {
+        "marketingState": "NOT_SUBSCRIBED",
+        "consentUpdatedAt": null,
+        "marketingOptInLevel": "SINGLE_OPT_IN"
+      },
+      "orders": {
+        "edges": [
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661348102464",
+              "legacyResourceId": "5661348102464",
+              "createdAt": "2024-01-18T17:31:51Z",
+              "displayFinancialStatus": "PENDING",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1021",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438955745600",
+                      "title": "THE CREATION OF ADAM | MICHELANGELO"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438955778368",
+                      "title": "THE NIGHT WATCH | REMBRANDT VAN RIJN"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661348233536",
+              "legacyResourceId": "5661348233536",
+              "createdAt": "2024-01-18T17:31:57Z",
+              "displayFinancialStatus": "PAID",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1022",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438955876672",
+                      "title": "GIRL WITH A PEARL EARRING | JOHANNES VERMEER"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661348528448",
+              "legacyResourceId": "5661348528448",
+              "createdAt": "2024-01-18T17:32:03Z",
+              "displayFinancialStatus": "PAID",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1023",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438956433728",
+                      "title": "GUERNICA | PABLO PICASSO"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661348692288",
+              "legacyResourceId": "5661348692288",
+              "createdAt": "2024-01-18T17:32:09Z",
+              "displayFinancialStatus": "REFUNDED",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1024",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438956663104",
+                      "title": "GIRL WITH A PEARL EARRING | JOHANNES VERMEER"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438956695872",
+                      "title": "THE PERSISTENCE OF MEMORY | SALVADOR DALI"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438956728640",
+                      "title": "THE CREATION OF ADAM | MICHELANGELO"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661349904704",
+              "legacyResourceId": "5661349904704",
+              "createdAt": "2024-01-18T17:32:55Z",
+              "displayFinancialStatus": "PAID",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1025",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438959481152",
+                      "title": "THE NIGHT WATCH | REMBRANDT VAN RIJN"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661350199616",
+              "legacyResourceId": "5661350199616",
+              "createdAt": "2024-01-18T17:33:01Z",
+              "displayFinancialStatus": "PAID",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1026",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438960234816",
+                      "title": "STARRY NIGHT | VINCENT VAN GOGH"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661350396224",
+              "legacyResourceId": "5661350396224",
+              "createdAt": "2024-01-18T17:33:07Z",
+              "displayFinancialStatus": "PAID",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1027",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438960496960",
+                      "title": "THE CREATION OF ADAM | MICHELANGELO"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661350527296",
+              "legacyResourceId": "5661350527296",
+              "createdAt": "2024-01-18T17:33:13Z",
+              "displayFinancialStatus": "REFUNDED",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1028",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438960660800",
+                      "title": "THE LAST SUPPER | LEONARDO DA VINCI"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438960693568",
+                      "title": "MONA LISA | LEONARDO DA VINCI"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438960726336",
+                      "title": "THE PERSISTENCE OF MEMORY | SALVADOR DALI"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661351575872",
+              "legacyResourceId": "5661351575872",
+              "createdAt": "2024-01-18T17:33:59Z",
+              "displayFinancialStatus": "REFUNDED",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1029",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438961938752",
+                      "title": "GIRL WITH A PEARL EARRING | JOHANNES VERMEER"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438961971520",
+                      "title": "THE SCREAM | EDVARD MUNCH"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661351641408",
+              "legacyResourceId": "5661351641408",
+              "createdAt": "2024-01-18T17:34:05Z",
+              "displayFinancialStatus": "PENDING",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1030",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438962069824",
+                      "title": "THE NIGHT WATCH | REMBRANDT VAN RIJN"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438962102592",
+                      "title": "THE PERSISTENCE OF MEMORY | SALVADOR DALI"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438962135360",
+                      "title": "GIRL WITH A PEARL EARRING | JOHANNES VERMEER"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661351903552",
+              "legacyResourceId": "5661351903552",
+              "createdAt": "2024-01-18T17:34:10Z",
+              "displayFinancialStatus": "PENDING",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1031",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438962397504",
+                      "title": "SELF-PORTRAIT WITHOUT BEARD | VINCENT VAN GOGH"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438962430272",
+                      "title": "GUERNICA | PABLO PICASSO"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438962463040",
+                      "title": "STARRY NIGHT | VINCENT VAN GOGH"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661352067392",
+              "legacyResourceId": "5661352067392",
+              "createdAt": "2024-01-18T17:34:16Z",
+              "displayFinancialStatus": "PAID",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1032",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438962692416",
+                      "title": "SELF-PORTRAIT WITHOUT BEARD | VINCENT VAN GOGH"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661352952128",
+              "legacyResourceId": "5661352952128",
+              "createdAt": "2024-01-18T17:35:02Z",
+              "displayFinancialStatus": "REFUNDED",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1033",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438963970368",
+                      "title": "MONA LISA | LEONARDO DA VINCI"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438964003136",
+                      "title": "THE LAST SUPPER | LEONARDO DA VINCI"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438964035904",
+                      "title": "THE SCREAM | EDVARD MUNCH"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661353115968",
+              "legacyResourceId": "5661353115968",
+              "createdAt": "2024-01-18T17:35:08Z",
+              "displayFinancialStatus": "PENDING",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1034",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438964232512",
+                      "title": "MONA LISA | LEONARDO DA VINCI"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661353345344",
+              "legacyResourceId": "5661353345344",
+              "createdAt": "2024-01-18T17:35:14Z",
+              "displayFinancialStatus": "REFUNDED",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1035",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438964527424",
+                      "title": "THE NIGHT WATCH | REMBRANDT VAN RIJN"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438964560192",
+                      "title": "GIRL WITH A PEARL EARRING | JOHANNES VERMEER"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438964592960",
+                      "title": "SELF-PORTRAIT WITHOUT BEARD | VINCENT VAN GOGH"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661353443648",
+              "legacyResourceId": "5661353443648",
+              "createdAt": "2024-01-18T17:35:19Z",
+              "displayFinancialStatus": "PENDING",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1036",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438964756800",
+                      "title": "STARRY NIGHT | VINCENT VAN GOGH"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661354066240",
+              "legacyResourceId": "5661354066240",
+              "createdAt": "2024-01-18T17:36:06Z",
+              "displayFinancialStatus": "REFUNDED",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1037",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438966001984",
+                      "title": "THE SCREAM | EDVARD MUNCH"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438966034752",
+                      "title": "STARRY NIGHT | VINCENT VAN GOGH"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438966067520",
+                      "title": "MONA LISA | LEONARDO DA VINCI"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661354164544",
+              "legacyResourceId": "5661354164544",
+              "createdAt": "2024-01-18T17:36:12Z",
+              "displayFinancialStatus": "PAID",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1038",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438966198592",
+                      "title": "STARRY NIGHT | VINCENT VAN GOGH"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438966231360",
+                      "title": "GUERNICA | PABLO PICASSO"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438966264128",
+                      "title": "THE LAST SUPPER | LEONARDO DA VINCI"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661354197312",
+              "legacyResourceId": "5661354197312",
+              "createdAt": "2024-01-18T17:36:17Z",
+              "displayFinancialStatus": "PENDING",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1039",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438966296896",
+                      "title": "GIRL WITH A PEARL EARRING | JOHANNES VERMEER"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "node": {
+              "id": "gid://shopify/Order/5661354361152",
+              "legacyResourceId": "5661354361152",
+              "createdAt": "2024-01-18T17:36:23Z",
+              "displayFinancialStatus": "PAID",
+              "displayFulfillmentStatus": "UNFULFILLED",
+              "name": "#1040",
+              "customer": {
+                "lastName": "Hatfield",
+                "firstName": "Christian",
+                "displayName": "Christian Hatfield"
+              },
+              "lineItems": {
+                "edges": [
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438966526272",
+                      "title": "STARRY NIGHT | VINCENT VAN GOGH"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438966559040",
+                      "title": "STARRY NIGHT | VINCENT VAN GOGH"
+                    }
+                  },
+                  {
+                    "node": {
+                      "id": "gid://shopify/LineItem/14438966591808",
+                      "title": "GUERNICA | PABLO PICASSO"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "events": {
+        "edges": []
+      }
+    }
+  },
+  "extensions": {
+    "cost": {
+      "requestedQueryCost": 606,
+      "actualQueryCost": 126,
+      "throttleStatus": {
+        "maximumAvailable": 1000.0,
+        "currentlyAvailable": 874,
+        "restoreRate": 50.0
+      }
+    }
+  }
+}
