@@ -4,9 +4,13 @@ Shopify App Setup
 To install the Shopify app you'll first need to create an API access token. Head over to your Shopify store and login 
 to the store admin. 
 
-From the store admin dashboard, navigate to the "Apps" page.
+From the store admin dashboard, navigate to the "Settings" page using the button in the bottom left.
 
-[![](/docs/assets/setup/shopify-setup-01.png)](/docs/assets/setup/shopify-setup-01.png)
+From here, click "Apps and sales channels" in the navigation panel on the left.
+
+
+
+[![](/docs/assets/setup/shopify-setup-13.png)](/docs/assets/setup/shopify-setup-13.png)
 
 Next, click on the "Develop apps" link at the top of the page.
 
