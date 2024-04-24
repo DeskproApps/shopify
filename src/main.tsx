@@ -14,22 +14,23 @@ import "tippy.js/dist/tippy.css";
 import "simplebar/dist/simplebar.min.css";
 import "@deskpro/deskpro-ui/dist/deskpro-ui.css";
 import "@deskpro/deskpro-ui/dist/deskpro-custom-icons.css";
+import "iframe-resizer/js/iframeResizer.contentWindow.js";
 
-TimeAgo.addDefaultLocale(en)
+TimeAgo.addDefaultLocale(en);
 
 const root = ReactDOM.createRoot(document.getElementById("root") as Element);
-root.render((
-    <StrictMode>
-      <DeskproAppProvider>
-        <HashRouter>
-          <QueryClientProvider client={queryClient}>
-            <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <Suspense fallback={<LoadingSpinner/>}>
-                <App />
-              </Suspense>
-            </ErrorBoundary>
-          </QueryClientProvider>
-        </HashRouter>
-      </DeskproAppProvider>
-    </StrictMode>
-));
+root.render(
+  <StrictMode>
+    <DeskproAppProvider>
+      <HashRouter>
+        <QueryClientProvider client={queryClient}>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Suspense fallback={<LoadingSpinner />}>
+              <App />
+            </Suspense>
+          </ErrorBoundary>
+        </QueryClientProvider>
+      </HashRouter>
+    </DeskproAppProvider>
+  </StrictMode>
+);
