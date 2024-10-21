@@ -1,5 +1,3 @@
-import get from "lodash/get";
-import { Stack } from "@deskpro/deskpro-ui";
 import { DEFAULT_ERROR } from "../../constants";
 import { ShopifyError } from "../../services/shopify";
 import { Container, ErrorBlock } from "../common";
@@ -11,25 +9,26 @@ type Props = Omit<FallbackProps, "error"> & {
 };
 
 const ErrorFallback: FC<Props> = ({ error }) => {
-  let message = DEFAULT_ERROR;
+  let message: string|string[] = DEFAULT_ERROR;
 
   // eslint-disable-next-line no-console
   console.error(error);
 
   if (error instanceof ShopifyError) {
-    message = get(error, ["data", "errors"])
-      || DEFAULT_ERROR;
+    let arrayOfErrors: string[] = [];
+
+    if (Array.isArray(error.data?.errors)) {
+      arrayOfErrors = error.data?.errors
+        .map((e) => (typeof e === "string") ? e : e.message)
+        .filter(Boolean);
+    }
+
+    message = arrayOfErrors.length > 0 ? arrayOfErrors : DEFAULT_ERROR;
   }
 
   return (
     <Container>
-      <ErrorBlock
-        text={(
-          <Stack gap={6} vertical style={{ padding: "8px" }}>
-            {message}
-          </Stack>
-        )}
-      />
+      <ErrorBlock text={message}/>
     </Container>
   );
 };
