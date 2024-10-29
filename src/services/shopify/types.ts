@@ -1,7 +1,7 @@
 export type Response<T> = Promise<{ data: T }>;
 
 export type ShopifyGraphQLError = {
-  errors: string,
+  errors: string|Array<{ message: string }>,
 };
 
 export type CustomerSearchParams = {
