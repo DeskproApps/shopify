@@ -5,7 +5,7 @@ import { proxyFetch, adminGenericProxyFetch } from "@deskpro/app-sdk";
 import { GRAPHQL_URL, placeholders } from "../../constants";
 import { getQueryParams } from "../../utils";
 import { ShopifyError } from "./ShopifyError";
-import type { Request, FetchOptions } from "../../types";
+import type { Request } from "../../types";
 
 const baseGraphQLRequest: Request = async (client, {
   url,
@@ -23,7 +23,7 @@ const baseGraphQLRequest: Request = async (client, {
   const params = getQueryParams(queryParams);
 
   const requestUrl = `${baseUrl}${isEmpty(params) ? "": `?${params}`}`;
-  const options: FetchOptions = {
+  const options: RequestInit = {
     method,
     headers: {
       "Accept": "application/json",
