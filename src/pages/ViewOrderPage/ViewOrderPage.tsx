@@ -9,14 +9,19 @@ import {
 import { useOrder } from "../../hooks";
 import { ViewOrder } from "../../components";
 import type { FC } from "react";
+import type { Maybe } from "../../types";
 
 const ViewOrderPage: FC = () => {
     const [searchParams] = useSearchParams();
     const orderId = searchParams.get("orderId");
     const { isLoading, order } = useOrder(orderId);
     const { getOrderLink } = useExternalLink();
-    const orderLink = useMemo(() => {
-      return getOrderLink(order?.legacyResourceId);
+
+    const orderLink: Maybe<string>  = useMemo(() => {
+        if(!order) return null
+    
+      return getOrderLink(order.legacyResourceId);
+      
     }, [getOrderLink, order]);
 
     useSetTitle(order?.name || "Shopify");

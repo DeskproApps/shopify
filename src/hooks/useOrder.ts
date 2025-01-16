@@ -1,4 +1,3 @@
-import get from "lodash/get";
 import { useQueryWithClient } from "@deskpro/app-sdk";
 import { getOrder } from "../services/shopify";
 import { QueryKey } from "../query";
@@ -7,7 +6,7 @@ import type { Order } from "../services/shopify/types";
 
 type UseOrder = (orderId: Maybe<Order["id"]>) => {
   isLoading: boolean,
-  order: Order,
+  order?: Order,
 };
 
 const useOrder: UseOrder = (orderId) => {
@@ -19,7 +18,7 @@ const useOrder: UseOrder = (orderId) => {
 
   return {
     isLoading: false,
-    order: get(order, ["data", "order"]),
+    order: order.data?.order,
   };
 };
 
