@@ -51,8 +51,8 @@ const VerifySettings: FC = () => {
       />
       {nbsp}
       {shopInfo
-        ? <P5>Verified as {`${shopInfo?.name} <${shopInfo?.email}>`}</P5>
-        : <Invalid type="p5">{error}</Invalid> || ""
+        ? <P5>Verified as {`${shopInfo.name} <${shopInfo.email}>`}</P5>
+        : <Invalid type="p5">{error}</Invalid> 
       }
     </Stack>
   );
