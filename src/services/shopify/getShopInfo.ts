@@ -8,7 +8,7 @@ export const getShopInfo = (
   client: IDeskproClient,
   settings?: Maybe<Settings>,
 ) => {
-    const query = gql`query {
+    const query = gql({})`query {
         shop {
           description email id name url
         }
