@@ -60,7 +60,7 @@ const LoadingAppPage: FC = () => {
                 customers.length < 1 ? navigate("/link_customer") :
                     navigate("/home")
             })
-            .catch(() => false)
+            .catch(() => {})
     } else {
 
         if (isUsingOAuth) {
