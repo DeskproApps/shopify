@@ -35,7 +35,7 @@ const LoadingAppPage: FC = () => {
         // Store the authentication method in the user state
         client.setUserState("isUsingOAuth", isUsingOAuth)
 
-        // Verify Monday.com authentication status
+        // Verify authentication status
         // If OAuth2 mode and the user is logged in the request would be make with their stored access token
         // If access token mode the request would be made with the access token provided in the app setup
         getShopInfo(client)
