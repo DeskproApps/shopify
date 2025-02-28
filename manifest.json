@@ -8,9 +8,16 @@
   "isSingleInstall": false,
   "hasDevMode": true,
   "serveUrl": "https://apps-cdn.deskpro-service.com/__name__/__version__",
+  "secrets": "/PEZF9wdI5aSTVh4szWoFlvYR6kD2+O5y28a/9s34I05ya/LLp9Lpaqp5zdY3gc1MQGVa0Cdu7vRmiz5cnLzRVSvqr0i0W1au7i3zEOYSt+t5AhRPCMSAt60GIlnxjbNl7NsE1CgM4iue+AohPEkpb6t/v2lbEuga55rU+QXcBx7Cj+e6toB90TWMgy2d3wPiFfQ/tuC8HPrgyedaTFeV3dYOOnoZm411oFEiLLSJ/ba7J/TEokJhpUe1k+X3VORKqu0qPV+37+y787dbG+pdlH/ACx0v0x6uWFglrIVmv/HlOHtwX4yL8cDgNMETJ3yYD4JPLUZsEtabdxdVwoihidNITsxEQVB/3JNVDrhTEnBVaG4MDW/erRsvf5KimopwRE6fQ0uCNGn08Z2vdWHH3o9+qdIQn2TOck3aaXoQv8Pucsw/e7jeT/SxBGOFva/E2mxp4c+g9tnLFfiAD2UEaYnHMgVJ3Kx5MSVK6F5EJEPjsLi3/vKPoFJET1tQPIn0kAwTw9Eb3ypC+zOOGVUc8X+tn9coHk6n9hq5kevu57nRAKYUW0MITFGXEpUyq7+77VeoPDNcLqda5ckmGgp/s0iyI0Ha+mYKZkVsLlnGebuSVSF7SWe+irD/ysCcBpiIax/8tyRM9m7h2d6p2Qbt7tLI3oykloqo6VWVHoUcR4Tb3dmnsfBjgqaqkpqxMOwHdl0tjg220qt2l5RTMnMwZLBYoDVIxdrchwab4J/3D/sf7Fzg8NdSETmvRxLkCcK0DsFg1Jse/lRFOCIIJlpLRGP/4K8MvKuimhIS70wTRFtpAcd6P/uUgWOSYF3YWZLqSCsLdbfuWljKR9XIH5H8rcICg6Jrfz5FE7+J/+B1B312ZD0gdhHfZaE1zfuP7VLcy3qNggV/dcpHeQ7KwbPvPNiwNAzXZ4AKEdgCYk36K6mHUk9/0pUMdAqXCHpifDKB1DQ07YQOk5F3UskPstGzHAsz+gsnBISy7J7Gvd8RdaOr0IJNSDYG5G8S3bpc7Mxe5yziZrDQWgO5A2wz4I+bGOrmg5tqeHYf9sh7RPlRdA5mBJldGX65TpZKUkuEVZ6Oyf0GWUVIiyxHoKwWkSCSfcT8qdF0DMcHMNU6HmgV3E5CSTtH45bh4lHzbebUaoH",
   "targets": [
-    { "target": "ticket_sidebar", "entrypoint": "index.html" },
-    { "target": "user_sidebar", "entrypoint": "index.html" }
+    {
+      "target": "ticket_sidebar",
+      "entrypoint": "index.html"
+    },
+    {
+      "target": "user_sidebar",
+      "entrypoint": "index.html"
+    }
   ],
   "entityAssociations": {
     "linkedShopifyCustomers": {
@@ -20,36 +27,97 @@
     }
   },
   "settings": {
+    "use_deskpro_saas": {
+      "title": "One-Click Installation",
+      "type": "boolean",
+      "default": true,
+      "isRequired": false,
+      "isBackendOnly": false,
+      "order": 5
+    },
+    "use_access_token": {
+      "title": "Use Access Token",
+      "type": "boolean",
+      "isRequired": false,
+      "isBackendOnly": false,
+      "default": false,
+      "condition": "settings.use_deskpro_saas != true",
+      "order": 10
+    },
     "shop_name": {
       "title": "Shop name",
       "description": "Your Shop name",
       "type": "string",
       "isRequired": true,
       "isBackendOnly": false,
-      "order": 10
+      "order": 20
     },
     "access_token": {
       "title": "Access Token",
       "description": "Your shopify access token, please follow the app setup guide to get this",
       "type": "string",
-      "isRequired": true,
+      "isRequired": false,
       "isBackendOnly": true,
-      "order": 20
+      "condition": "settings.use_deskpro_saas != true && settings.use_access_token == true",
+      "order": 30
     },
     "verify_settings": {
       "title": "",
       "type": "app_embedded",
-      "options": { "entrypoint": "#/admin/verify_settings" },
+      "options": {
+        "entrypoint": "#/admin/verify_settings",
+        "height": "30px"
+      },
+      "isRequired": false,
+      "condition": "settings.use_deskpro_saas != true && settings.use_access_token == true",
+      "isBackendOnly": true,
+      "order": 40
+    },
+    "client_id": {
+      "title": "Client ID",
+      "type": "string",
+      "isRequired": false,
+      "isBackendOnly": false,
+      "condition": "settings.use_deskpro_saas != true && settings.use_access_token != true",
+      "order": 50
+    },
+    "client_secret": {
+      "title": "Client Secret",
+      "type": "string",
       "isRequired": false,
       "isBackendOnly": true,
-      "order": 30
+      "condition": "settings.use_deskpro_saas != true && settings.use_access_token != true",
+      "order": 60
+    },
+    "callback_url": {
+      "title": "Callback URL",
+      "type": "app_embedded",
+      "options": {
+        "entrypoint": "#/admin/callback"
+      },
+      "isRequired": false,
+      "isBackendOnly": true,
+      "condition": "settings.use_deskpro_saas != true && settings.use_access_token != true",
+      "order": 70
     }
   },
   "proxy": {
     "whitelist": [
       {
         "url": "https://(.*).myshopify.com/admin/api/.*",
-        "methods": ["GET", "POST", "PUT", "DELETE"],
+        "methods": [
+          "GET",
+          "POST",
+          "PUT",
+          "DELETE"
+        ],
+        "timeout": 30
+      },
+      {
+        "url": "https://(.*).myshopify.com/admin/oauth/.*",
+        "methods": [
+          "POST"
+        ],
         "timeout": 30
       }
     ]
