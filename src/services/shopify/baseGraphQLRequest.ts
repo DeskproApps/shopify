@@ -1,11 +1,11 @@
+import { getQueryParams } from "@/utils";
+import { GRAPHQL_URL, OAUTH2_ACCESS_TOKEN_PATH, placeholders } from "@/constants";
+import { proxyFetch, adminGenericProxyFetch } from "@deskpro/app-sdk";
+import { ShopifyError } from "./ShopifyError";
 import has from "lodash/has";
 import isEmpty from "lodash/isEmpty";
 import isString from "lodash";
-import { proxyFetch, adminGenericProxyFetch } from "@deskpro/app-sdk";
-import { GRAPHQL_URL, placeholders } from "../../constants";
-import { getQueryParams } from "../../utils";
-import { ShopifyError } from "./ShopifyError";
-import type { Request } from "../../types";
+import type { Request } from "@/types";
 
 const baseGraphQLRequest: Request = async (client, {
   url,
@@ -22,13 +22,15 @@ const baseGraphQLRequest: Request = async (client, {
   const baseUrl = rawUrl ? rawUrl : `${GRAPHQL_URL(settings?.shop_name)}${url || ""}`;
   const params = getQueryParams(queryParams);
 
+  const isUsingOAuth2 = (await client.getUserState<boolean>("isUsingOAuth"))[0].data
+
   const requestUrl = `${baseUrl}${isEmpty(params) ? "": `?${params}`}`;
   const options: RequestInit = {
     method,
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
-      "X-Shopify-Access-Token": settings?.access_token || placeholders.ACCESS_TOKEN,
+      "X-Shopify-Access-Token": settings?.access_token || (isUsingOAuth2 ? `[user[${OAUTH2_ACCESS_TOKEN_PATH}]]` : placeholders.ACCESS_TOKEN) ,
       ...customHeaders,
     },
   };
