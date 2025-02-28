@@ -17,12 +17,13 @@ import { useSearch } from "./hooks";
 import { LinkCustomer } from "../../components";
 import type { FC, ChangeEvent } from "react";
 import type { CustomerType } from "../../services/shopify/types";
+import { ContextData, Settings } from "@/types";
 
 const LinkCustomerPage: FC = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const { client } = useDeskproAppClient();
-    const { context } = useDeskproLatestAppContext();
+    const { context } = useDeskproLatestAppContext<ContextData, Settings>();
     const [search, setSearch] = useState<string>("");
     const [selectedCustomerId, setSelectedCustomerId] = useState<CustomerType["id"]>("");
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -45,6 +46,19 @@ const LinkCustomerPage: FC = () => {
                 payload: { type: "changePage", path: "/home" }
             });
         }
+
+        if (context?.settings.use_access_token !== true) {
+            registerElement("menu", {
+              type: "menu",
+              items: [{
+                title: "Switch Account",
+                payload: {
+                  type: "changePage",
+                  path: `/login`,
+                },
+              }],
+            });
+          }
     }, [isEditMode]);
 
     useEffect(() => {

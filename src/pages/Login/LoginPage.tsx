@@ -1,7 +1,7 @@
 import { AnchorButton, H3, Stack } from "@deskpro/deskpro-ui"
 import { ErrorBlock } from "@/components/common"
 import { FC } from "react"
-import { useDeskproElements } from "@deskpro/app-sdk"
+import { useDeskproElements, useInitialisedDeskproAppClient } from "@deskpro/app-sdk"
 import useLogin from "./useLogin"
 
 const LoginPage: FC = () => {
@@ -9,6 +9,10 @@ const LoginPage: FC = () => {
         clearElements()
         registerElement("refresh", { type: "refresh_button" })
     })
+
+    useInitialisedDeskproAppClient((client)=>{
+        client.setTitle("Login")
+    }, [])
 
     const { onSignIn, authUrl, isLoading, error } = useLogin();
 
