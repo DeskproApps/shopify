@@ -51,10 +51,10 @@ const LinkCustomerPage: FC = () => {
             registerElement("menu", {
               type: "menu",
               items: [{
-                title: "Switch Account",
+                title: "Logout",
                 payload: {
                   type: "changePage",
-                  path: `/login`,
+                  path: `/logout`,
                 },
               }],
             });

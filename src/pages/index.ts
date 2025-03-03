@@ -1,4 +1,6 @@
 export { AdminCallbackPage } from "./AdminCallbackPage";
+export { default as LoginPage } from "./Login";
+export { default as LogoutPage } from "./LogoutPage";
 export { EditCustomerPage } from "./EditCustomerPage";
 export { EditOrderPage } from "./EditOrderPage";
 export { HomePage } from "./HomePage";

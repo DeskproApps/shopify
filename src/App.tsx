@@ -1,10 +1,9 @@
-import { AdminCallbackPage, EditCustomerPage, EditOrderPage, HomePage, LinkCustomerPage, ListOrdersPage, LoadingAppPage, VerifySettings, ViewCustomerPage, ViewOrderPage } from "./pages";
+import { AdminCallbackPage, EditCustomerPage, EditOrderPage, HomePage, LinkCustomerPage, ListOrdersPage, LoadingAppPage, LoginPage, LogoutPage, VerifySettings, ViewCustomerPage, ViewOrderPage } from "./pages";
 import { isNavigatePayload } from "./utils";
 import { match } from "ts-pattern";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 import { useDeskproAppClient, useDeskproAppEvents } from "@deskpro/app-sdk";
-import LoginPage from "./pages/Login";
 import type { EventPayload } from "./types";
 import type { FC } from "react";
 
@@ -32,6 +31,7 @@ const App: FC = () => {
       <Route path="/admin/verify_settings" element={<VerifySettings />} />
       <Route path="/admin/callback" element={<AdminCallbackPage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/logout" element={<LogoutPage />} />
       <Route path="/home" element={<HomePage />} />
       <Route path="/link_customer" element={<LinkCustomerPage />} />
       <Route path="/view_customer" element={<ViewCustomerPage />} />
