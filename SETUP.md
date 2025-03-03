@@ -1,8 +1,11 @@
 Shopify App Setup
 ===
 
-To install the Shopify app you'll first need to create an API access token. Head over to your Shopify store and login 
-to the store admin. 
+Follow these steps to install and configure the Shopify app using either an Access Token or OAuth credentials.
+
+## Using Access Token
+
+Head over to your Shopify store and login to the store admin. 
 
 From the store admin dashboard, navigate to the "Settings" page using the button in the bottom left.
 
@@ -80,3 +83,39 @@ To configure who can see and use the Shopify app, head to the "Permissions" tab 
 you'd like to have access.
 
 When you're happy, click "Install".
+
+## Using OAuth
+
+Go to your Shopify Partner account and navigate to the Apps section in the sidebar. On the "Apps" page, click "Create app".
+
+[![](/docs/assets/setup/shopify-setup-oauth-01.png)](/docs/assets/setup/shopify-setup-oauth-01.png)
+
+On the "Create a new app" page click "Create app manually" under "Use Shopify Partners", give your app a name (e.g. Deskpro) and click "Create".
+
+[![](/docs/assets/setup/shopify-setup-oauth-02.png)](/docs/assets/setup/shopify-setup-oauth-02.png)
+
+Once the app is created, you'll see a screen with its details. Copy the `Client ID` and `Client Secret`, then enter them in the Settings tab in Deskpro.
+
+[![](/docs/assets/setup/shopify-setup-oauth-05.png)](/docs/assets/setup/shopify-setup-oauth-05.png)
+
+Next, click "Choose distribution" on the same page to make your app live.
+
+Select a distribution method. Public apps require approval from Shopify, while Custom apps are intended for use on a single store without requiring approval. This guide follows the Custom app setup.
+
+[![](/docs/assets/setup/shopify-setup-oauth-03.png)](/docs/assets/setup/shopify-setup-oauth-03.png)
+
+Enter your store url and click "Generate Link"
+
+
+Now, click Configuration in the sidebar. Enter the callback URL from the Settings tab in Deskpro into the "Allowed redirection URL(s)" field. Set "Embed app in Shopify admin" to `false`.
+
+[![](/docs/assets/setup/shopify-setup-oauth-04.png)](/docs/assets/setup/shopify-setup-oauth-04.png)
+
+
+Once you've made these changes, click "Save and release".
+
+To configure who can see and use the Shopify app, head to the "Permissions" tab and select those users and/or groups 
+you'd like to have access.
+
+When you're happy, click "Install".
+
