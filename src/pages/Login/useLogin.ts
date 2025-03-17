@@ -2,8 +2,8 @@ import { ContextData, Settings } from "@/types";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import { getAccessToken, getShopInfo } from "@/services/shopify";
 import { getEntityCustomerList } from "@/services/deskpro";
+import { IOAuth2, OAuth2Result, useDeskproLatestAppContext, useInitialisedDeskproAppClient } from "@deskpro/app-sdk";
 import { OAUTH2_ACCESS_TOKEN_PATH, OAUTH2_REFRESH_TOKEN_PATH } from "@/constants";
-import { OAuth2Result, useDeskproLatestAppContext, useInitialisedDeskproAppClient } from "@deskpro/app-sdk";
 import { useCallback, useState } from "react";
 
 interface UseLogin {
@@ -17,12 +17,13 @@ export default function useLogin(): UseLogin {
     const [authUrl, setAuthUrl] = useState<string | null>(null)
     const [error, setError] = useState<null | string>(null)
     const [isLoading, setIsLoading] = useState(false)
+    const [isPolling, setIsPolling] = useState(false)
+    const [oAuth2Context, setOAuth2Context] = useState<IOAuth2 | null>(null)
     const navigate = useNavigate()
 
     const { context } = useDeskproLatestAppContext<ContextData, Settings>()
 
     const user = context?.data?.ticket?.primaryUser || context?.data?.user
-
 
     useInitialisedDeskproAppClient(async (client) => {
         if (context?.settings.use_deskpro_saas === undefined || !user) {
@@ -44,7 +45,7 @@ export default function useLogin(): UseLogin {
             setError("A client ID is required");
             return
         }
-        const oauth2 = mode === "local" ?
+        const oAuth2Response = mode === "local" ?
             await client.startOauth2Local(
                 ({ state, callbackUrl }) => {
                     return `https://${context?.settings.shop_name}.myshopify.com/admin/oauth/authorize?${createSearchParams([
@@ -57,7 +58,7 @@ export default function useLogin(): UseLogin {
                 /\bcode=(?<code>[^&#]+)/,
                 async (code: string): Promise<OAuth2Result> => {
                     // Extract the callback URL from the authorization URL
-                    const url = new URL(oauth2.authorizationUrl);
+                    const url = new URL(oAuth2Response.authorizationUrl);
                     const redirectUri = url.searchParams.get("redirect_uri");
 
                     if (!redirectUri) {
@@ -72,38 +73,54 @@ export default function useLogin(): UseLogin {
             // Global Proxy Service
             : await client.startOauth2Global("0ad23fa9caf394119372cd5db27dba4b");
 
-        setAuthUrl(oauth2.authorizationUrl)
-        setIsLoading(false)
+        setAuthUrl(oAuth2Response.authorizationUrl)
+        setOAuth2Context(oAuth2Response)
 
-        try {
-            const result = await oauth2.poll()
-
-            await client.setUserState(OAUTH2_ACCESS_TOKEN_PATH, result.data.access_token, { backend: true })
-
-            if (result.data.refresh_token) {
-                await client.setUserState(OAUTH2_REFRESH_TOKEN_PATH, result.data.refresh_token, { backend: true })
-            }
-
-            const shopResult = await getShopInfo(client)
-
-            if (!shopResult?.data?.shop) {
-                throw new Error("Error authenticating user")
-            }
-
-            getEntityCustomerList(client, user.id)
-            .then((customers) => {
-                customers.length < 1 ? navigate("/link_customer") :
-                    navigate("/home")
-            })
-            .catch(() => {})
-        } catch (error) {
-            setError(error instanceof Error ? error.message : 'Unknown error');
-            setIsLoading(false);
-        }
     }, [setAuthUrl, context?.settings.use_deskpro_saas])
+
+    useInitialisedDeskproAppClient((client) => {
+        if (!user || !oAuth2Context) {
+            return
+        }
+
+        const startPolling = async () => {
+            try {
+                const result = await oAuth2Context.poll()
+
+                await client.setUserState(OAUTH2_ACCESS_TOKEN_PATH, result.data.access_token, { backend: true })
+
+                if (result.data.refresh_token) {
+                    await client.setUserState(OAUTH2_REFRESH_TOKEN_PATH, result.data.refresh_token, { backend: true })
+                }
+
+                const shopResult = await getShopInfo(client)
+
+                if (!shopResult?.data?.shop) {
+                    throw new Error("Error authenticating user")
+                }
+
+                getEntityCustomerList(client, user.id)
+                    .then((customers) => {
+                        customers.length < 1 ? navigate("/link_customer") :
+                            navigate("/home")
+                    })
+                    .catch(() => { navigate("/link_customer") })
+            } catch (error) {
+                setError(error instanceof Error ? error.message : 'Unknown error');
+            } finally {
+                setIsLoading(false)
+                setIsPolling(false)
+            }
+        }
+
+        if (isPolling) {
+            void startPolling()
+        }
+    }, [isPolling, user, oAuth2Context, navigate])
 
     const onSignIn = useCallback(() => {
         setIsLoading(true);
+        setIsPolling(true);
         window.open(authUrl ?? "", '_blank');
     }, [setIsLoading, authUrl]);
 
