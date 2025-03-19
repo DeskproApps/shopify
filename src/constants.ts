@@ -8,6 +8,9 @@ export const ENTITY = 'linkedShopifyCustomers';
 
 export const DEFAULT_ERROR = "There was an error!";
 
+export const OAUTH2_ACCESS_TOKEN_PATH = "oauth2/access_token"
+export const OAUTH2_REFRESH_TOKEN_PATH = "oauth2/refresh_token"
+
 export const placeholders = {
   SHOP_NAME: "__shop_name__",
   ACCESS_TOKEN: "__access_token__",

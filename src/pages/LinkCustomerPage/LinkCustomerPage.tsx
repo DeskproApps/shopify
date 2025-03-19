@@ -1,5 +1,4 @@
-import {useMemo, useState, useEffect, useCallback} from "react";
-import get from "lodash/get";
+import { useState, useEffect, useCallback} from "react";
 import isEmpty from "lodash/isEmpty";
 import { useDebouncedCallback } from "use-debounce";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -17,24 +16,24 @@ import { useSearch } from "./hooks";
 import { LinkCustomer } from "../../components";
 import type { FC, ChangeEvent } from "react";
 import type { CustomerType } from "../../services/shopify/types";
+import { ContextData, Settings } from "@/types";
 
 const LinkCustomerPage: FC = () => {
-    const navigate = useNavigate();
-    const [searchParams] = useSearchParams();
-    const { client } = useDeskproAppClient();
-    const { context } = useDeskproLatestAppContext();
-    const [search, setSearch] = useState<string>("");
-    const [selectedCustomerId, setSelectedCustomerId] = useState<CustomerType["id"]>("");
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [search, setSearch] = useState<string>("");
+    const [searchParams] = useSearchParams();
+    const [selectedCustomerId, setSelectedCustomerId] = useState<CustomerType["id"]>("");
+    const { client } = useDeskproAppClient();
+    const { context } = useDeskproLatestAppContext<ContextData, Settings>();
     const { isLoading, customers } = useSearch(search);
-    const customerId = useMemo(() => searchParams.get("customerId"), [searchParams]);
-    const dpUser = useMemo(() => {
-      return get(context, ["data", "ticket", "primaryUser"])
-        || get(context, ["data", "user"])
-    }, [context]);
+    const customerId =  searchParams.get("customerId")
+    const dpUser = context?.data?.ticket?.primaryUser || context?.data?.user
+    const navigate = useNavigate();
 
     useSetTitle("Link Customer");
+
+  const isUsingOAuth = context?.settings?.use_access_token !== true || context.settings.use_advanced_connect === false
 
     useRegisterElements(({ registerElement }) => {
         registerElement("refresh", { type: "refresh_button" });
@@ -45,6 +44,19 @@ const LinkCustomerPage: FC = () => {
                 payload: { type: "changePage", path: "/home" }
             });
         }
+
+        if (isUsingOAuth) {
+            registerElement("menu", {
+              type: "menu",
+              items: [{
+                title: "Logout",
+                payload: {
+                  type: "changePage",
+                  path: `/logout`,
+                },
+              }],
+            });
+          }
     }, [isEditMode]);
 
     useEffect(() => {
