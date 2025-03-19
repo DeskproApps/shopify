@@ -19,8 +19,7 @@ const ViewCustomerPage: FC = () => {
     return getCustomerLink(customer?.legacyResourceId);
   }, [getCustomerLink, customer?.legacyResourceId]);
 
-  const isUsingOAuth = context?.settings.use_access_token !== true
-
+  const isUsingOAuth = context?.settings?.use_access_token !== true || context.settings.use_advanced_connect === false
 
   useSetTitle(customer?.displayName || "Shopify");
 
