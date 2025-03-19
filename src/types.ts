@@ -29,7 +29,7 @@ export type Settings = {
   shop_name?: string,
   access_token?: string,
   client_id?: string,
-  use_deskpro_saas?: boolean,
+  use_advanced_connect?: boolean,
   use_access_token?: boolean,
 };
 

@@ -27,10 +27,11 @@
     }
   },
   "settings": {
-    "use_deskpro_saas": {
-      "title": "One-Click Installation",
+    "use_advanced_connect": {
+      "title": "Advanced Connect",
+      "description": "Follow the setup guide and use your credentials to connect the app to Deskpro.",
       "type": "boolean",
-      "default": true,
+      "default": false,
       "isRequired": false,
       "isBackendOnly": false,
       "order": 5
@@ -41,7 +42,7 @@
       "isRequired": false,
       "isBackendOnly": false,
       "default": false,
-      "condition": "settings.use_deskpro_saas != true",
+      "condition": "settings.use_advanced_connect != false",
       "order": 10
     },
     "shop_name": {
@@ -58,7 +59,7 @@
       "type": "string",
       "isRequired": false,
       "isBackendOnly": true,
-      "condition": "settings.use_deskpro_saas != true && settings.use_access_token == true",
+      "condition": "settings.use_advanced_connect != false && settings.use_access_token == true",
       "order": 30
     },
     "verify_settings": {
@@ -69,7 +70,7 @@
         "height": "30px"
       },
       "isRequired": false,
-      "condition": "settings.use_deskpro_saas != true && settings.use_access_token == true",
+      "condition": "settings.use_advanced_connect != false && settings.use_access_token == true",
       "isBackendOnly": true,
       "order": 40
     },
@@ -78,7 +79,7 @@
       "type": "string",
       "isRequired": false,
       "isBackendOnly": false,
-      "condition": "settings.use_deskpro_saas != true && settings.use_access_token != true",
+      "condition": "settings.use_advanced_connect != false && settings.use_access_token != true",
       "order": 50
     },
     "client_secret": {
@@ -86,7 +87,7 @@
       "type": "string",
       "isRequired": false,
       "isBackendOnly": true,
-      "condition": "settings.use_deskpro_saas != true && settings.use_access_token != true",
+      "condition": "settings.use_advanced_connect != false && settings.use_access_token != true",
       "order": 60
     },
     "callback_url": {
@@ -97,7 +98,7 @@
       },
       "isRequired": false,
       "isBackendOnly": true,
-      "condition": "settings.use_deskpro_saas != true && settings.use_access_token != true",
+      "condition": "settings.use_advanced_connect != false && settings.use_access_token != true",
       "order": 70
     }
   },
