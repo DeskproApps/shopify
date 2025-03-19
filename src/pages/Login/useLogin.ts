@@ -72,7 +72,7 @@ export default function useLogin(): UseLogin {
             // Global Proxy Service
             : await client.startOauth2Global("0ad23fa9caf394119372cd5db27dba4b");
 
-        setAuthUrl(oAuth2Response.authorizationUrl)
+        setAuthUrl(mode === "local" ? oAuth2Response.authorizationUrl : `${oAuth2Response.authorizationUrl}&subdomain=${context.settings.shop_name}`)
         setOAuth2Context(oAuth2Response)
 
     }, [setAuthUrl, context?.settings.use_advanced_connect])
@@ -92,11 +92,17 @@ export default function useLogin(): UseLogin {
                     await client.setUserState(OAUTH2_REFRESH_TOKEN_PATH, result.data.refresh_token, { backend: true })
                 }
 
-                const shopResult = await getShopInfo(client)
 
-                if (!shopResult?.data?.shop) {
+                try {
+                    const shopResult = await getShopInfo(client)
+
+                    if (!shopResult?.data?.shop) {
+                        throw new Error()
+                    }
+                } catch {
                     throw new Error("Error authenticating user")
                 }
+
 
                 getEntityCustomerList(client, user.id)
                     .then((customers) => {
