@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/react';
 import './instrument';
 import { Suspense, StrictMode } from "react";
 import ReactDOM from "react-dom/client";
@@ -17,6 +16,7 @@ import "@deskpro/deskpro-ui/dist/deskpro-custom-icons.css";
 import "./main.css";
 import "simplebar/dist/simplebar.min.css";
 import { Scrollbar } from "@deskpro/deskpro-ui";
+import { ErrorBoundary } from '@sentry/react';
 
 TimeAgo.addDefaultLocale(en);
 
@@ -27,11 +27,11 @@ root.render(
       <DeskproAppProvider>
         <HashRouter>
           <QueryClientProvider client={queryClient}>
-            <Sentry.ErrorBoundary FallbackComponent={ErrorFallback}>
+            <ErrorBoundary fallback={ErrorFallback}>
               <Suspense fallback={<LoadingSpinner />}>
                 <App />
               </Suspense>
-            </Sentry.ErrorBoundary>
+            </ErrorBoundary>
           </QueryClientProvider>
         </HashRouter>
       </DeskproAppProvider>
