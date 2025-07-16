@@ -2,6 +2,7 @@ import { FC } from "react";
 import styled from "styled-components";
 import { H1, Stack } from "@deskpro/deskpro-ui";
 import { ShopifyLink } from "../../common";
+import { DeskproAppTheme } from "@deskpro/app-sdk";
 
 type Props = {
     text?: string,
@@ -10,7 +11,7 @@ type Props = {
     onChangePage: () => void,
 };
 
-const Link = styled.a`
+const Link = styled.a<DeskproAppTheme>`
   color: ${({ theme }) => (theme.colors.cyan100)};
   text-decoration: none;
 `;

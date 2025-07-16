@@ -6,7 +6,7 @@ import {
     AnyIcon,
     RoundedLabelTag,
 } from "@deskpro/deskpro-ui";
-import { useDeskproAppTheme } from "@deskpro/app-sdk";
+import { DeskproAppTheme, useDeskproAppTheme } from "@deskpro/app-sdk";
 import { ShopifyLogo } from "./ShopifyLogo";
 import { Props } from "./types";
 
@@ -14,7 +14,7 @@ const Container = styled(Stack)`
   padding: 2px;
 `;
 
-const Link = styled.a`
+const Link = styled.a<DeskproAppTheme>`
     color: ${({ theme }) => (theme.colors.brandShade100)}
 `;
 
@@ -38,7 +38,7 @@ const ShopifyLink = ({ href }: Props) => {
             closeIcon={faArrowUpRightFromSquare as AnyIcon}
             label={(
                 <Container>
-                    <ShopifyIcon icon={<ShopifyLogo/>} />
+                    <ShopifyIcon icon={<ShopifyLogo />} />
                     <Link target="_blank" href={href}>
                         <Icon icon={faArrowUpRightFromSquare as AnyIcon} />
                     </Link>
