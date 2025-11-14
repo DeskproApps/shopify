@@ -50,7 +50,12 @@
       {
         "url": "https://(.*).myshopify.com/admin/api/.*",
         "methods": ["GET", "POST", "PUT", "DELETE"],
-        "timeout": 30
+        "timeout": 30,
+        "settingsInjection": {
+          "access_token": {
+            "header": ["X-Shopify-Access-Token"]
+          }
+        }
       }
     ]
   }
